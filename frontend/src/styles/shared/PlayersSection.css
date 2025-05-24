@@ -1,0 +1,155 @@
+.players-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: #f4f4f4;
+}
+
+.player-category {
+    text-align: left;
+    padding: 30px;
+}
+
+.player-category h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.players-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 40px;
+    max-width: calc(240px * 4 + 40px * 3);
+    /* Fits 4 cards + 3 gaps */
+}
+
+/* Modificări specifice cartonaselor - fără alte elemente */
+.player-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    width: 240px;
+    height: 320px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+/* Efect de hover - ridicare ușoară */
+.player-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Wrapper pentru imagine */
+.player-image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.player-image {
+    width: 100%;
+    height: 270px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.player-number {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #007bff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.player-card:hover .player-number {
+    background: #007bff;
+    color: white;
+}
+/* Informații despre jucător */
+.player-info {
+    padding: 10px;
+    text-align: center;
+    background: #fff;
+    border-radius: 0 0 15px 15px;
+}
+
+.player-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+/* Stil pentru cardul jucătorului logat */
+.player-card.current-user {
+    border: 3px solid #1e3a8a;
+}
+
+.player-card.current-user::after {
+    content: '★';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #1e3a8a;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.players-section .search-bar {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.players-section .search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.players-section .search-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.players-section .no-results {
+    text-align: center;
+    color: #999;
+    font-size: 1.2rem;
+    font-style: italic;
+    margin: 30px 0;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

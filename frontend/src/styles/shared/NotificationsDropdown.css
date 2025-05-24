@@ -1,0 +1,209 @@
+/* styles/NotificationsDropdown.css */
+.notifications-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.notifications-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+    color: #333;
+}
+
+.notifications-btn:hover {
+    color: #007bff;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    z-index: 1000;
+}
+
+/* Header pentru dropdown */
+.notifications-header {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    /* Mutăm butoanele în stânga și dreapta */
+    align-items: center;
+}
+
+/* Buton „Show Unread” */
+.show-unread-btn {
+    background-color: #e9ecef;
+    border: none;
+    color: #007bff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.show-unread-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.show-unread-btn:disabled {
+    background-color: #e9ecef;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* Buton „Mark all as read” */
+.mark-all-read-btn {
+    background-color: #e9ecef;
+    border: none;
+    color: #28a745;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mark-all-read-btn:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.mark-all-read-btn:disabled {
+    background-color: #e9ecef;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.notifications-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item.unread {
+    background-color: #f8f9fa;
+}
+
+.notification-item.read {
+    background-color: white;
+}
+
+.unread-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #007bff;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.notification-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.notification-text {
+    font-size: 14px;
+    color: #333;
+}
+
+.notification-text strong {
+    font-weight: 600;
+}
+
+.notification-date {
+    color: #888;
+    font-size: 12px;
+}
+
+.notification-item:hover {
+    background-color: #f1f1f1;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #dc3545;
+}
+
+.delete-btn:hover {
+    color: #c82333;
+}
+
+.no-notifications {
+    padding: 10px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+
+.notifications-text {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.35;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+/* Afișează textul la hover pe butonul de notificări */
+.notifications-btn:hover .notifications-text {
+    opacity: 1;
+    visibility: visible; 
+}

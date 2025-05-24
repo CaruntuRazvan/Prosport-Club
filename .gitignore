@@ -1,0 +1,11 @@
+# Ignoră fișierele de configurare și modulele node
+node_modules/
+.env
+*.txt
+
+# Alte opționale utile
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/

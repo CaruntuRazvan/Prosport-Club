@@ -1,0 +1,321 @@
+.injury-section {
+  padding: 20px 60px 20px 20px; /* Padding-right pentru „Go Up” */
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #f3f4f6; /* Gri deschis */
+  min-height: 100vh;
+}
+
+.injury-section h2 {
+  color: #1f2937; /* Gri închis */
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.injury-action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.injury-add-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6; /* Albastru solid */
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+}
+
+.injury-add-btn:hover {
+  background: #2563eb; /* Nuanță mai închisă, fără scale */
+}
+
+.injury-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.injury-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Umbră statică */
+}
+
+.injury-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.injury-card-header h3 {
+  color: #1f2937;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.injury-card-status {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.injury-card-status.injured {
+  background: #3b82f6; /* Albastru */
+  color: #fff;
+}
+
+.injury-card-status.recovering {
+  background: #3b82f6; /* Albastru */
+  color: #fff;
+}
+
+.injury-card-info {
+  display: grid;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #6b7280; /* Gri secundar */
+}
+
+.injury-card-info p {
+  margin: 0;
+}
+
+.injury-card-info p strong {
+  color: #1f2937;
+}
+
+.injury-progress-bar {
+  background: #e5e7eb; /* Gri fundal */
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.injury-progress-fill {
+  height: 100%;
+  background: #3b82f6; /* Albastru */
+  border-radius: 6px;
+}
+
+.injury-details-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+  width: 100%;
+  margin-top: 12px;
+}
+
+.injury-details-btn:hover {
+  background: #2563eb; /* Nuanță mai închisă, fără scale */
+}
+
+.injury-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.injury-modal-content {
+  background: #fff; /* Alb */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+}
+
+.injury-modal-content h3 {
+  color: #1f2937;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.injury-modal-content p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 8px 0;
+}
+
+.injury-modal-content p strong {
+  color: #1f2937;
+}
+
+.injury-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.injury-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.injury-form-group label {
+  color: #1f2937;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.injury-edit-input,
+.injury-edit-input textarea,
+.injury-edit-input select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: #f9fafb;
+  transition: border-color 0.3s ease;
+}
+
+.injury-edit-input:focus,
+.injury-edit-input textarea:focus,
+.injury-edit-input select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.injury-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.injury-save-btn,
+.injury-edit-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+}
+
+.injury-save-btn:hover,
+.injury-edit-btn:hover {
+  background: #2563eb; /* Nuanță mai închisă */
+}
+
+.injury-cancel-btn,
+.injury-close-modal-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+}
+
+.injury-cancel-btn:hover,
+.injury-close-modal-btn:hover {
+  background: #dc2626;
+}
+
+.injury-no-injuries {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 16px;
+}
+
+.injury-loading {
+  text-align: center;
+  color: #1f2937;
+  font-size: 1rem;
+  padding: 16px;
+}
+
+@media (max-width: 768px) {
+  .injury-section {
+    padding: 10px 40px 10px 10px;
+    max-width: 100%;
+  }
+
+  .injury-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .injury-card-container {
+    grid-template-columns: 1fr;
+  }
+
+  .injury-card {
+    padding: 12px;
+  }
+
+  .injury-card-header h3 {
+    font-size: 1rem;
+  }
+
+  .injury-add-btn,
+  .injury-details-btn,
+  .injury-save-btn,
+  .injury-cancel-btn,
+  .injury-edit-btn,
+  .injury-close-modal-btn {
+    padding: 7px 14px;
+    font-size: 0.85rem;
+  }
+
+  .injury-modal-content {
+    width: 95%;
+    padding: 16px;
+    max-width: 400px;
+  }
+
+  .injury-form-group label {
+    font-size: 0.85rem;
+  }
+
+  .injury-edit-input,
+  .injury-edit-input textarea,
+  .injury-edit-input select {
+    padding: 7px 10px;
+    font-size: 0.85rem;
+  }
+
+  .injury-modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

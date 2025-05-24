@@ -1,0 +1,330 @@
+.nutrition-section {
+    padding: 20px 60px 20px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nutrition-section h2 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.nutrition-action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.nutrition-export-csv-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #4a90e2, #63b3ed);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+}
+
+.nutrition-export-csv-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.5);
+}
+
+.nutrition-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nutrition-table th,
+.nutrition-table td {
+    padding: 12px 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.nutrition-table th {
+    background-color: #e1f0f5;
+    /* Albastru pastel */
+    font-weight: 600;
+    color: #1e3a8a;
+}
+
+.nutrition-table tr {
+    transition: background-color 0.2s ease;
+}
+
+.nutrition-table tr:hover {
+    background-color: #f9fafb;
+}
+
+.nutrition-highlight-underweight {
+    background-color: #f5e1e1;
+    /* Roșu pastel */
+}
+
+.nutrition-highlight-overweight {
+    background-color: #f5e1f0;
+    /* Roz pastel */
+}
+
+.nutrition-details-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #38a169, #68d391);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(56, 161, 105, 0.3);
+}
+
+.nutrition-details-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 161, 105, 0.5);
+}
+
+.nutrition-modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.nutrition-modal-content {
+    background-color: #e1f5e1;
+    /* Verde pastel */
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.nutrition-modal-content h3 {
+    margin: 0 0 15px;
+    color: #1e3a8a;
+    font-size: 1.4rem;
+}
+
+.nutrition-modal-content p {
+    margin: 10px 0;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.nutrition-modal-content p strong {
+    color: #1e3a8a;
+}
+
+.nutrition-close-modal-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #e53e3e, #f56565);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+    display: block;
+    margin: 20px auto 0;
+}
+
+.nutrition-close-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.5);
+}
+
+.nutrition-no-players {
+    text-align: center;
+    color: #718096;
+    font-size: 1.1rem;
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+.nutrition-loading {
+    text-align: center;
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 20px;
+}
+
+.nutrition-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.nutrition-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nutrition-form-group label {
+    color: #1e3a8a;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.nutrition-edit-input {
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background-color: #f9fafb;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nutrition-edit-input:focus {
+    outline: none;
+    border-color: #1e3a8a;
+    box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
+}
+
+.nutrition-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.nutrition-save-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #38a169, #68d391);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(56, 161, 105, 0.3);
+}
+
+.nutrition-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 161, 105, 0.5);
+}
+
+.nutrition-cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #e53e3e, #f56565);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+}
+
+.nutrition-cancel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.5);
+}
+
+.nutrition-edit-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #4a90e2, #63b3ed);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    margin-right: 10px;
+}
+
+.nutrition-edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.5); 
+}
+
+@media (max-width: 768px) {
+    .nutrition-section {
+        padding: 10px 40px 10px 10px;
+        /* Redus padding, păstrează spațiu pentru „Go Up” */
+        max-width: 100%;
+    }
+
+    .nutrition-table {
+        font-size: 0.8rem;
+        /* Text mai mic */
+    }
+
+    .nutrition-table th,
+    .nutrition-table td {
+        padding: 8px 10px;
+        /* Redus padding în celule */
+    }
+
+    .nutrition-action-buttons {
+        justify-content: center;
+        /* Centrează butonul CSV */
+    }
+
+    .nutrition-export-csv-btn,
+    .nutrition-details-btn,
+    .nutrition-save-btn,
+    .nutrition-cancel-btn,
+    .nutrition-edit-btn,
+    .nutrition-close-modal-btn {
+        padding: 6px 12px;
+        /* Butoane mai mici */
+        font-size: 0.85rem;
+    }
+
+    .nutrition-modal-content {
+        width: 95%;
+        /* Aproape full-width pe mobil */
+        padding: 15px;
+        max-width: 400px;
+    }
+
+    .nutrition-edit-form {
+        gap: 10px;
+        /* Spațiu mai mic între input-uri */
+    }
+
+    .nutrition-form-group label {
+        font-size: 0.85rem;
+    }
+
+    .nutrition-edit-input {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+
+    .nutrition-modal-actions {
+        flex-direction: column;
+        /* Butoane stivuite vertical */
+        gap: 8px;
+    } 
+}

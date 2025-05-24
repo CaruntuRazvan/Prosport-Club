@@ -1,0 +1,115 @@
+.admin-reset-section {
+    padding: 20px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin: 20px 0;
+    /* Adăugăm padding-right pentru a face loc butonului "Go Up" */
+    padding-right: 60px;
+}
+
+.reset-section-title {
+    color: #1e3a8a;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Container cu flexbox pentru cele două coloane */
+.reset-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Stiluri pentru coloane */
+.reset-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Reducem spațierea între elemente */
+}
+
+.reset-column h4 {
+    color: #333;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 2px solid #1e3a8a;
+    padding-bottom: 5px;
+}
+
+/* Stiluri pentru fiecare element de reset */
+.reset-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Spațiere mai mică între elementele din interior */
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+
+.reset-item p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+    text-align: center;
+}
+
+.reset-user-dropdown {
+    padding: 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    background-color: #fff;
+    width: 100%;
+    /* Ocupă toată lățimea disponibilă */
+}
+
+.reset-btn {
+    padding: 6px 12px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    width: 100%;
+    /* Butonul ocupă toată lățimea */
+}
+
+.reset-btn:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: scale(1.01);
+}
+
+.reset-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Responsivitate */
+@media (max-width: 768px) {
+    .reset-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .reset-column {
+        width: 100%;
+    }
+
+    .reset-item {
+        padding: 8px;
+    }
+
+    .reset-btn {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+    } }

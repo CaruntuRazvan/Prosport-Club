@@ -1,0 +1,441 @@
+.team-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-right: 60px;
+}
+
+.team-section h2 {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.team-kits {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite kit-urilor să treacă pe rânduri noi pe ecrane mici */
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+    /* Adaugă spațiu în jurul containerului */
+}
+
+.kit-item {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    padding: 15px;
+    /* Adaugă spațiu interior */
+    width: 200px;
+    /* Lățime fixă pentru consistență */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Adaugă umbră pentru un aspect modern */
+    transition: transform 0.3s ease;
+    /* Efect de tranziție pentru hover */
+}
+
+.kit-item:hover {
+    transform: translateY(-5px);
+    /* Ridică elementul la hover */
+}
+
+.kit-image {
+    width: 100%;
+    /* Imaginea ocupă toată lățimea containerului */
+    max-width: 200px;
+    /* Limitează lățimea maximă */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.kit-item p {
+    margin: 0;
+    color: #1e3a8a;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    /* Centrăm textul */
+}
+
+.team-news {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.team-news h4 {
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 2px solid #1e3a8a;
+    padding-bottom: 5px;
+    margin: 0;
+}
+
+.news-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.news-item:hover {
+    transform: translateY(-2px);
+}
+
+.news-item h5 {
+    margin: 0 0 5px 0;
+    color: #1e3a8a;
+    font-size: 16px;
+}
+
+.news-item p {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 14px;
+}
+
+.news-date {
+    display: block;
+    color: #666;
+    font-size: 12px;
+    font-style: italic;
+}
+.no-news {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.news-action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.news-add-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1e3a8a;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.news-add-btn:hover {
+    background-color: #152c6b;
+}
+
+.news-item-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.news-edit-btn,
+.news-delete-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.news-edit-btn {
+    background-color: #3b82f6;
+    color: #fff;
+}
+
+.news-edit-btn:hover {
+    background-color: #2563eb;
+}
+
+.news-delete-btn {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+.news-delete-btn:hover {
+    background-color: #dc2626; }
+/* Stiluri pentru modalul cu imagine mărită */
+.news-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.news-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.news-modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.news-modal-close-btn:hover {
+    color: #ff4d4f;
+}
+
+.news-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.news-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.news-form-group label {
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.news-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.news-input textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.news-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.news-save-btn,
+.news-cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.news-save-btn {
+    background-color: #1e3a8a;
+    color: #fff;
+}
+
+.news-save-btn:hover {
+    background-color: #152c6b;
+}
+
+.news-cancel-btn {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+.news-cancel-btn:hover {
+    background-color: #dc2626; }
+
+
+.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.image-modal-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 80%;
+    max-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.enlarged-image {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.image-modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.image-modal-close-btn:hover {
+    color: #ff4d4f;
+}
+/* Stiluri pentru secțiunea cu link-ul către PDF */
+.fines-link-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.fines-link-section:hover {
+    transform: translateY(-2px);
+}
+
+.fines-link-section h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e3a8a;
+    border-bottom: 2px solid #1e3a8a;
+    padding-bottom: 5px;
+    margin: 0 0 10px 0;
+}
+
+.fines-link-section p {
+    font-size: 14px;
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.fines-link {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #1e3a8a;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+.fines-link::after {
+    content: '📄';
+    margin-left: 8px;
+    font-size: 1rem;
+}
+.fines-link:hover {
+    background-color: #152c6b;
+    /* O nuanță mai închisă de #1e3a8a */
+}
+.quote-banner {
+    background-color: #f1f3f5;
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.quote-text {
+    color: #333;
+    font-style: italic;
+}
+/* Responsivitate */
+@media (max-width: 768px) {
+    .team-kits {
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .kit-item {
+        width: 150px;
+        /* Reducem lățimea pe ecrane mai mici */
+    }
+
+    .kit-image {
+        max-width: 150px;
+        /* Reducem dimensiunea imaginii */
+    }
+
+    .kit-item p {
+        font-size: 14px;
+        /* Reducem fontul */
+    }
+
+    .fines-link-section {
+        padding: 10px;
+    }
+
+    .fines-link-section h4 {
+        font-size: 16px;
+    }
+
+    .fines-link-section p {
+        font-size: 12px;
+    }
+
+    .fines-link {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .team-kits {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kit-item {
+        width: 100%;
+        /* Ocupă toată lățimea */
+        max-width: 200px;
+        /* Limitează lățimea maximă */
+    }
+
+    .fines-link-section {
+        margin-top: 15px;
+    }
+}

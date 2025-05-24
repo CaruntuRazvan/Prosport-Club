@@ -1,0 +1,85 @@
+.admin-container, .player-container, .manager-container, .staff-container {
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(to right, #022c5a, #3b82f6);
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #021d3a;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+}
+
+.team-logo {
+    width: 110px;
+    height: auto;
+    display: block;
+    margin: 0 auto 30px;
+    transition: transform 0.3s ease;
+}
+
+.team-logo:hover {
+    transform: scale(1.05);
+    /* Efect de scalare la hover */
+}
+
+.admin-profile, .player-profile, .manager-profile, .staff-profile {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.admin-profile p, .player-profile p, .manager-profile p, .staff-profile p {
+    margin: 5px 0;
+    color: #1e3a8a;
+}
+
+.admin-profile p strong, .player-profile p strong, .manager-profile p strong, .staff-profile p strong {
+    color: #1e3a8a;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.sidebar li:hover {
+    background-color: #1a3c6e;
+}
+
+.sidebar li.active {
+    background-color: #3b82f6;
+}
+
+.main-content {
+    margin-left: 250px;
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.header {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    color: #1e3a8a;
+}
+

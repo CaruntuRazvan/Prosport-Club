@@ -1,0 +1,64 @@
+
+.request-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.request-btn {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  color: #1e3a8a;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+.request-btn:hover {
+  background-color: #edf2f7;
+  color: #1e3a8a;
+}
+
+.request-btn svg {
+  margin-right: 8px;
+}
+
+
+.request-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-width: 180px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.request-option {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  color: #4a5568;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 16px;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.request-option:last-child {
+  border-bottom: none;
+}
+
+.request-option:hover {
+  background-color: #f7fafc;
+  color: #1e3a8a;
+}
+
