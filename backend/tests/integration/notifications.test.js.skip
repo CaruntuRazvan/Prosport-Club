@@ -30,14 +30,17 @@ beforeAll(async () => {
       dbName: 'testdb',
     },
     binary: {
-      version: '5.0.15',
+      version: '4.4.6',
+      downloadDir: process.env.MONGOMS_DOWNLOAD_DIR || './mongodb-binaries',
+      skipMD5: true,
     },
   });
   const uri = mongoServer.getUri();
   try {
     await mongoose.connect(uri, {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 10000,
       dbName: 'testdb',
     });
     log.success('MongoDB connected');
