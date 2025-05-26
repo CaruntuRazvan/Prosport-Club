@@ -8,6 +8,7 @@ import { getEvents, getEventDetails, deleteEvent } from '../../services/eventSer
 import { getFeedbackForEvent } from '../../services/feedbackService';
 import AddFeedbackModal from '../feedbacks/AddFeedbackModal';
 import FeedbackList from '../feedbacks/FeedbackList';
+import { useConfirm } from '../../context/ConfirmContext';
 import '../../styles/calendar/EventCalendar.css';
 
 const EventCalendar = ({ userId, eventColor }) => {
@@ -19,6 +20,7 @@ const EventCalendar = ({ userId, eventColor }) => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [userRole, setUserRole] = useState('');
+  const { showConfirm } = useConfirm();
   const modalRef = useRef(null);
   const calendarRef = useRef(null);
 
@@ -178,8 +180,7 @@ const EventCalendar = ({ userId, eventColor }) => {
   };
 
   const handleDeleteEvent = async (eventId) => {
-    const confirmDelete = window.confirm('Ești sigur că vrei să ștergi acest eveniment?');
-    if (confirmDelete) {
+    showConfirm('Ești sigur că vrei să ștergi acest eveniment?', async () => {
       try {
         await deleteEvent(eventId);
         setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId));
@@ -211,7 +212,7 @@ const EventCalendar = ({ userId, eventColor }) => {
           },
         });
       }
-    }
+    });
   };
 
   const closeModal = () => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { fetchAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement } from '../../services/announcementService';
+import { useConfirm } from '../../context/ConfirmContext';
 import '../../styles/shared/AboutTeam.css';
 
 const AboutTeam = ({ userRole }) => {
@@ -14,6 +15,7 @@ const AboutTeam = ({ userRole }) => {
     title: '',
     description: '',
   });
+  const { showConfirm } = useConfirm();
   const createModalRef = useRef(null);
   const editModalRef = useRef(null);
 
@@ -257,40 +259,38 @@ const AboutTeam = ({ userRole }) => {
 
   // Handle delete announcement with confirmation
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Ești sigur că vrei să ștergi acest anunț?');
-    if (!confirmDelete) {
-      return;
-    }
-    try {
-      console.log('Deleting Announcement:', id);
-      await deleteAnnouncement(id);
-      setAnnouncements(announcements.filter(ann => ann._id !== id));
-      toast.success('Anunț șters cu succes!', {
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeButton: false,
-        style: {
-          background: '#28a745',
-          color: '#fff',
-          fontSize: '14px',
-          padding: '8px 16px',
-          borderRadius: '4px',
-        },
-      });
-    } catch (error) {
-      toast.error(error.message || 'Eroare la ștergerea anunțului.', {
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeButton: false,
-        style: {
-          background: '#dc3545',
-          color: '#fff',
-          fontSize: '14px',
-          padding: '8px 16px',
-          borderRadius: '4px',
-        },
-      });
-    }
+    showConfirm('Ești sigur că vrei să ștergi acest anunț?', async () => {
+      try {
+        console.log('Deleting Announcement:', id);
+        await deleteAnnouncement(id);
+        setAnnouncements(announcements.filter(ann => ann._id !== id));
+        toast.success('Anunț șters cu succes!', {
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeButton: false,
+          style: {
+            background: '#28a745',
+            color: '#fff',
+            fontSize: '14px',
+            padding: '8px 16px',
+            borderRadius: '4px',
+          },
+        });
+      } catch (error) {
+        toast.error(error.message || 'Eroare la ștergerea anunțului.', {
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeButton: false,
+          style: {
+            background: '#dc3545',
+            color: '#fff',
+            fontSize: '14px',
+            padding: '8px 16px',
+            borderRadius: '4px',
+          },
+        });
+      }
+    });
   };
 
   // Handle edit toggle

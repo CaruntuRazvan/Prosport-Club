@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchFines, deleteFine, updateFineStatus, requestPaymentConfirmation, rejectPaymentRequest, exportFinesToCSV } from '../../services/fineService';
 import { toast, ToastContainer } from 'react-toastify';
+import { useConfirm } from '../../context/ConfirmContext';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/fines/FineList.css';
 
@@ -9,7 +10,7 @@ const FineList = ({ userId, userRole, refresh }) => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [paidFilter, setPaidFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
+  const { showConfirm } = useConfirm();
   useEffect(() => {
     fetchFinesData();
   }, [refresh]);
@@ -66,7 +67,7 @@ const FineList = ({ userId, userRole, refresh }) => {
   };
 
   const handleDeleteFine = async (fineId) => {
-    if (window.confirm('Ești sigur că vrei să ștergi această penalizare?')) {
+    showConfirm('Ești sigur că vrei să ștergi această penalizare?', async () => {
       try {
         await deleteFine(fineId);
         toast.success('Penalizare ștearsă cu succes!', {
@@ -96,7 +97,7 @@ const FineList = ({ userId, userRole, refresh }) => {
           },
         });
       }
-    }
+    });
   };
 
   const handleRequestPaymentConfirmation = async (fineId) => {

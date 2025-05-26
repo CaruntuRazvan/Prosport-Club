@@ -3,6 +3,7 @@ import { voteInPoll, fetchPolls, fetchPollById, deletePoll } from '../../service
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { toast, ToastContainer } from 'react-toastify';
+import { useConfirm } from '../../context/ConfirmContext';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/polls/PollsList.css';
 
@@ -17,7 +18,7 @@ const PollsList = ({ userId, userRole }) => {
   const [results, setResults] = useState(null);
   const [votes, setVotes] = useState([]);
   const [statusFilter, setStatusFilter] = useState('all'); // Nou: Filtru pentru Active/Expired
-
+  const { showConfirm } = useConfirm();
   useEffect(() => {
     fetchPollsData();
   }, []);
@@ -115,7 +116,7 @@ const PollsList = ({ userId, userRole }) => {
   };
 
   const handleDeletePoll = async (pollId) => {
-    if (window.confirm('Are you sure you want to delete this poll?')) {
+    showConfirm('Are you sure you want to delete this poll?', async () => {
       try {
         await deletePoll(pollId);
         toast.success('Poll deleted successfully!', {
@@ -148,7 +149,7 @@ const PollsList = ({ userId, userRole }) => {
           },
         });
       }
-    }
+    });
   };
 
   useEffect(() => {

@@ -1,12 +1,15 @@
+// src/components/auth/LogoutComponent.js
 import React from 'react';
+import { useConfirm } from '../../context/ConfirmContext'; // Importăm useConfirm
 import '../../styles/auth/LogoutComponent.css';
 
 const LogoutComponent = ({ handleLogout }) => {
+  const { showConfirm } = useConfirm(); // Folosim useConfirm
+
   const handleLogoutWithConfirmation = () => {
-    const confirmLogout = window.confirm('Ești sigur că vrei să te deconectezi?');
-    if (confirmLogout) {
+    showConfirm('Ești sigur că vrei să te deconectezi?', () => {
       handleLogout();
-    }
+    });
   };
 
   return (

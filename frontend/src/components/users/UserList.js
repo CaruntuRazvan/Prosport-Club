@@ -1,6 +1,7 @@
 import React from 'react';
-
+import { useConfirm } from '../../context/ConfirmContext';
 const UserList = ({ users, onDeleteUser, onViewUser, onEditUser }) => {
+  const { showConfirm } = useConfirm();
   return (
     <div className="user-list">
       {users.length > 0 ? (
@@ -32,10 +33,9 @@ const UserList = ({ users, onDeleteUser, onViewUser, onEditUser }) => {
             <button
               className="delete-btn"
               onClick={() => {
-                const confirmDelete = window.confirm(`Sigur vrei să ștergi utilizatorul ${user.name}?`);
-                if (confirmDelete) {
+                showConfirm(`Sigur vrei să ștergi utilizatorul ${user.name}?`, () => {
                   onDeleteUser(user.email);
-                }
+                });
               }}
             >
               <svg

@@ -1,15 +1,17 @@
+// src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { ToastContainer , toast} from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isTokenExpired } from './utils/api';
 import LoginForm from './components/auth/LoginForm';
-import LogoutModal from './components/auth/LogoutModal';
 import AdminPage from './pages/AdminPage';
 import PlayerPage from './pages/PlayerPage';
 import ManagerPage from './pages/ManagerPage';
 import StaffPage from './pages/StaffPage';
 import ScrollToTopButton from './components/shared/ScrollToTopButton';
+import { ConfirmProvider } from './context/ConfirmContext'; // Importăm ConfirmProvider
+import { useConfirm } from './context/ConfirmContext'; // Importăm useConfirm
 
 // Subcomponent care conține logica aplicației
 const AppContent = () => {
@@ -19,6 +21,7 @@ const AppContent = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [toastKey, setToastKey] = useState(Date.now());
   const navigate = useNavigate();
+  const confirm = useConfirm(); // Folosim useConfirm
 
   const checkAuth = () => {
     if (showLogoutModal) return;
@@ -27,10 +30,12 @@ const AppContent = () => {
     const storedIsAuthenticated = localStorage.getItem('isAuthenticated');
     const token = localStorage.getItem('token');
 
-    //console.log('AppContent - checkAuth - Stored user:', storedUser);
     if (token && isTokenExpired(token)) {
-      //console.log('AppContent - checkAuth - Token expirat, afișez modalul de deconectare.');
-      setShowLogoutModal(true);
+      confirm('Sesiunea ta a expirat. Te rugăm să te autentifici din nou.', () => {
+        handleLogout();
+        navigate('/login');
+      });
+      setShowLogoutModal(true); // Păstrăm această stare pentru a evita verificări repetate
       return;
     }
 
@@ -63,29 +68,24 @@ const AppContent = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [showLogoutModal]); 
+  }, [showLogoutModal]);
 
   useEffect(() => {
     if (userInfo) {
-      //console.log('AppContent - userInfo actualizat:', userInfo);
+      console.log('AppContent - userInfo actualizat:', userInfo);
     }
   }, [userInfo]);
 
   const handleLogout = () => {
-    //console.log('AppContent - handleLogout apelat.');
+    console.log('AppContent - handleLogout apelat.');
     localStorage.removeItem('user');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('token');
     setIsAuthenticated(false);
     setUserInfo(null);
+    setShowLogoutModal(false);
     toast.dismiss();
     setToastKey(Date.now());
-  };
-
-  const handleModalClose = () => {
-    setShowLogoutModal(false);
-    handleLogout();
-    navigate('/login');
   };
 
   if (isLoading) {
@@ -107,7 +107,6 @@ const AppContent = () => {
         pauseOnHover
         style={{ zIndex: 999999, position: 'fixed', bottom: 0, left: 0 }}
       />
-      {showLogoutModal && <LogoutModal onClose={handleModalClose} />}
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
@@ -167,7 +166,9 @@ const AppContent = () => {
 const App = () => {
   return (
     <Router>
-      <AppContent />
+      <ConfirmProvider> {/* Înfășurăm aplicația în ConfirmProvider */}
+        <AppContent />
+      </ConfirmProvider>
     </Router>
   );
 };
