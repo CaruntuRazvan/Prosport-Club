@@ -6,32 +6,39 @@ const log = require('../utils/logger');
 const app = require('../../app');
 const User = require('../../models/User');
 
-
 jest.mock('../../middleware/openaiService', () => ({
   generateText: jest.fn().mockResolvedValue('Mocked response from OpenAI'),
 }));
-// Setează timeout-ul global
+
+// Set global timeout
 jest.setTimeout(30000);
 
 let mongoServer;
 
 beforeAll(async () => {
   log.info('Starting MongoMemoryServer and connecting to MongoDB...');
-  mongoServer = await MongoMemoryServer.create({
-    instance: {
-      dbName: 'testdb',
-    },
-    binary: {
-      version: '5.0.15',
-    },
-  });
-  const uri = mongoServer.getUri();
+  
   try {
+    mongoServer = await MongoMemoryServer.create({
+      instance: {
+        dbName: 'testdb',
+      },
+      binary: {
+        version: '4.4.6',
+        downloadDir: process.env.MONGOMS_DOWNLOAD_DIR || './mongodb-binaries',
+        skipMD5: true,
+      },
+    });
+    
+    const uri = mongoServer.getUri();
+    
     await mongoose.connect(uri, {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 10000,
       dbName: 'testdb',
     });
+    
     log.success('MongoDB connected');
   } catch (error) {
     log.error(`Failed to connect to MongoDB: ${error.message}`);
@@ -43,26 +50,44 @@ beforeAll(async () => {
 
 afterAll(async () => {
   log.info('Disconnecting from MongoDB and stopping MongoMemoryServer...');
-  await mongoose.disconnect();
-  await mongoServer.stop();
-  log.success('MongoDB disconnected and MongoMemoryServer stopped');
+  
+  try {
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.close();
+    }
+    
+    if (mongoServer) {
+      await mongoServer.stop();
+      log.success('MongoMemoryServer stopped');
+    }
+    
+    log.success('MongoDB disconnected');
+  } catch (error) {
+    log.error(`Cleanup error: ${error.message}`);
+  }
 }, 30000);
 
 beforeEach(async () => {
   log.info('Starting beforeEach...');
-  await User.deleteMany();
-  const password = await bcrypt.hash('parola123', 10);
-  await User.create({
-    email: 'test@example.com',
-    password,
-    name: 'Test User',
-    role: 'player',
-    playerId: null,
-    managerId: null,
-    staffId: null,
-    _id: new mongoose.Types.ObjectId(),
-  });
-  log.success('Database cleared and user created');
+  
+  try {
+    await User.deleteMany({});
+    const password = await bcrypt.hash('parola123', 10);
+    await User.create({
+      email: 'test@example.com',
+      password,
+      name: 'Test User',
+      role: 'player',
+      playerId: null,
+      managerId: null,
+      staffId: null,
+      _id: new mongoose.Types.ObjectId(),
+    });
+    log.success('Database cleared and user created');
+  } catch (error) {
+    log.error(`BeforeEach error: ${error.message}`);
+    throw error;
+  }
 }, 30000);
 
 describe('POST /api/users/login', () => {

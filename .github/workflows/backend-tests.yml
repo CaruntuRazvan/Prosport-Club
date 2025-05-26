@@ -8,7 +8,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04  # Use Ubuntu 20.04 for better library compatibility
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -17,15 +18,30 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: 'backend/package-lock.json'
 
-    # (optional) install libssl1.1 (if needed)
-    - name: Install libssl1.1
+    # Install system dependencies for MongoDB Memory Server
+    - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libssl1.1 || true
+        sudo apt-get install -y libssl1.1 libcurl4-openssl-dev libssl-dev || true
+        # Alternative for newer Ubuntu versions
+        wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb || true
+        sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb || true
 
-    - name: Set MongoDB binary version for mongodb-memory-server
-      run: echo "MONGOMS_DOWNLOAD_VERSION=5.0.15" >> $GITHUB_ENV
+    # Set MongoDB Memory Server environment variables
+    - name: Configure MongoDB Memory Server
+      run: |
+        echo "MONGOMS_DOWNLOAD_VERSION=4.4.6" >> $GITHUB_ENV
+        echo "MONGOMS_DOWNLOAD_DIR=${{ github.workspace }}/mongodb-binaries" >> $GITHUB_ENV
+        echo "MONGOMS_SKIP_MD5=1" >> $GITHUB_ENV
+        echo "MONGOMS_PREFER_GLOBAL_PATH=1" >> $GITHUB_ENV
+        echo "CI=true" >> $GITHUB_ENV
+        echo "NODE_ENV=test" >> $GITHUB_ENV
+
+    - name: Create MongoDB binaries directory
+      run: mkdir -p ${{ github.workspace }}/mongodb-binaries
 
     - name: Install dependencies
       run: |
