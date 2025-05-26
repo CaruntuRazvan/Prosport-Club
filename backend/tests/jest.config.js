@@ -2,7 +2,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
 // Mock pentru openaiService
-jest.mock('../middleware/openaiService');
+jest.mock('../../middleware/openaiService');
 
 let mongoServer;
 
