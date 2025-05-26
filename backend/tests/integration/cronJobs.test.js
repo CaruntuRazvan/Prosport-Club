@@ -7,6 +7,9 @@ const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 const { updateEventStatus } = require('../../middleware/cronJobs'); 
 
+jest.mock('../../middleware/openaiService', () => ({
+  generateText: jest.fn().mockResolvedValue('Mocked response from OpenAI'),
+}));
 
 jest.mock('node-cron', () => ({
   schedule: jest.fn((schedule, callback) => {

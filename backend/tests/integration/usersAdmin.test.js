@@ -9,6 +9,9 @@ const Player = require('../../models/Player');
 const Manager = require('../../models/Manager');
 const Staff = require('../../models/Staff');
 
+jest.mock('../../middleware/openaiService', () => ({
+  generateText: jest.fn().mockResolvedValue('Mocked response from OpenAI'),
+}));
 // Setează timeout-ul global
 jest.setTimeout(30000);
 
