@@ -22,7 +22,7 @@ beforeAll(async () => {
       dbName: 'testdb',
     },
     binary: {
-      version: '4.4.6',
+      version: '5.0.0'
     },
   });
   const uri = mongoServer.getUri();

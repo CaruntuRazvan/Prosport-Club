@@ -10,10 +10,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Install libcrypto.so.1.1
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libssl1.1
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
