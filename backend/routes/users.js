@@ -32,9 +32,12 @@ router.post(
   [
     // Validare și sanitizare pentru email
     body('email')
+      .trim()
       .isEmail()
       .withMessage('Introdu un email valid')
-      .normalizeEmail(), // Sanitizează email-ul (elimină spațiile, transformă în lowercase)
+      .normalizeEmail() // Sanitizează email-ul (elimină spațiile, transformă în lowercase)
+      .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      .withMessage('Email-ul conține caractere nepermise'),
 
     // Validare și sanitizare pentru parolă
     body('password')

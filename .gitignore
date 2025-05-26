@@ -2,7 +2,8 @@
 node_modules/
 .env
 *.txt
-
+backup/
+backups/
 # Alte opționale utile
 .DS_Store
 npm-debug.log*
