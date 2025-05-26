@@ -11,15 +11,16 @@ const Notification = require('../../models/Notification');
 jest.mock('../../middleware/openaiService', () => ({
   generateText: jest.fn().mockResolvedValue('Mocked response from OpenAI'),
 }));
-// Setează timeout-ul global
+
+// Set global timeout
 jest.setTimeout(30000);
 
 let mongoServer;
 
-// Definim un userId static pentru mock
+// Define a static userId for mock
 const mockUserId = new mongoose.Types.ObjectId().toString();
 
-// Mock pentru middleware-ul auth
+// Mock for auth middleware
 jest.mock('../../middleware/auth', () => jest.fn((req, res, next) => {
   req.user = { role: 'manager', _id: mockUserId };
   next();
@@ -27,21 +28,28 @@ jest.mock('../../middleware/auth', () => jest.fn((req, res, next) => {
 
 beforeAll(async () => {
   log.info('Starting MongoMemoryServer and connecting to MongoDB...');
-  mongoServer = await MongoMemoryServer.create({
-    instance: {
-      dbName: 'testdb',
-    },
-    binary: {
-      version: '5.0.15',
-    },
-  });
-  const uri = mongoServer.getUri();
+  
   try {
+    mongoServer = await MongoMemoryServer.create({
+      instance: {
+        dbName: 'testdb',
+      },
+      binary: {
+        version: '4.4.6',
+        downloadDir: process.env.MONGOMS_DOWNLOAD_DIR || './mongodb-binaries',
+        skipMD5: true,
+      },
+    });
+    
+    const uri = mongoServer.getUri();
+    
     await mongoose.connect(uri, {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 10000,
       dbName: 'testdb',
     });
+    
     log.success('MongoDB connected');
   } catch (error) {
     log.error(`Failed to connect to MongoDB: ${error.message}`);
@@ -53,17 +61,37 @@ beforeAll(async () => {
 
 afterAll(async () => {
   log.info('Disconnecting from MongoDB and stopping MongoMemoryServer...');
-  await mongoose.disconnect();
-  await mongoServer.stop();
-  log.success('MongoDB disconnected and MongoMemoryServer stopped');
+  
+  try {
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.close();
+    }
+    
+    if (mongoServer) {
+      await mongoServer.stop();
+      log.success('MongoMemoryServer stopped');
+    }
+    
+    log.success('MongoDB disconnected');
+  } catch (error) {
+    log.error(`Cleanup error: ${error.message}`);
+  }
 }, 30000);
 
 beforeEach(async () => {
   log.info('Starting beforeEach...');
-  await User.deleteMany();
-  await Fine.deleteMany();
-  await Notification.deleteMany();
-  log.success('Database cleared');
+  
+  try {
+    await Promise.all([
+      User.deleteMany({}),
+      Fine.deleteMany({}),
+      Notification.deleteMany({})
+    ]);
+    log.success('Database cleared');
+  } catch (error) {
+    log.error(`BeforeEach error: ${error.message}`);
+    throw error;
+  }
 }, 30000);
 
 describe('Fine Routes Integration Tests', () => {
@@ -183,7 +211,7 @@ describe('Fine Routes Integration Tests', () => {
         .send({
           receiverId: playerId.toString(),
           reason: 'Late to training',
-          amount: -50, // Sumă invalidă
+          amount: -50, // Invalid amount
           expirationDate: '2025-06-01T12:00:00Z',
         });
 
