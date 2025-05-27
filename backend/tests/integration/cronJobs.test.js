@@ -125,8 +125,8 @@ describe('Cron Jobs Integration Tests', () => {
       await Event.create({
         title: 'Future Event',
         description: 'Event with future finish date',
-        startDate: '2025-05-27T10:00:00Z',
-        finishDate: '2025-05-27T12:00:00Z', // În viitor față de data curentă (2025-05-26)
+        startDate: '2025-07-28T10:00:00Z',
+        finishDate: '2025-07-28T12:00:00Z', 
         players: [],
         staff: [],
         createdBy: creatorId,

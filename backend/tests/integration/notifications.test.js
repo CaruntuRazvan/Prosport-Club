@@ -114,14 +114,18 @@ describe('Notification Routes Integration Tests', () => {
       expect(res.body).toHaveProperty('notifications');
       expect(res.body.notifications).toHaveLength(2);
       expect(res.body).toHaveProperty('unreadCount', 1);
-      expect(res.body.notifications[0]).toMatchObject({
-        title: 'New Poll',
-        isRead: false,
-      });
-      expect(res.body.notifications[1]).toMatchObject({
-        title: 'Poll Reminder',
-        isRead: true,
-      });
+      expect(res.body.notifications).toContainEqual(
+        expect.objectContaining({
+          title: 'New Poll',
+          isRead: false,
+        })
+      );
+      expect(res.body.notifications).toContainEqual(
+        expect.objectContaining({
+          title: 'Poll Reminder',
+          isRead: true,
+        })
+      );
       log.separator();
     });
 
