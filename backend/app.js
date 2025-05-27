@@ -9,12 +9,11 @@ const notificationsRoutes = require('./routes/notifications'); // Ruta notifică
 const healthRoutes = require('./routes/health'); // Ruta sănătate
 const injuriesRoutes = require('./routes/injuries'); // Ruta accidentări
 const announcementsRoutes = require('./routes/announcements'); // Ruta anunțuri
-const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
+//const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
 
 const cors = require('cors');
 const path = require('path');
 const app = express();
-//const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
 app.use(cors()); 
 
 // Servește fișierele statice din folderul uploads
