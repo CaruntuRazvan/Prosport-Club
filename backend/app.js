@@ -83,6 +83,6 @@ if (process.env.ENABLE_CRON === 'true') {
   cron.backupMongoDBMonthly();
   cron.cleanOldBackups();
 } else {
-  console.log('Cron jobs are disabled.');
+  console.log('Cron jobs are disabled!');
 }
 module.exports = app; 
