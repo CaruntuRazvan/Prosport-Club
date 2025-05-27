@@ -77,11 +77,10 @@ app.get('/api/quote', async (req, res) => {
 });
 
 if (process.env.ENABLE_CRON === 'true') {
-  const cron = require('./middleware/cronJobs');
-  cron.updateEventStatus();
-  cron.cleanOldNotifications();
-  cron.backupMongoDBMonthly();
-  cron.cleanOldBackups();
+  updateEventStatus();
+  cleanOldNotifications();
+  backupMongoDBMonthly();
+  cleanOldBackups();
 } else {
   console.log('Cron jobs are disabled.');
 }
