@@ -44,12 +44,11 @@ const PlayerPage = ({ userId, handleLogout }) => {
     loadPlayerInfo();
   }, [userId, role]);
 
-  
   useEffect(() => {
-  const sectionFromUrl = searchParams.get("section");
-  if (sectionFromUrl) {
-    setActiveSection(sectionFromUrl);
-  }
+    const sectionFromUrl = searchParams.get("section");
+    if (sectionFromUrl) {
+      setActiveSection(sectionFromUrl);
+    }
   }, [searchParams]);
   
   const calculateAge = (dateOfBirth) => {
@@ -129,7 +128,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
           >
             Fines
           </li>
-           <li
+          <li
             className={activeSection === 'journal' ? 'active' : ''}
             onClick={() => setActiveSection('journal')}
           >
@@ -149,147 +148,161 @@ const PlayerPage = ({ userId, handleLogout }) => {
           </div>
         </header>
 
-        {/* Secțiunea Profilul Meu */}
-        {activeSection === 'profile' && playerInfo && (
-          <section className="profile-section">
-            <div className="profile-card">
-              <div className="profile-header">
-                <div className="profile-avatar">
-                  {playerInfo.playerId?.image ? (
-                    <img src={`${process.env.REACT_APP_URL}${playerInfo.playerId.image}`} alt="Profile" className="profile-image" draggable="false"/>
-                  ) : (
-                    <span>{playerInfo.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</span>
+        <div className="section-wrapper" key={activeSection}>
+          {/* Secțiunea Profilul Meu */}
+          {activeSection === 'profile' && playerInfo && (
+            <section className="profile-section section">
+              <div className="profile-card">
+                <div className="profile-header">
+                  <div className="profile-avatar">
+                    {playerInfo.playerId?.image ? (
+                      <img src={`${process.env.REACT_APP_URL}${playerInfo.playerId.image}`} alt="Profile" className="profile-image" draggable="false"/>
+                    ) : (
+                      <span>{playerInfo.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</span>
+                    )}
+                  </div>
+                  <h3 className="profile-name">{playerInfo.playerId?.firstName} {playerInfo.playerId?.lastName}</h3>
+                  <span className="profile-role">Jucător</span>
+                </div>
+
+                <div className="profile-details">
+                  <h4>Informații personale</h4>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">Prenume:</span>
+                      <span className="info-value">{playerInfo.playerId?.firstName}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Nume:</span>
+                      <span className="info-value">{playerInfo.playerId?.lastName}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Vârsta:</span>
+                      <span className="info-value">{calculateAge(playerInfo.playerId?.dateOfBirth)} ani</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Naționalitate:</span>
+                      <span className="info-value">{playerInfo.playerId?.nationality}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Înălțime:</span>
+                      <span className="info-value">{playerInfo.playerId?.height} cm</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Greutate:</span>
+                      <span className="info-value">{playerInfo.playerId?.weight} kg</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Email:</span>
+                      <span className="info-value">{playerInfo.email}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Poziție:</span>
+                      <span className="info-value">
+                        {playerInfo.playerId?.position === 'Goalkeeper' ? 'Portar' :
+                        playerInfo.playerId?.position === 'Defender' ? 'Fundaș' :
+                        playerInfo.playerId?.position === 'Midfielder' ? 'Mijlocaș' :
+                        playerInfo.playerId?.position === 'Forward' ? 'Atacant' :
+                        playerInfo.playerId?.position || 'N/A'}
+                      </span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Număr tricou:</span>
+                      <span className="info-value">{playerInfo.playerId?.shirtNumber || 'N/A'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Număr de telefon:</span>
+                      <span className="info-value">{playerInfo.playerId?.phoneNumber || 'N/A'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Picior preferat:</span>
+                      <span className="info-value">
+                        {playerInfo.playerId?.preferredFoot === 'right' ? 'Drept' :
+                        playerInfo.playerId?.preferredFoot === 'left' ? 'Stâng' :
+                        playerInfo.playerId?.preferredFoot === 'both' ? 'Ambele' :
+                        playerInfo.playerId?.preferredFoot || 'N/A'}
+                      </span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Stare:</span>
+                      <span className="info-value">
+                        {playerInfo.playerId?.status === 'notInjured' ? 'Nu este accidentat' :
+                        playerInfo.playerId?.status === 'recovering' ? 'În recuperare' :
+                        playerInfo.playerId?.status === 'injured' ? 'Accidentat' :
+                        playerInfo.playerId?.status || 'N/A'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {playerInfo.playerId?.history && playerInfo.playerId.history.length > 0 && (
+                    <div className="profile-section">
+                      <h4>Istoric cluburi</h4>
+                      <ul className="history-list">
+                        {playerInfo.playerId.history.map((entry, index) => (
+                          <li key={index}>
+                            {entry.club} ({entry.startYear} - {entry.endYear})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
-                <h3 className="profile-name">{playerInfo.playerId?.firstName} {playerInfo.playerId?.lastName}</h3>
-                <span className="profile-role">Jucător</span>
               </div>
+            </section>
+          )}
 
-              <div className="profile-details">
-                <h4>Informații personale</h4>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="info-label">Prenume:</span>
-                    <span className="info-value">{playerInfo.playerId?.firstName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Nume:</span>
-                    <span className="info-value">{playerInfo.playerId?.lastName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Vârsta:</span>
-                    <span className="info-value">{calculateAge(playerInfo.playerId?.dateOfBirth)} ani</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Naționalitate:</span>
-                    <span className="info-value">{playerInfo.playerId?.nationality}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Înălțime:</span>
-                    <span className="info-value">{playerInfo.playerId?.height} cm</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Greutate:</span>
-                    <span className="info-value">{playerInfo.playerId?.weight} kg</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Email:</span>
-                    <span className="info-value">{playerInfo.email}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Poziție:</span>
-                    <span className="info-value">
-                      {playerInfo.playerId?.position === 'Goalkeeper' ? 'Portar' :
-                      playerInfo.playerId?.position === 'Defender' ? 'Fundaș' :
-                      playerInfo.playerId?.position === 'Midfielder' ? 'Mijlocaș' :
-                      playerInfo.playerId?.position === 'Forward' ? 'Atacant' :
-                      playerInfo.playerId?.position || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Număr tricou:</span>
-                    <span className="info-value">{playerInfo.playerId?.shirtNumber || 'N/A'}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Număr de telefon:</span>
-                    <span className="info-value">{playerInfo.playerId?.phoneNumber || 'N/A'}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Picior preferat:</span>
-                    <span className="info-value">
-                      {playerInfo.playerId?.preferredFoot === 'right' ? 'Drept' :
-                      playerInfo.playerId?.preferredFoot === 'left' ? 'Stâng' :
-                      playerInfo.playerId?.preferredFoot === 'both' ? 'Ambele' :
-                      playerInfo.playerId?.preferredFoot || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Stare:</span>
-                    <span className="info-value">
-                      {playerInfo.playerId?.status === 'notInjured' ? 'Nu este accidentat' :
-                      playerInfo.playerId?.status === 'recovering' ? 'În recuperare' :
-                      playerInfo.playerId?.status === 'injured' ? 'Accidentat' :
-                      playerInfo.playerId?.status || 'N/A'}
-                    </span>
-                  </div>
-                </div>
+          {activeSection === 'team' && (
+            <section className="team-section section">
+              <AboutTeam userRole={role}/>
+            </section>
+          )}
 
-                {playerInfo.playerId?.history && playerInfo.playerId.history.length > 0 && (
-                  <div className="profile-section">
-                    <h4>Istoric cluburi</h4>
-                    <ul className="history-list">
-                      {playerInfo.playerId.history.map((entry, index) => (
-                        <li key={index}>
-                          {entry.club} ({entry.startYear} - {entry.endYear})
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
+          {/* Secțiunea Jucatori */}
+          {activeSection === 'players' && (
+            <section className="players-section section">
+              <PlayersSection
+                onPlayerClick={handleOpenProfile}
+                currentUserId={userId}
+              />
+            </section>
+          )}
+          
+          {activeSection === 'staff' && (
+            <section className="staff-section section">
+              <StaffSection
+                onStaffClick={handleOpenProfile}
+                currentUserId={userId}
+              />
+            </section>
+          )}
 
-        {activeSection === 'team' && <AboutTeam userRole={role}/>}
+          {/* Secțiunea Calendar */}
+          {activeSection === 'calendar' && (
+            <section className="calendar-section section">
+              <EventCalendar userId={userId} eventColor={eventColor} />
+            </section>
+          )}
 
-        {/* Secțiunea Jucatori */}
-        {activeSection === 'players' && (
-          <PlayersSection
-            onPlayerClick={handleOpenProfile}
-            currentUserId={userId}
-          />
-        )}
-        
-        {activeSection === 'staff' && (
-          <StaffSection
-            onStaffClick={handleOpenProfile}
-            currentUserId={userId}
-          />
-        )}
+          {/* Secțiunea Sondaje */}
+          {activeSection === 'polls' && (
+            <section className="polls-section section">
+              <PollsList userId={userId} userRole={role} />
+            </section>
+          )}  
 
-        {/* Secțiunea Calendar */}
-        {activeSection === 'calendar' && (
-          <section className="calendar-section">
-            <EventCalendar userId={userId} eventColor={eventColor} />
-          </section>
-        )}
-
-        {/* Secțiunea Sondaje */}
-       {activeSection === 'polls' && (
-        <section className="polls-section">
-          <PollsList userId={userId} userRole={role} />
-        </section>
-        )}  
-
-         {activeSection === 'fines' && (
-        <section className="fines-section">
-          <FineList userId={userId} userRole={role} />
-        </section>
-        )}
-        
+          {activeSection === 'fines' && (
+            <section className="fines-section section">
+              <FineList userId={userId} userRole={role} setActiveSection={setActiveSection}/>
+            </section>
+          )}
+          
           {/* Secțiunea Penalizări */}
-        {activeSection === 'journal' && <JournalSection userId={userId} />}
+          {activeSection === 'journal' && (
+            <section className="journal-section section">
+              <JournalSection userId={userId} />
+            </section>
+          )}
+        </div>
         
         {/* Modal pentru profilul jucătorului selectat */}
         {selectedUser && (

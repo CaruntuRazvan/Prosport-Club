@@ -421,7 +421,7 @@ const AboutTeam = ({ userRole }) => {
         )}
 
         {/* Fines Link Section */}
-        <div className="fines-link-section">
+        <div id="fines-link-section" className="fines-link-section">
           <h4>Rules and Penalties</h4>
           <p>Check the list of penalties and fees applicable to team members.</p>
           <a

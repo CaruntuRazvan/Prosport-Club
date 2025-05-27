@@ -10,7 +10,8 @@ const EditUserForm = ({ user, onEditUser, onClose }) => {
   // Stări pentru câmpurile comune (Player, Manager, Staff)
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState(''); // Stocăm data în format ISO (yyyy-mm-dd)
+  const [dateOfBirthDisplay, setDateOfBirthDisplay] = useState(''); // Stocăm data afișată în format dd/mm/yyyy
   const [nationality, setNationality] = useState('');
   const [history, setHistory] = useState([{ club: '', startYear: '', endYear: '' }]);
   const [image, setImage] = useState(null);
@@ -28,13 +29,13 @@ const EditUserForm = ({ user, onEditUser, onClose }) => {
   const [staffRole, setStaffRole] = useState('');
   const [certifications, setCertifications] = useState([{ name: '', year: '' }]);
 
-  const formRef = useRef(null); // Referință către formular
+  const formRef = useRef(null);
 
   // Detectăm clic-urile în afara formularului
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
-        onClose(); // Închide formularul
+        onClose();
       }
     };
 
@@ -49,7 +50,12 @@ const EditUserForm = ({ user, onEditUser, onClose }) => {
     if (user.role === 'player' && user.playerId) {
       setFirstName(user.playerId.firstName || '');
       setLastName(user.playerId.lastName || '');
-      setDateOfBirth(user.playerId.dateOfBirth ? new Date(user.playerId.dateOfBirth).toISOString().split('T')[0] : '');
+      const dob = user.playerId.dateOfBirth ? new Date(user.playerId.dateOfBirth) : null;
+      if (dob) {
+        const formattedDate = `${dob.getDate().toString().padStart(2, '0')}/${(dob.getMonth() + 1).toString().padStart(2, '0')}/${dob.getFullYear()}`;
+        setDateOfBirthDisplay(formattedDate);
+        setDateOfBirth(user.playerId.dateOfBirth.split('T')[0]);
+      }
       setNationality(user.playerId.nationality || '');
       setHeight(user.playerId.height || '');
       setWeight(user.playerId.weight || '');
@@ -62,19 +68,52 @@ const EditUserForm = ({ user, onEditUser, onClose }) => {
     } else if (user.role === 'manager' && user.managerId) {
       setFirstName(user.managerId.firstName || '');
       setLastName(user.managerId.lastName || '');
-      setDateOfBirth(user.managerId.dateOfBirth ? new Date(user.managerId.dateOfBirth).toISOString().split('T')[0] : '');
+      const dob = user.managerId.dateOfBirth ? new Date(user.managerId.dateOfBirth) : null;
+      if (dob) {
+        const formattedDate = `${dob.getDate().toString().padStart(2, '0')}/${(dob.getMonth() + 1).toString().padStart(2, '0')}/${dob.getFullYear()}`;
+        setDateOfBirthDisplay(formattedDate);
+        setDateOfBirth(user.managerId.dateOfBirth.split('T')[0]);
+      }
       setNationality(user.managerId.nationality || '');
       setHistory(user.managerId.history && user.managerId.history.length > 0 ? user.managerId.history : [{ club: '', startYear: '', endYear: '' }]);
     } else if (user.role === 'staff' && user.staffId) {
       setFirstName(user.staffId.firstName || '');
       setLastName(user.staffId.lastName || '');
-      setDateOfBirth(user.staffId.dateOfBirth ? new Date(user.staffId.dateOfBirth).toISOString().split('T')[0] : '');
+      const dob = user.staffId.dateOfBirth ? new Date(user.staffId.dateOfBirth) : null;
+      if (dob) {
+        const formattedDate = `${dob.getDate().toString().padStart(2, '0')}/${(dob.getMonth() + 1).toString().padStart(2, '0')}/${dob.getFullYear()}`;
+        setDateOfBirthDisplay(formattedDate);
+        setDateOfBirth(user.staffId.dateOfBirth.split('T')[0]);
+      }
       setNationality(user.staffId.nationality || '');
       setStaffRole(user.staffId.role || '');
       setHistory(user.staffId.history && user.staffId.history.length > 0 ? user.staffId.history : [{ club: '', startYear: '', endYear: '' }]);
       setCertifications(user.staffId.certifications && user.staffId.certifications.length > 0 ? user.staffId.certifications : [{ name: '', year: '' }]);
     }
   }, [user]);
+
+  // Gestionăm schimbarea datei în format dd/mm/yyyy
+  const handleDateOfBirthChange = (e) => {
+    const value = e.target.value;
+    setDateOfBirthDisplay(value);
+
+    // Validăm formatul și transformăm în ISO (yyyy-mm-dd)
+    if (value.match(/^\d{2}\/\d{2}\/\d{4}$/)) { // Verificăm formatul dd/mm/yyyy
+      const [day, month, year] = value.split('/').map(Number);
+      if (
+        day >= 1 && day <= 31 &&
+        month >= 1 && month <= 12 &&
+        year >= 1900 && year <= 9999
+      ) {
+        const isoDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        setDateOfBirth(isoDate);
+      } else {
+        setDateOfBirth('');
+      }
+    } else {
+      setDateOfBirth('');
+    }
+  };
 
   const handleAddHistory = () => {
     setHistory([...history, { club: '', startYear: '', endYear: '' }]);
@@ -159,7 +198,7 @@ const EditUserForm = ({ user, onEditUser, onClose }) => {
 
     try {
       await onEditUser(user._id, userData);
-      onClose(); // Închide pop-up-ul după submit
+      onClose();
     } catch (error) {
       alert(error.message || 'Eroare la actualizarea utilizatorului!');
     }
@@ -212,8 +251,14 @@ const EditUserForm = ({ user, onEditUser, onClose }) => {
                 <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
               </div>
               <div>
-                <label>Data nașterii:</label>
-                <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                <label>Data nașterii (dd/mm/yyyy):</label>
+                <input
+                  type="text"
+                  value={dateOfBirthDisplay}
+                  onChange={handleDateOfBirthChange}
+                  placeholder="dd/mm/yyyy"
+                  maxLength="10"
+                />
               </div>
               <div>
                 <label>Naționalitate:</label>

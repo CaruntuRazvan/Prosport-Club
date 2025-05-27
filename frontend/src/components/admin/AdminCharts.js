@@ -5,36 +5,53 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const AdminCharts = ({ totalAdmins, totalPlayers, totalManagers, totalStaff, newPlayersLastMonth, averageAge, nationalities }) => {
-  // Date pentru graficul Bar (distribuția utilizatorilor pe categorii)
+  // Data for Bar Chart (User Distribution by Category)
   const chartData = {
-    labels: [`Admini (${totalAdmins})`, `Jucători (${totalPlayers})`, `Manageri (${totalManagers})`, `Staff (${totalStaff})`],
+    labels: [`Admins (${totalAdmins})`, `Players (${totalPlayers})`, `Managers (${totalManagers})`, `Staff (${totalStaff})`],
     datasets: [
-      { label: `Număr admini`, data: [totalAdmins, 0, 0, 0], backgroundColor: '#FF5733', borderColor: '#FF5733', borderWidth: 1 },
-      { label: `Număr jucători`, data: [0, totalPlayers, 0, 0], backgroundColor: '#33FF57', borderColor: '#33FF57', borderWidth: 1 },
-      { label: `Număr manageri`, data: [0, 0, totalManagers, 0], backgroundColor: '#3357FF', borderColor: '#3357FF', borderWidth: 1 },
-      { label: `Număr staff`, data: [0, 0, 0, totalStaff], backgroundColor: '#FFD700', borderColor: '#FFD700', borderWidth: 1 },
+      { label: `Number of Admins`, data: [totalAdmins, 0, 0, 0], backgroundColor: '#FF5733', borderColor: '#FF5733', borderWidth: 1 },
+      { label: `Number of Players`, data: [0, totalPlayers, 0, 0], backgroundColor: '#33FF57', borderColor: '#33FF57', borderWidth: 1 },
+      { label: `Number of Managers`, data: [0, 0, totalManagers, 0], backgroundColor: '#3357FF', borderColor: '#3357FF', borderWidth: 1 },
+      { label: `Number of Staff`, data: [0, 0, 0, totalStaff], backgroundColor: '#FFD700', borderColor: '#FFD700', borderWidth: 1 },
     ],
   };
 
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    scales: { y: { ticks: { stepSize: 1 }, min: 0, max: Math.max(totalAdmins, totalPlayers, totalManagers, totalStaff) + 1 }, x: { ticks: { font: { size: 14 } } } },
-    plugins: { legend: { display: true, position: 'top', labels: { font: { size: 14 }, boxWidth: 20 } }, title: { display: true, text: 'Număr utilizatori pe categorii', font: { size: 18 } } },
+    scales: { 
+      y: { ticks: { stepSize: 1 }, min: 0, max: Math.max(totalAdmins, totalPlayers, totalManagers, totalStaff) + 1 }, 
+      x: { ticks: { font: { size: 14 } } },
+    },
+    plugins: { 
+      legend: { display: true, position: 'top', labels: { font: { size: 14 }, boxWidth: 20 } }, 
+      title: { display: true, text: 'Number of Users by Category', font: { size: 18 } },
+    },
   };
 
-  // Date pentru graficul Pie (distribuția naționalităților)
+  // Data for Pie Chart (Nationality Distribution)
   const nationalityLabels = Object.keys(nationalities);
   const nationalityData = Object.values(nationalities);
   const nationalityChartData = {
     labels: nationalityLabels,
-    datasets: [{ label: 'Naționalități', data: nationalityData, backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF00FF', '#00CED1'], borderColor: ['#FFFFFF'], borderWidth: 1 }],
+    datasets: [
+      { 
+        label: 'Nationalities', 
+        data: nationalityData, 
+        backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FFD700', '#FF00FF', '#00CED1'], 
+        borderColor: ['#FFFFFF'], 
+        borderWidth: 1 
+      }
+    ],
   };
 
   const nationalityChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Distribuția naționalităților jucătorilor', font: { size: 18 } } },
+    plugins: { 
+      legend: { position: 'top' }, 
+      title: { display: true, text: 'Nationality Distribution of Players', font: { size: 18 } },
+    },
   };
 
   return (
@@ -49,8 +66,6 @@ const AdminCharts = ({ totalAdmins, totalPlayers, totalManagers, totalStaff, new
           <Pie data={nationalityChartData} options={nationalityChartOptions} />
         </div>
       </div>
-      {/* Placeholder pentru alte grafice pe care le poți adăuga */}
-      {/* Ex. <div className="chart-item"><Line data={newChartData} options={newChartOptions} /></div> */}
     </div>
   );
 };

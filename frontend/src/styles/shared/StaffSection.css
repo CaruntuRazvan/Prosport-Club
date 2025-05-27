@@ -104,3 +104,25 @@
     margin-top: 5px;
     /* Spațiu între nume și rol */
 }
+.no-managers-message {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+}
+
+/* Stiluri pentru mesajul "Nu există membri staff disponibili" */
+.no-staff-message {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #ddd; 
+}

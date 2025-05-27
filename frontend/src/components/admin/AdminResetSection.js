@@ -1,11 +1,11 @@
-// src/components/admin/AdminResetSection.js
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { fetchUsers } from '../../services/userService';
 import { resetAllFines, resetUserFines } from '../../services/fineService';
 import { resetAllPolls, resetUserPolls } from '../../services/pollService';
 import { resetAllFeedbacks, resetUserFeedbacks, resetAllFeedbackSummaries, resetUserFeedbackSummaries } from '../../services/feedbackService';
-import { useConfirm } from '../../context/ConfirmContext'; // Importăm useConfirm
+import { resetAllEvents, resetUserEvents } from '../../services/eventService'; // Importăm noile funcții
+import { useConfirm } from '../../context/ConfirmContext';
 import '../../styles/admin/AdminResetSection.css';
 
 // Funcție reutilizabilă pentru toast-uri
@@ -31,9 +31,9 @@ const showToast = (message, type = 'success') => {
 
 const AdminResetSection = () => {
   const [users, setUsers] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(''); // O singură stare pentru utilizator
-  const [isLoading, setIsLoading] = useState(false); // Stare pentru încărcare
-  const { showConfirm } = useConfirm(); // Folosim useConfirm
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { showConfirm } = useConfirm();
 
   // Încarcă lista utilizatorilor
   useEffect(() => {
@@ -192,6 +192,42 @@ const AdminResetSection = () => {
     });
   };
 
+  // Șterge toate evenimentele
+  const handleResetAllEvents = async () => {
+    showConfirm('Ești sigur că vrei să ștergi toate evenimentele din baza de date? Această acțiune este ireversibilă!', async () => {
+      setIsLoading(true);
+      try {
+        await resetAllEvents();
+        showToast('Toate evenimentele și notificările asociate au fost șterse cu succes!');
+      } catch (error) {
+        showToast('Eroare la ștergerea evenimentelor: ' + error.message, 'error');
+      } finally {
+        setIsLoading(false);
+      }
+    });
+  };
+
+  // Șterge evenimentele asociate unui utilizator selectat
+  const handleResetUserEvents = async () => {
+    if (!selectedUserId) {
+      showToast('Selectează un utilizator pentru resetare!', 'error');
+      return;
+    }
+
+    showConfirm('Ești sigur că vrei să ștergi toate evenimentele asociate acestui utilizator? Această acțiune este ireversibilă!', async () => {
+      setIsLoading(true);
+      try {
+        await resetUserEvents(selectedUserId);
+        showToast('Evenimentele și notificările utilizatorului au fost șterse cu succes!');
+        setSelectedUserId('');
+      } catch (error) {
+        showToast('Eroare la ștergerea evenimentelor utilizatorului: ' + error.message, 'error');
+      } finally {
+        setIsLoading(false);
+      }
+    });
+  };
+
   return (
     <section className="admin-reset-section">
       <h3 className="reset-section-title">Resetare Date</h3>
@@ -199,6 +235,16 @@ const AdminResetSection = () => {
         {/* Coloana stângă: Reset total */}
         <div className="reset-column reset-all-column">
           <h4>Resetare Totală</h4>
+          <div className="reset-item">
+            <p>Șterge toate evenimentele</p>
+            <button
+              className="reset-btn"
+              onClick={handleResetAllEvents}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Se procesează...' : 'Șterge Evenimentele'}
+            </button>
+          </div>
           <div className="reset-item">
             <p>Șterge toate amenzile</p>
             <button
@@ -244,6 +290,28 @@ const AdminResetSection = () => {
         {/* Coloana dreaptă: Reset per utilizator */}
         <div className="reset-column reset-user-column">
           <h4>Resetare per Utilizator</h4>
+          <div className="reset-item">
+            <p>Evenimentele utilizatorului</p>
+            <select
+              value={selectedUserId}
+              onChange={(e) => setSelectedUserId(e.target.value)}
+              className="reset-user-dropdown"
+            >
+              <option value="">Selectează un utilizator</option>
+              {users.map(user => (
+                <option key={user._id} value={user._id}>
+                  {user.name} ({user.role})
+                </option>
+              ))}
+            </select>
+            <button
+              className="reset-btn"
+              onClick={handleResetUserEvents}
+              disabled={!selectedUserId || isLoading}
+            >
+              {isLoading ? 'Se procesează...' : 'Șterge Evenimentele'}
+            </button>
+          </div>
           <div className="reset-item">
             <p>Amenzile utilizatorului</p>
             <select

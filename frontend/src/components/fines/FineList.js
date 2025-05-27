@@ -5,12 +5,13 @@ import { useConfirm } from '../../context/ConfirmContext';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/fines/FineList.css';
 
-const FineList = ({ userId, userRole, refresh }) => {
+const FineList = ({ userId, userRole, refresh, setActiveSection }) => { // Adăugăm setActiveSection ca prop
   const [fines, setFines] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const [paidFilter, setPaidFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const { showConfirm } = useConfirm();
+
   useEffect(() => {
     fetchFinesData();
   }, [refresh]);
@@ -25,7 +26,7 @@ const FineList = ({ userId, userRole, refresh }) => {
       console.log('Fines data:', filteredData);
       setFines(filteredData);
     } catch (error) {
-      toast.error(error.message || 'Eroare la preluarea penalizărilor.', {
+      toast.error(error.message || 'Error fetching fines.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -51,7 +52,7 @@ const FineList = ({ userId, userRole, refresh }) => {
       link.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      toast.error(error.message || 'Eroare la exportarea amenzilor în CSV.', {
+      toast.error(error.message || 'Error exporting fines to CSV.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -67,10 +68,10 @@ const FineList = ({ userId, userRole, refresh }) => {
   };
 
   const handleDeleteFine = async (fineId) => {
-    showConfirm('Ești sigur că vrei să ștergi această penalizare?', async () => {
+    showConfirm('Are you sure you want to delete this fine?', async () => {
       try {
         await deleteFine(fineId);
-        toast.success('Penalizare ștearsă cu succes!', {
+        toast.success('Fine deleted successfully!', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -84,7 +85,7 @@ const FineList = ({ userId, userRole, refresh }) => {
         });
         fetchFinesData();
       } catch (error) {
-        toast.error(error.message || 'Eroare la ștergerea penalizării.', {
+        toast.error(error.message || 'Error deleting fine.', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -103,7 +104,7 @@ const FineList = ({ userId, userRole, refresh }) => {
   const handleRequestPaymentConfirmation = async (fineId) => {
     try {
       await requestPaymentConfirmation(fineId);
-      toast.success('Solicitare de plată trimisă cu succes!', {
+      toast.success('Payment request sent successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -117,7 +118,7 @@ const FineList = ({ userId, userRole, refresh }) => {
       });
       fetchFinesData();
     } catch (error) {
-      toast.error(error.message || 'Eroare la solicitarea confirmării plății.', {
+      toast.error(error.message || 'Error requesting payment confirmation.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -135,7 +136,7 @@ const FineList = ({ userId, userRole, refresh }) => {
   const handleApprovePayment = async (fineId) => {
     try {
       await updateFineStatus(fineId, true);
-      toast.success('Plata aprobată cu succes!', {
+      toast.success('Payment approved successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -149,7 +150,7 @@ const FineList = ({ userId, userRole, refresh }) => {
       });
       fetchFinesData();
     } catch (error) {
-      toast.error(error.message || 'Eroare la aprobarea plății.', {
+      toast.error(error.message || 'Error approving payment.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -167,7 +168,7 @@ const FineList = ({ userId, userRole, refresh }) => {
   const handleRejectPayment = async (fineId) => {
     try {
       await rejectPaymentRequest(fineId);
-      toast.success('Solicitarea de plată a fost respinsă!', {
+      toast.success('Payment request rejected!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -181,7 +182,7 @@ const FineList = ({ userId, userRole, refresh }) => {
       });
       fetchFinesData();
     } catch (error) {
-      toast.error(error.message || 'Eroare la respingerea solicitării de plată.', {
+      toast.error(error.message || 'Error rejecting payment request.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -194,6 +195,16 @@ const FineList = ({ userId, userRole, refresh }) => {
         },
       });
     }
+  };
+
+  const handleGoToFinesTariffs = () => {
+    setActiveSection('team'); // Setăm secțiunea activă la "team"
+    setTimeout(() => {
+      const finesSection = document.getElementById('fines-link-section');
+      if (finesSection) {
+        finesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 450); 
   };
 
   const filteredFines = fines.filter((fine) => {
@@ -215,7 +226,6 @@ const FineList = ({ userId, userRole, refresh }) => {
     return matchesActive && matchesPaid && matchesSearch;
   });
 
-  // Calculează statisticile
   const totalFines = fines.length;
   const activeFines = fines.filter(fine => fine.isActive).length;
   const paidFines = fines.filter(fine => fine.isPaid).length;
@@ -238,25 +248,25 @@ const FineList = ({ userId, userRole, refresh }) => {
         <div className="fines-stats-line">
           <span className="fines-stat-item total">Total: {totalFines}</span>
           <span className="fines-stat-item active">Active: {activeFines}</span>
-          <span className="fines-stat-item paid">Plătite: {paidFines}</span>
+          <span className="fines-stat-item paid">Paid: {paidFines}</span>
         </div>
-     </div>
+      </div>
 
       <div className="filters">
         <label>
-          Stare:
+          Status:
           <select value={activeFilter} onChange={(e) => setActiveFilter(e.target.value)}>
-            <option value="all">Toate</option>
+            <option value="all">All</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
         </label>
         <label>
-          Plată:
+          Payment:
           <select value={paidFilter} onChange={(e) => setPaidFilter(e.target.value)}>
-            <option value="all">Toate</option>
-            <option value="paid">Plătite</option>
-            <option value="unpaid">Neplătite</option>
+            <option value="all">All</option>
+            <option value="paid">Paid</option>
+            <option value="unpaid">Unpaid</option>
           </select>
         </label>
         {(userRole === 'manager' || userRole === 'staff') && (
@@ -264,25 +274,30 @@ const FineList = ({ userId, userRole, refresh }) => {
             <div className="search-container">
               <input
                 type="text"
-                placeholder="Caută după nume jucător..."
+                placeholder="Search by player name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
               />
             </div>
             <button onClick={handleExportFines} className="export-csv-btn">
-              Exportă CSV
+              Export to CSV
             </button>
           </div>
+        )}
+        {userRole === 'player' && (
+          <button onClick={handleGoToFinesTariffs} className="go-to-fines-tariffs-btn">
+            Go to Fines Tariffs
+          </button>
         )}
       </div>
 
       <div className="fines-list">
         {fines.length === 0 ? (
-          <p className="no-fines-message">Nu există penalizări disponibile.</p>
+          <p className="no-fines-message">No fines available.</p>
         ) : filteredFines.length === 0 ? (
           <p className="no-fines-message">
-            {searchQuery ? `Nici o penalizare găsită pentru „${searchQuery}”.` : 'Nu există penalizări disponibile pentru filtrele selectate.'}
+            {searchQuery ? `No fines found for "${searchQuery}".` : 'No fines available for the selected filters.'}
           </p>
         ) : (
           filteredFines.map((fine) => {
@@ -293,12 +308,12 @@ const FineList = ({ userId, userRole, refresh }) => {
                 {userRole === 'player' ? (
                   <>
                     <h4>{fine.reason}</h4>
-                    <p>Suma: {fine.amount} EUR</p>
-                    <p>Stare: {fine.isPaid ? 'Plătită' : 'Neplătită'}</p>
+                    <p>Amount: {fine.amount} EUR</p>
+                    <p>Status: {fine.isPaid ? 'Paid' : 'Unpaid'}</p>
                     {fine.expirationDate && (
                       <p>
-                        Expiră la:{' '}
-                        {new Date(fine.expirationDate).toLocaleString('ro-RO', {
+                        Expires on:{' '}
+                        {new Date(fine.expirationDate).toLocaleString('en-GB', {
                           day: '2-digit',
                           month: '2-digit',
                           year: 'numeric',
@@ -307,38 +322,38 @@ const FineList = ({ userId, userRole, refresh }) => {
                         })}
                       </p>
                     )}
-                    <p>De la: {fine.creatorId?.name || 'Utilizator necunoscut'}</p>
+                    <p>From: {fine.creatorId?.name || 'Unknown User'}</p>
                     {fine.receiverId === userId && !fine.isPaid && !fine.paymentRequested && !isExpired && (
                       <button
                         onClick={() => handleRequestPaymentConfirmation(fine._id)}
                         className="request-payment-btn"
                       >
-                        Am plătit
+                        I Paid
                       </button>
                     )}
                     {fine.paymentRequested && !fine.isPaid && (
-                      <p className="awaiting-confirmation">Așteaptă confirmarea antrenorului...</p>
+                      <p className="awaiting-confirmation">Awaiting coach confirmation...</p>
                     )}
                     {!fine.paymentRequested && !fine.isPaid && fine.updatedAt > fine.createdAt && (
-                      <p className="fine-rejected">Solicitarea de plată a fost respinsă.</p>
+                      <p className="fine-rejected">Payment request rejected.</p>
                     )}
-                    {fine.isPaid && <p className="fine-paid">Amenda a fost plătită.</p>}
+                    {fine.isPaid && <p className="fine-paid">Fine has been paid.</p>}
                     {isExpired && !fine.isPaid && (
                       <p className="fine-expired">
-                        A expirat perioada de plată pentru această amendă. Nu mai puteți plăti.
+                        The payment period for this fine has expired. You can no longer pay.
                       </p>
                     )}
                   </>
                 ) : (
                   <>
                     <h4>{fine.reason}</h4>
-                    <p>Jucător: {fine.receiverId?.name || 'Necunoscut'}</p>
-                    <p>Suma: {fine.amount} EUR</p>
-                    <p>Stare: {fine.isPaid ? 'Plătită' : 'Neplătită'}</p>
+                    <p>Player: {fine.receiverId?.name || 'Unknown'}</p>
+                    <p>Amount: {fine.amount} EUR</p>
+                    <p>Status: {fine.isPaid ? 'Paid' : 'Unpaid'}</p>
                     {fine.expirationDate && (
                       <p>
-                        Expiră la:{' '}
-                        {new Date(fine.expirationDate).toLocaleString('ro-RO', {
+                        Expires on:{' '}
+                        {new Date(fine.expirationDate).toLocaleString('en-GB', {
                           day: '2-digit',
                           month: '2-digit',
                           year: 'numeric',
@@ -347,13 +362,13 @@ const FineList = ({ userId, userRole, refresh }) => {
                         })}
                       </p>
                     )}
-                    <p>Creat de: {fine.creatorId?.name || 'Utilizator necunoscut'}</p>
+                    <p>Created by: {fine.creatorId?.name || 'Unknown User'}</p>
                     {fine.paymentRequested && !fine.isPaid && (
-                      <p className="payment-requested">Jucătorul a solicitat confirmarea plății.</p>
+                      <p className="payment-requested">Player requested payment confirmation.</p>
                     )}
-                    {fine.isPaid && <p className="fine-paid">Amenda a fost plătită.</p>}
+                    {fine.isPaid && <p className="fine-paid">Fine has been paid.</p>}
                     {isExpired && !fine.isPaid && (
-                      <p className="fine-not-paid">Amenda nu a fost plătită.</p>
+                      <p className="fine-not-paid">Fine has not been paid.</p>
                     )}
                     {(userRole === 'manager' || userRole === 'staff') && fine.creatorId._id === userId && (
                       <>
@@ -363,20 +378,20 @@ const FineList = ({ userId, userRole, refresh }) => {
                               onClick={() => handleApprovePayment(fine._id)}
                               className="approve-payment-btn"
                             >
-                              Aprobă plată
+                              Approve Payment
                             </button>
                             <button
                               onClick={() => handleRejectPayment(fine._id)}
                               className="reject-payment-btn"
                             >
-                              Respinge plată
+                              Reject Payment
                             </button>
                           </div>
                         )}
                         <button
                           onClick={() => handleDeleteFine(fine._id)}
                           className="delete-fine-btn"
-                          title="Șterge penalizare"
+                          title="Delete Fine"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

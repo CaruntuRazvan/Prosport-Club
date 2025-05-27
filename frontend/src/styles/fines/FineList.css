@@ -298,7 +298,19 @@
     font-weight: 550;
     margin-top: 10px;
 }
+.go-to-fines-tariffs-btn {
+    padding: 8px 16px;
+    background-color: #CD7F32;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
 
+.go-to-fines-tariffs-btn:hover {
+    background-color: #B06A27; 
+}
 @media (max-width: 768px) {
     .fines-section {
         padding: 10px 40px 10px 10px;

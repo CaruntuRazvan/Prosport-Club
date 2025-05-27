@@ -1,4 +1,3 @@
-// components/StaffSection.js
 import React, { useState, useEffect } from 'react';
 import { fetchStaff, fetchManagers } from '../../services/userService';
 import '../../styles/shared/StaffSection.css';
@@ -32,89 +31,93 @@ const StaffSection = ({ onStaffClick, currentUserId }) => {
   }, []);
 
   const renderManagersList = () => (
-    <div className="staff-category"> {/* Adăugăm containerul staff-category */}
-      <h2>Manageri</h2>
-      <div className="staff-list">
-        {managers.map(manager => (
-          <div
-            key={manager._id}
-            className={`staff-card ${manager._id === currentUserId ? 'current-user' : ''}`}
-          >
-            <div className="staff-image-wrapper">
-              <img
-                src={
-                  manager.managerId?.image
-                    ?`${process.env.REACT_APP_URL}${manager.managerId.image}`
-                    : '/images/default-user.jpg'
-                }
-                alt={`${manager.managerId?.firstName} ${manager.managerId?.lastName}`}
-                className="staff-image"
-                draggable="false"
-                onClick={() => onStaffClick && onStaffClick(manager)}
-                onError={(e) => {
-                  e.target.src = '/images/default-user.jpg';
-                  console.log(`Eroare la încărcarea imaginii pentru ${manager.managerId?.firstName} ${manager.managerId?.lastName}`);
-                }}
-              />
+    managers.length > 0 ? (
+      <div className="staff-category">
+        <h2>Manageri</h2>
+        <div className="staff-list">
+          {managers.map(manager => (
+            <div
+              key={manager._id}
+              className={`staff-card ${manager._id === currentUserId ? 'current-user' : ''}`}
+            >
+              <div className="staff-image-wrapper">
+                <img
+                  src={
+                    manager.managerId?.image
+                      ? `${process.env.REACT_APP_URL}${manager.managerId.image}`
+                      : '/images/default-user.jpg'
+                  }
+                  alt={`${manager.managerId?.firstName} ${manager.managerId?.lastName}`}
+                  className="staff-image"
+                  draggable="false"
+                  onClick={() => onStaffClick && onStaffClick(manager)}
+                  onError={(e) => {
+                    e.target.src = '/images/default-user.jpg';
+                    console.log(`Eroare la încărcarea imaginii pentru ${manager.managerId?.firstName} ${manager.managerId?.lastName}`);
+                  }}
+                />
+              </div>
+              <div className="staff-info">
+                <span className="staff-name">{`${manager.managerId?.firstName} ${manager.managerId?.lastName}`.toUpperCase()}</span>
+                <span className="staff-role">Manager</span>
+              </div>
             </div>
-            <div className="staff-info">
-              <span className="staff-name">{`${manager.managerId?.firstName} ${manager.managerId?.lastName}`.toUpperCase()}</span>
-              <span className="staff-role">Manager</span>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    ) : (
+      <div className="no-managers-message">Nu există manageri disponibili.</div>
+    )
   );
 
   const renderStaffList = () => (
-    <div className="staff-category"> 
-      <h2>Staff</h2>
-      <div className="staff-list">
-        {staffMembers.map(staff => (
-          <div
-            key={staff._id}
-            className={`staff-card ${staff._id === currentUserId ? 'current-user' : ''}`}
-          >
-            <div className="staff-image-wrapper">
-              <img
-                src={
-                  staff.staffId?.image
-                    ? `${process.env.REACT_APP_URL}${staff.staffId.image}`
-                    : '/images/default-user.jpg'
-                }
-                alt={`${staff.staffId?.firstName} ${staff.staffId?.lastName}`}
-                className="staff-image"
-                draggable="false"
-                onClick={() => onStaffClick && onStaffClick(staff)}
-                loading="lazy"
-                onError={(e) => {
-                  e.target.src = '/images/default-user.jpg';
-                  console.log(`Eroare la încărcarea imaginii pentru ${staff.staffId?.firstName} ${staff.staffId?.lastName}`);
-                }}
-              />
+    staffMembers.length > 0 ? (
+      <div className="staff-category">
+        <h2>Staff</h2>
+        <div className="staff-list">
+          {staffMembers.map(staff => (
+            <div
+              key={staff._id}
+              className={`staff-card ${staff._id === currentUserId ? 'current-user' : ''}`}
+            >
+              <div className="staff-image-wrapper">
+                <img
+                  src={
+                    staff.staffId?.image
+                      ? `${process.env.REACT_APP_URL}${staff.staffId.image}`
+                      : '/images/default-user.jpg'
+                  }
+                  alt={`${staff.staffId?.firstName} ${staff.staffId?.lastName}`}
+                  className="staff-image"
+                  draggable="false"
+                  onClick={() => onStaffClick && onStaffClick(staff)}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.src = '/images/default-user.jpg';
+                    console.log(`Eroare la încărcarea imaginii pentru ${staff.staffId?.firstName} ${staff.staffId?.lastName}`);
+                  }}
+                />
+              </div>
+              <div className="staff-info">
+                <span className="staff-name">{`${staff.staffId?.firstName} ${staff.staffId?.lastName}`.toUpperCase()}</span>
+                <span className="staff-role">{staff.staffId?.role || 'N/A'}</span>
+              </div>
             </div>
-            <div className="staff-info">
-              <span className="staff-name">{`${staff.staffId?.firstName} ${staff.staffId?.lastName}`.toUpperCase()}</span>
-              <span className="staff-role">{staff.staffId?.role || 'N/A'}</span>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    ) : (
+      <div className="no-staff-message">Nu există membri staff disponibili.</div>
+    )
   );
 
-  if (loading) return <div>Se încarcă datele...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="loading-message">Se încarcă datele...</div>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="staff-section">
-      {managers.length > 0 && renderManagersList()}
-      {staffMembers.length > 0 ? (
-        renderStaffList()
-      ) : (
-        <div>Nu există membri staff disponibili.</div>
-      )}
+      {renderManagersList()}
+      {renderStaffList()}
     </div>
   );
 };

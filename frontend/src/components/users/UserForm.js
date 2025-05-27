@@ -9,7 +9,8 @@ const UserForm = ({ onAddUser, onClose }) => {
   // Câmpuri comune (pentru Player, Manager, Staff)
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState(''); // Stocăm data în format ISO (yyyy-mm-dd)
+  const [dateOfBirthDisplay, setDateOfBirthDisplay] = useState(''); // Stocăm data afișată în format dd/mm/yyyy
   const [nationality, setNationality] = useState('');
   const [history, setHistory] = useState([{ club: '', startYear: '', endYear: '' }]);
   const [image, setImage] = useState(null);
@@ -27,13 +28,13 @@ const UserForm = ({ onAddUser, onClose }) => {
   const [staffRole, setStaffRole] = useState('');
   const [certifications, setCertifications] = useState([{ name: '', year: '' }]);
 
-  const formRef = useRef(null); // Referință către formular
+  const formRef = useRef(null);
 
   // Detectăm clic-urile în afara formularului
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
-        onClose(); // Închide formularul
+        onClose();
       }
     };
 
@@ -42,6 +43,29 @@ const UserForm = ({ onAddUser, onClose }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [onClose]);
+
+  // Gestionăm schimbarea datei în format dd/mm/yyyy
+  const handleDateOfBirthChange = (e) => {
+    const value = e.target.value;
+    setDateOfBirthDisplay(value);
+
+    // Validăm formatul și transformăm în ISO (yyyy-mm-dd)
+    if (value.match(/^\d{2}\/\d{2}\/\d{4}$/)) { // Verificăm formatul dd/mm/yyyy
+      const [day, month, year] = value.split('/').map(Number);
+      if (
+        day >= 1 && day <= 31 &&
+        month >= 1 && month <= 12 &&
+        year >= 1900 && year <= 9999
+      ) {
+        const isoDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        setDateOfBirth(isoDate);
+      } else {
+        setDateOfBirth('');
+      }
+    } else {
+      setDateOfBirth('');
+    }
+  };
 
   const handleAddHistory = () => {
     setHistory([...history, { club: '', startYear: '', endYear: '' }]);
@@ -132,6 +156,7 @@ const UserForm = ({ onAddUser, onClose }) => {
     setFirstName('');
     setLastName('');
     setDateOfBirth('');
+    setDateOfBirthDisplay('');
     setNationality('');
     setHeight('');
     setWeight('');
@@ -188,8 +213,14 @@ const UserForm = ({ onAddUser, onClose }) => {
                 <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
               </div>
               <div>
-                <label>Data nașterii:</label>
-                <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                <label>Data nașterii (dd/mm/yyyy):</label>
+                <input
+                  type="text"
+                  value={dateOfBirthDisplay}
+                  onChange={handleDateOfBirthChange}
+                  placeholder="dd/mm/yyyy"
+                  maxLength="10"
+                />
               </div>
               <div>
                 <label>Naționalitate:</label>

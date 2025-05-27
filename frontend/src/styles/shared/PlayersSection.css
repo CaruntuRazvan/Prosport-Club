@@ -142,6 +142,17 @@
     animation: fadeIn 0.5s ease-in-out;
 }
 
+.players-section .no-players-message {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;

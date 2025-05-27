@@ -16,7 +16,6 @@ import SettingsComponent from '../components/shared/SettingsComponent';
 import LogoutComponent from '../components/auth/LogoutComponent';
 import PlayerNutritionList from '../components/staff/PlayerNutritionList';
 import InjuredPlayersList from '../components/staff/InjuredPlayersList';
-//import '../styles/StaffPage.css';
 import '../styles/shared/GlobalStyles.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -186,109 +185,127 @@ const StaffPage = ({ userId, handleLogout }) => {
           </div>
         </header>
 
-        {activeSection === 'profile' && staffInfo && (
-          <section className="profile-section">
-            <div className="profile-card">
-              <div className="profile-header">
-                <div className="profile-avatar">
-                  {staffInfo.staffId?.image ? (
-                    <img src={`${process.env.REACT_APP_URL}${staffInfo.staffId.image}`} alt="Profile" className="profile-image" loading="lazy" draggable="false"/>
-                  ) : (
-                    <span>{staffInfo.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</span>
+        <div className="section-wrapper" key={activeSection}>
+          {activeSection === 'profile' && staffInfo && (
+            <section className="profile-section section">
+              <div className="profile-card">
+                <div className="profile-header">
+                  <div className="profile-avatar">
+                    {staffInfo.staffId?.image ? (
+                      <img src={`${process.env.REACT_APP_URL}${staffInfo.staffId.image}`} alt="Profile" className="profile-image" loading="lazy" draggable="false"/>
+                    ) : (
+                      <span>{staffInfo.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</span>
+                    )}
+                  </div>
+                  <h3 className="profile-name">{staffInfo.staffId?.firstName} {staffInfo.staffId?.lastName}</h3>
+                  <span className="profile-role">Staff</span>
+                </div>
+
+                <div className="profile-details">
+                  <h4>Informații personale</h4>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">Prenume:</span>
+                      <span className="info-value">{staffInfo.staffId?.firstName}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Nume:</span>
+                      <span className="info-value">{staffInfo.staffId?.lastName}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Vârsta:</span>
+                      <span className="info-value">{calculateAge(staffInfo.staffId?.dateOfBirth)} ani</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Naționalitate:</span>
+                      <span className="info-value">{staffInfo.staffId?.nationality}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Email:</span>
+                      <span className="info-value">{staffInfo.email}</span>
+                    </div>
+                  </div>
+
+                  {staffInfo.staffId?.history && staffInfo.staffId.history.length > 0 && (
+                    <div className="profile-section">
+                      <h4>Istoric cluburi</h4>
+                      <ul className="history-list">
+                        {staffInfo.staffId.history.map((entry, index) => (
+                          <li key={index}>
+                            {entry.club} ({entry.startYear} - {entry.endYear})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
-                <h3 className="profile-name">{staffInfo.staffId?.firstName} {staffInfo.staffId?.lastName}</h3>
-                <span className="profile-role">Staff</span>
               </div>
+            </section>
+          )}
 
-              <div className="profile-details">
-                <h4>Informații personale</h4>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="info-label">Prenume:</span>
-                    <span className="info-value">{staffInfo.staffId?.firstName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Nume:</span>
-                    <span className="info-value">{staffInfo.staffId?.lastName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Vârsta:</span>
-                    <span className="info-value">{calculateAge(staffInfo.staffId?.dateOfBirth)} ani</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Naționalitate:</span>
-                    <span className="info-value">{staffInfo.staffId?.nationality}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Email:</span>
-                    <span className="info-value">{staffInfo.email}</span>
-                  </div>
-                </div>
+          {activeSection === 'team' && (
+            <section className="team-section section">
+              <AboutTeam userRole={role}/>
+            </section>
+          )}
 
-                {staffInfo.staffId?.history && staffInfo.staffId.history.length > 0 && (
-                  <div className="profile-section">
-                    <h4>Istoric cluburi</h4>
-                    <ul className="history-list">
-                      {staffInfo.staffId.history.map((entry, index) => (
-                        <li key={index}>
-                          {entry.club} ({entry.startYear} - {entry.endYear})
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
+          {activeSection === 'players' && (
+            <section className="players-section section">
+              <PlayersSection onPlayerClick={handleOpenProfile} />
+            </section>
+          )}
 
-        {activeSection === 'team' && <AboutTeam userRole={role}/>}
+          {activeSection === 'staff' && (
+            <section className="staff-section section">
+              <StaffSection
+                onStaffClick={handleOpenProfile}
+                currentUserId={userId}
+              />
+            </section>
+          )}
 
-        {activeSection === 'players' && (
-          <PlayersSection onPlayerClick={handleOpenProfile} />
-        )}
+          {activeSection === 'calendar' && (
+            <section className="calendar-section section">
+              <EventCalendar userId={userId} eventColor={eventColor} />
+            </section>
+          )}
 
-        {activeSection === 'staff' && (
-          <StaffSection
-            onStaffClick={handleOpenProfile}
-            currentUserId={userId}
-          />
-        )}
+          {activeSection === 'feedbacks' && (
+            <section className="feedbacks-section section">
+              <FeedbackSummarySection creatorId={userId} />
+            </section>
+          )}
 
-        {activeSection === 'calendar' && (
-          <section className="calendar-section">
-            <EventCalendar userId={userId} eventColor={eventColor} />
-          </section>
-        )}
+          {activeSection === 'polls' && (
+            <section className="polls-section section">
+              <PollsList userId={userId} userRole={role} />
+            </section>
+          )}
 
-        {activeSection === 'feedbacks' && (
-          <section className="feedbacks-section">
-            <FeedbackSummarySection creatorId={userId} />
-          </section>
-        )}
+          {activeSection === 'fines' && (
+            <section className="fines-section section">
+              <FineList userId={userId} userRole={role} />
+            </section>
+          )}
 
-        {activeSection === 'polls' && (
-          <section className="polls-section">
-            <PollsList userId={userId} userRole={role} />
-          </section>
-        )}
+          {activeSection === 'journal' && (
+            <section className="journal-section section">
+              <JournalSection userId={userId} />
+            </section>
+          )}
 
-        {activeSection === 'fines' && (
-          <section className="fines-section">
-            <FineList userId={userId} userRole={role} />
-          </section>
-        )}
+          {activeSection === 'nutrition' && staffInfo?.staffId?.role === 'Nutritionist' && (
+            <section className="nutrition-section section">
+              <PlayerNutritionList calculateAge={calculateAge} userRole={role}/>
+            </section>
+          )}
 
-        {activeSection === 'journal' && <JournalSection userId={userId} />}
-
-        {activeSection === 'nutrition' && staffInfo?.staffId?.role === 'Nutritionist' && (
-          <PlayerNutritionList calculateAge={calculateAge} userRole={role}/>
-        )}
-
-        {activeSection === 'injuries' && (staffInfo?.staffId?.role === 'Physiotherapist' || staffInfo?.staffId?.role === 'Fitness Coach') && (
-          <InjuredPlayersList userRole={role} />
-        )}
+          {activeSection === 'injuries' && (staffInfo?.staffId?.role === 'Physiotherapist' || staffInfo?.staffId?.role === 'Fitness Coach') && (
+            <section className="injuries-section section">
+              <InjuredPlayersList userRole={role} />
+            </section>
+          )}
+        </div>
 
         {selectedUser && (
           <UserProfile

@@ -177,22 +177,19 @@
   font-weight: bold;
   margin-right: 15px;
 }
-.user-controls {
-  display: flex;
-  justify-content: space-between;
-  /* Dropdown în stânga, butonul în dreapta */
-  align-items: center;
-  margin-bottom: 20px;
-}
-.user-filter-search {
+
+
+/* Stiluri pentru containerul de filtrare și căutare */
+.admin-user-filter-search {
   display: flex;
   align-items: center;
+  /* Aliniem vertical */
   gap: 15px;
   /* Spațiu între dropdown și search bar */
 }
 
-
-.filter-dropdown {
+/* Stiluri pentru dropdown */
+.admin-filter-dropdown {
   padding: 10px 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -201,12 +198,50 @@
   color: #1e3a8a;
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
+  height: 40px;
+  /* Asigurăm o înălțime fixă pentru aliniere */
+  box-sizing: border-box;
+  /* Include padding-ul în înălțime */
 }
 
-.filter-dropdown:focus {
+.admin-filter-dropdown:focus {
   border-color: #1e3a8a;
   box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
   outline: none;
+}
+
+/* Stiluri pentru search bar */
+.admin-users-search-bar {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 200px;
+  /* Ajustează lățimea după preferințe */
+  transition: border-color 0.3s, box-shadow 0.3s;
+  height: 40px;
+  /* Asigurăm aceeași înălțime ca dropdown-ul */
+  box-sizing: border-box;
+  /* Include padding-ul în înălțime */
+}
+
+.admin-users-search-bar:focus {
+  border-color: #1e3a8a;
+  box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
+  outline: none;
+}
+
+.admin-users-search-bar::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Stiluri existente pentru user-controls și add-user-btn */
+.user-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .add-user-btn {
@@ -271,26 +306,6 @@
   /* Blue color for SVG on hover */
 }
 
-.search-bar {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  width: 200px;
-  /* Ajustează lățimea după preferințe */
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.search-bar:focus {
-  border-color: #1e3a8a;
-  box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
-  outline: none;
-}
-
-.search-bar::placeholder {
-  color: #999;
-  font-style: italic;
-}
 .modal-close-btn {
   position: absolute;
   top: 10px;

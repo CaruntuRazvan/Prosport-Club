@@ -97,3 +97,35 @@ export const updateEvent = async (eventId, eventData) => {
     throw error;
   }
 };
+
+export const resetAllEvents = async () => {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/events/reset-all`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Eroare la ștergerea tuturor evenimentelor: ${errorText || 'Server error'}`);
+  }
+
+  return await response.json();
+};
+
+export const resetUserEvents = async (userId) => {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/events/reset-user/${userId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Eroare la ștergerea evenimentelor utilizatorului: ${errorText || 'Server error'}`);
+  }
+
+  return await response.json();
+};

@@ -39,7 +39,7 @@ const ManagerPage = ({ userId, handleLogout }) => {
   const [preferredFoot, setPreferredFoot] = useState({});
   const [averageAge, setAverageAge] = useState(0);
   const [shirtNumbers, setShirtNumbers] = useState({});
-
+  const [averageHeightByPosition, setAverageHeightByPosition] = useState({});
   const role = 'manager';
 
   useEffect(() => {
@@ -140,6 +140,24 @@ const ManagerPage = ({ userId, handleLogout }) => {
           return acc;
         }, {});
         setShirtNumbers(shirtDist);
+        const heightByPosition = players.reduce((acc, player) => {
+          const position = player.playerId?.position || 'Unknown';
+          if (!acc[position]) {
+            acc[position] = { totalHeight: 0, count: 0 };
+          }
+          const height = player.playerId?.height || 0;
+          acc[position].totalHeight += height;
+          acc[position].count += 1;
+          return acc;
+        }, {});
+  
+        const averageHeightByPosition = Object.keys(heightByPosition).reduce((acc, position) => {
+          const { totalHeight, count } = heightByPosition[position];
+          acc[position] = count > 0 ? (totalHeight / count).toFixed(1) : 0;
+          return acc;
+        }, {});
+
+        setAverageHeightByPosition(averageHeightByPosition);
       } catch (error) {
         console.error('Eroare la preluarea datelor jucătorilor:', error);
       }
@@ -267,115 +285,130 @@ const ManagerPage = ({ userId, handleLogout }) => {
           </div>
         </header>
 
-        {activeSection === 'profile' && managerInfo && (
-          <section className="profile-section">
-            <div className="profile-card">
-              <div className="profile-header">
-                <div className="profile-avatar">
-                  {managerInfo.managerId?.image ? (
-                    <img src={`${process.env.REACT_APP_URL}${managerInfo.managerId.image}`} alt="Profile" className="profile-image" draggable="false"/>
-                  ) : (
-                    <span>{managerInfo.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</span>
+        <div className="section-wrapper" key={activeSection}>
+          {activeSection === 'profile' && managerInfo && (
+            <section className="profile-section section">
+              <div className="profile-card">
+                <div className="profile-header">
+                  <div className="profile-avatar">
+                    {managerInfo.managerId?.image ? (
+                      <img src={`${process.env.REACT_APP_URL}${managerInfo.managerId.image}`} alt="Profile" className="profile-image" draggable="false"/>
+                    ) : (
+                      <span>{managerInfo.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</span>
+                    )}
+                  </div>
+                  <h3 className="profile-name">{managerInfo.managerId?.firstName} {managerInfo.managerId?.lastName}</h3>
+                  <span className="profile-role">Manager</span>
+                </div>
+
+                <div className="profile-details">
+                  <h4>Informații personale</h4>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">Prenume:</span>
+                      <span className="info-value">{managerInfo.managerId?.firstName}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Nume:</span>
+                      <span className="info-value">{managerInfo.managerId?.lastName}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Vârsta:</span>
+                      <span className="info-value">{calculateAge(managerInfo.managerId?.dateOfBirth)} ani</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Naționalitate:</span>
+                      <span className="info-value">{managerInfo.managerId?.nationality}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Email:</span>
+                      <span className="info-value">{managerInfo.email}</span>
+                    </div>
+                  </div>
+
+                  {managerInfo.managerId?.history && managerInfo.managerId.history.length > 0 && (
+                    <div className="profile-section">
+                      <h4>Istoric cluburi</h4>
+                      <ul className="history-list">
+                        {managerInfo.managerId.history.map((entry, index) => (
+                          <li key={index}>
+                            {entry.club} ({entry.startYear} - {entry.endYear})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
-                <h3 className="profile-name">{managerInfo.managerId?.firstName} {managerInfo.managerId?.lastName}</h3>
-                <span className="profile-role">Manager</span>
               </div>
+            </section>
+          )}
 
-              <div className="profile-details">
-                <h4>Informații personale</h4>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="info-label">Prenume:</span>
-                    <span className="info-value">{managerInfo.managerId?.firstName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Nume:</span>
-                    <span className="info-value">{managerInfo.managerId?.lastName}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Vârsta:</span>
-                    <span className="info-value">{calculateAge(managerInfo.managerId?.dateOfBirth)} ani</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Naționalitate:</span>
-                    <span className="info-value">{managerInfo.managerId?.nationality}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Email:</span>
-                    <span className="info-value">{managerInfo.email}</span>
-                  </div>
-                </div>
+          {activeSection === 'team' && (
+            <section className="team-section section">
+              <AboutTeam userRole={role}/>
+            </section>
+          )}
 
-                {managerInfo.managerId?.history && managerInfo.managerId.history.length > 0 && (
-                  <div className="profile-section">
-                    <h4>Istoric cluburi</h4>
-                    <ul className="history-list">
-                      {managerInfo.managerId.history.map((entry, index) => (
-                        <li key={index}>
-                          {entry.club} ({entry.startYear} - {entry.endYear})
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
+          {activeSection === 'players' && (
+            <section className="players-section section">
+              <PlayersSection
+                onPlayerClick={handleOpenProfile}
+              />
+            </section>
+          )}
+            
+          {activeSection === 'staff' && (
+            <section className="staff-section section">
+              <StaffSection
+                onStaffClick={handleOpenProfile}
+                currentUserId={userId}
+              />
+            </section>
+          )}
+          {activeSection === 'calendar' && (
+            <section className="calendar-section section">
+              <EventCalendar userId={userId} eventColor={eventColor} />
+            </section>
+          )}
 
-        {activeSection === 'team' && <AboutTeam userRole={role}/>}
+          {activeSection === 'statistics' && (
+            <section className="statistics-section section">
+              <ManagerCharts
+                playersByPosition={playersByPosition}
+                ageDistribution={ageDistribution}
+                nationalities={nationalities}
+                medicalStatus={medicalStatus}
+                preferredFoot={preferredFoot}
+                averageAge={averageAge}
+                shirtNumbers={shirtNumbers}
+                averageHeightByPosition={averageHeightByPosition}
+              />
+            </section>
+          )}
+          {activeSection === 'feedbacks' && (
+            <section className="feedbacks-section section">
+              <FeedbackSummarySection creatorId={userId} />
+            </section>
+          )}
 
-        {activeSection === 'players' && (
-          <PlayersSection
-            onPlayerClick={handleOpenProfile}
-          />
-        )}
+          {activeSection === 'polls' && (
+            <section className="polls-section section">
+              <PollsList userId={userId} userRole={role} />
+            </section>
+          )}
+         
+          {activeSection === 'fines' && (
+            <section className="fines-section section">
+              <FineList userId={userId} userRole={role} />
+            </section>
+          )}
           
-        {activeSection === 'staff' && (
-          <StaffSection
-            onStaffClick={handleOpenProfile}
-            currentUserId={userId}
-          />
-        )}
-        {activeSection === 'calendar' && (
-          <section className="calendar-section">
-            <EventCalendar userId={userId} eventColor={eventColor} />
-          </section>
-        )}
-
-        {activeSection === 'statistics' && (
-          <section className="statistics-section">
-            <ManagerCharts
-              playersByPosition={playersByPosition}
-              ageDistribution={ageDistribution}
-              nationalities={nationalities}
-              medicalStatus={medicalStatus}
-              preferredFoot={preferredFoot}
-              averageAge={averageAge}
-              shirtNumbers={shirtNumbers}
-            />
-          </section>
-        )}
-        {activeSection === 'feedbacks' && (
-          <section className="feedbacks-section">
-            <FeedbackSummarySection creatorId={userId} />
-          </section>
-        )}
-
-        {activeSection === 'polls' && (
-          <section className="polls-section">
-            <PollsList userId={userId} userRole={role} />
-          </section>
-        )}
-       
-        {activeSection === 'fines' && (
-          <section className="fines-section">
-            <FineList userId={userId} userRole={role} />
-          </section>
-        )}
-        
-        {activeSection === 'journal' && <JournalSection userId={userId} />}
+          {activeSection === 'journal' && (
+            <section className="journal-section section">
+              <JournalSection userId={userId} />
+            </section>
+          )}
+        </div>
 
         {selectedUser && (
           <UserProfile

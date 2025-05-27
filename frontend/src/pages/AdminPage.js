@@ -1,4 +1,3 @@
-// src/pages/AdminPage.js
 import React, { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -63,7 +62,7 @@ const AdminPage = ({ userId, handleLogout }) => {
         const data = await fetchUsers();
         setUsers(data);
       } catch (err) {
-        toast.error('Eroare la preluarea utilizatorilor: ' + err.message, {
+        toast.error('Error fetching users: ' + err.message, {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -87,7 +86,7 @@ const AdminPage = ({ userId, handleLogout }) => {
         const adminData = await fetchCurrentUser(userId, 'admin');
         setAdminInfo(adminData);
       } catch (error) {
-        toast.error('Eroare la încărcarea datelor admin: ' + error.message, {
+        toast.error('Error loading admin data: ' + error.message, {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -128,7 +127,7 @@ const AdminPage = ({ userId, handleLogout }) => {
       setUsers(updatedUsers);
       setIsAddingUser(false);
       setActiveSection('users');
-      toast.success('Utilizator adăugat cu succes!', {
+      toast.success('User added successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -141,7 +140,7 @@ const AdminPage = ({ userId, handleLogout }) => {
         },
       });
     } catch (err) {
-      toast.error('Eroare la adăugarea utilizatorului: ' + err.message, {
+      toast.error('Error adding user: ' + err.message, {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -178,7 +177,7 @@ const AdminPage = ({ userId, handleLogout }) => {
         },
       });
     } catch (error) {
-      toast.error('Eroare la ștergerea utilizatorului: ' + error.message, {
+      toast.error('Error deleting user: ' + error.message, {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -203,7 +202,7 @@ const AdminPage = ({ userId, handleLogout }) => {
         setSelectedUser(updatedUser);
       }
       setEditingUser(null);
-      toast.success('Utilizator editat cu succes!', {
+      toast.success('User updated successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -216,7 +215,7 @@ const AdminPage = ({ userId, handleLogout }) => {
         },
       });
     } catch (err) {
-      toast.error('Eroare la editarea utilizatorului: ' + err.message, {
+      toast.error('Error updating user: ' + err.message, {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -270,12 +269,10 @@ const AdminPage = ({ userId, handleLogout }) => {
   };
 
   const nationalities = players.reduce((acc, player) => {
-    const nat = player.playerId?.nationality || 'Necunoscut';
+    const nat = player.playerId?.nationality || 'Unknown';
     acc[nat] = (acc[nat] || 0) + 1;
     return acc;
   }, {});
-
-
 
   return (
     <div className="admin-container">
@@ -304,13 +301,13 @@ const AdminPage = ({ userId, handleLogout }) => {
             Dashboard
           </li>
           <li className={activeSection === 'team' ? 'active' : ''} onClick={() => setActiveSection('team')}>
-            Despre Echipa
+            About Team
           </li>
           <li className={activeSection === 'users' ? 'active' : ''} onClick={() => setActiveSection('users')}>
-            Utilizatori
+            Users
           </li>
           <li className={activeSection === 'stats' ? 'active' : ''} onClick={() => setActiveSection('stats')}>
-            Statistici
+            Statistics
           </li>
           <li className={activeSection === 'reset' ? 'active' : ''} onClick={() => setActiveSection('reset')}>
             Reset
@@ -321,98 +318,104 @@ const AdminPage = ({ userId, handleLogout }) => {
       <div className="main-content">
         <header className="header">
           <h1>Admin Dashboard</h1>
-          
           <LogoutComponent handleLogout={handleLogout} />
         </header>
 
-        {activeSection === 'team' && <AboutTeam userRole={adminInfo?.role || 'admin'} />}
-        {activeSection === 'dashboard' && (
-          <section className="dashboard-section">
-            <h2>Bine ai venit, {adminInfo?.name}!</h2>
-            <p>Bine ai revenit la gestionarea clubului ProSport!</p>
-          </section>
-        )}
+        <div className="section-wrapper" key={activeSection}>
+          {activeSection === 'dashboard' && (
+            <section className="dashboard-section section">
+              <h2>Welcome, {adminInfo?.name}!</h2>
+              <p>Welcome back to managing the ProSport club!</p>
+            </section>
+          )}
+
+          {activeSection === 'team' && (
+            <section className="team-section section">
+              <AboutTeam userRole={adminInfo?.role || 'admin'} />
+            </section>
+          )}
+
+          {activeSection === 'users' && (
+            <section className="users-section section">
+              <h3>Users List</h3>
+              <div className="user-controls">
+                <div className="admin-user-filter-search">
+                  <select value={activeCategory} onChange={(e) => setActiveCategory(e.target.value)} className="admin-filter-dropdown">
+                    <option value="admin">Admins</option>
+                    <option value="player">Players</option>
+                    <option value="manager">Managers</option>
+                    <option value="staff">Staff</option>
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Search user by name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="admin-users-search-bar"
+                  />
+                </div>
+                <button className="add-user-btn" onClick={() => setIsAddingUser(true)}>
+                  <span className="add-icon">+</span> Add User
+                </button>
+              </div>
+              <UserList
+                users={filteredUsers}
+                onDeleteUser={handleDelete}
+                onViewUser={handleViewUser}
+                onEditUser={(user) => setEditingUser(user)}
+              />
+            </section>
+          )}
+          {activeSection === 'stats' && (
+            <section className="stats-section section">
+              <div className="stats-grid">
+                <div className="stats-card">
+                  <h4>Total Users</h4>
+                  <p>{totalUsers}</p>
+                </div>
+                <div className="stats-card">
+                  <h4>New Players in the Last Month</h4>
+                  <p>{newPlayersLastMonth}</p>
+                </div>
+                <div className="stats-card">
+                  <h4>Average Age of Players</h4>
+                  <p>{averageAge.toFixed(1)} years</p>
+                </div>
+              </div>
+              {adminInfo?.role === 'admin' && (
+                <AdminCharts
+                  totalAdmins={totalAdmins}
+                  totalPlayers={totalPlayers}
+                  totalManagers={totalManagers}
+                  totalStaff={totalStaff}
+                  newPlayersLastMonth={newPlayersLastMonth}
+                  averageAge={averageAge}
+                  nationalities={nationalities}
+                />
+              )}
+            </section>
+          )}
+
+          {activeSection === 'reset' && (
+            <section className="reset-section section">
+              <AdminResetSection />
+            </section>
+          )}
+        </div>
 
         {selectedUser && (
           <UserProfile user={selectedUser} onClose={() => setSelectedUser(null)} calculateAge={calculateAge} />
         )}
 
-        {activeSection === 'users' && (
-          <section className="users-section">
-            <h3>Lista utilizatori</h3>
-            <div className="user-controls">
-              <div className="user-filter-search">
-                <select value={activeCategory} onChange={(e) => setActiveCategory(e.target.value)} className="filter-dropdown">
-                  <option value="admin">Admini</option>
-                  <option value="player">Jucători</option>
-                  <option value="manager">Manageri</option>
-                  <option value="staff">Staff</option>
-                </select>
-                <input
-                  type="text"
-                  placeholder="Caută utilizator după nume..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-bar"
-                />
-              </div>
-              <button className="add-user-btn" onClick={() => setIsAddingUser(true)}>
-                <span className="add-icon">+</span> Adaugă utilizator
-              </button>
-            </div>
-            <UserList
-              users={filteredUsers}
-              onDeleteUser={handleDelete}
-              onViewUser={handleViewUser}
-              onEditUser={(user) => setEditingUser(user)}
-            />
-            {isAddingUser && (
-              <UserForm onAddUser={handleAddUser} onClose={() => setIsAddingUser(false)} />
-            )}
-            {editingUser && (
-              <EditUserForm
-                user={editingUser}
-                onEditUser={handleEditUser}
-                onClose={() => setEditingUser(null)}
-              />
-            )}
-          </section>
+        {isAddingUser && (
+          <UserForm onAddUser={handleAddUser} onClose={() => setIsAddingUser(false)} />
         )}
-
-        {activeSection === 'stats' && (
-          <section className="stats-section">
-            <div className="stats-grid">
-              <div className="stats-card">
-                <h4>Total utilizatori</h4>
-                <p>{totalUsers}</p>
-              </div>
-              <div className="stats-card">
-                <h4>Jucători noi în ultima lună</h4>
-                <p>{newPlayersLastMonth}</p>
-              </div>
-              <div className="stats-card">
-                <h4>Vârsta medie a jucătorilor</h4>
-                <p>{averageAge.toFixed(1)} ani</p>
-              </div>
-            </div>
-            {adminInfo?.role === 'admin' && (
-              <AdminCharts
-                totalAdmins={totalAdmins}
-                totalPlayers={totalPlayers}
-                totalManagers={totalManagers}
-                totalStaff={totalStaff}
-                newPlayersLastMonth={newPlayersLastMonth}
-                averageAge={averageAge}
-                nationalities={nationalities}
-              />
-            )}
-          </section>
-        )}
-
-        {activeSection === 'reset' && (
-          <section className="reset-section">
-            <AdminResetSection />
-          </section>
+        {editingUser && (
+          <EditUserForm
+            user={editingUser}
+            onEditUser={handleEditUser}
+            onClose={() => setEditingUser(null)}
+          />
         )}
       </div>
     </div>

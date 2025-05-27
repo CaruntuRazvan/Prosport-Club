@@ -2,6 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const auth = require('../middleware/auth');
+const Notification = require('../models/Notification');
+
+const isAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Acces permis doar administratorilor.' });
+  }
+  next();
+};
 
 // Middleware pentru a verifica dacă utilizatorul este manager sau staff
 const isManagerOrStaff = (req, res, next) => {
@@ -182,4 +190,61 @@ router.delete('/:id', auth, isManagerOrStaff, isEventAuthorized, async (req, res
   }
 });
 
+// DELETE /api/events/reset-all - Șterge toate evenimentele
+router.delete('/reset-all', auth, isAdmin, async (req, res) => {
+  try {
+    // Șterge toate evenimentele
+    await Event.deleteMany({});
+    console.log('Toate evenimentele au fost șterse.');
+
+    // Șterge notificările asociate evenimentelor
+    await Notification.deleteMany({ type: 'event' });
+    console.log('Notificările asociate evenimentelor au fost șterse.');
+
+    res.status(200).json({ message: 'Toate evenimentele și notificările asociate au fost șterse cu succes.' });
+  } catch (error) {
+    console.error('Eroare la ștergerea evenimentelor:', error);
+    res.status(500).json({ message: 'Eroare la ștergerea evenimentelor.' });
+  }
+});
+
+// DELETE /api/events/reset-user/:userId - Șterge evenimentele asociate unui utilizator
+router.delete('/reset-user/:userId', auth, isAdmin, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Găsește evenimentele create de utilizator sau în care utilizatorul este implicat (ca jucător sau staff)
+    const events = await Event.find({
+      $or: [
+        { createdBy: userId },
+        { players: userId },
+        { staff: userId },
+      ],
+    });
+
+    const eventIds = events.map(event => event._id);
+
+    // Șterge evenimentele
+    await Event.deleteMany({
+      $or: [
+        { createdBy: userId },
+        { players: userId },
+        { staff: userId },
+      ],
+    });
+    console.log(`Șterse ${eventIds.length} evenimente asociate utilizatorului ${userId}.`);
+
+    // Șterge notificările asociate evenimentelor
+    await Notification.deleteMany({
+      type: 'event',
+      actionLink: { $in: eventIds.map(id => id.toString()) },
+    });
+    console.log(`Șterse notificările asociate evenimentelor utilizatorului ${userId}.`);
+
+    res.status(200).json({ message: 'Evenimentele și notificările asociate utilizatorului au fost șterse cu succes.' });
+  } catch (error) {
+    console.error(`Eroare la ștergerea evenimentelor utilizatorului ${req.params.userId}:`, error);
+    res.status(500).json({ message: 'Eroare la ștergerea evenimentelor utilizatorului.' });
+  }
+});
 module.exports = router;

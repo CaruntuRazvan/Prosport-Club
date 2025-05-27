@@ -13,8 +13,9 @@ const backupMongoDB = async () => {
     const date = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
     const backupPath = path.join(backupDir, `backup-${date}`);
 
-    // Comanda mongodump (presupunem că MongoDB rulează local)
-    const command = `mongodump --uri="mongodb://localhost/football-app" --out="${backupPath}"`;
+    // Folosim URI-ul MongoDB Atlas din variabila de mediu
+    const mongoUri = process.env.MONGO_URI;
+    const command = `mongodump --uri="${mongoUri}" --out="${backupPath}"`;
 
     console.log(`Încep backup-ul bazei de date la ${backupPath}...`);
     const { stdout, stderr } = await execPromise(command);
