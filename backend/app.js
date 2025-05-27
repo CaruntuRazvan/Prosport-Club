@@ -75,11 +75,12 @@ app.get('/api/quote', async (req, res) => {
     ]);
   }
 });
-
+/*
 if (process.env.ENABLE_CRON === 'true') {
   const { startCronJobs } = require('./middleware/cronJobs');
   startCronJobs();
 } else {
   console.log('Cron jobs are disabled.');
 }
+  */
 module.exports = app; 
