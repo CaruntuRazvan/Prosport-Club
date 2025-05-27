@@ -76,9 +76,13 @@ app.get('/api/quote', async (req, res) => {
   }
 });
 
-
-//updateEventStatus(); // actualizarea statusului evenimentelor
-//cleanOldNotifications(); // ștergerea notificărilor vechi
-//backupMongoDBMonthly(); // backup zilnic al bazei de date
-//cleanOldBackups(); // ștergerea backup-urilor vechi
+if (process.env.ENABLE_CRON === 'true') {
+  const cron = require('./middleware/cronJobs');
+  cron.updateEventStatus();
+  cron.cleanOldNotifications();
+  cron.backupMongoDBMonthly();
+  cron.cleanOldBackups();
+} else {
+  console.log('Cron jobs are disabled.');
+}
 module.exports = app; 
