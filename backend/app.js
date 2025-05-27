@@ -78,8 +78,8 @@ app.get('/api/quote', async (req, res) => {
 });
 
 
-updateEventStatus(); // actualizarea statusului evenimentelor
-cleanOldNotifications(); // ștergerea notificărilor vechi
-backupMongoDBMonthly(); // backup zilnic al bazei de date
-cleanOldBackups(); // ștergerea backup-urilor vechi
+//updateEventStatus(); // actualizarea statusului evenimentelor
+//cleanOldNotifications(); // ștergerea notificărilor vechi
+//backupMongoDBMonthly(); // backup zilnic al bazei de date
+//cleanOldBackups(); // ștergerea backup-urilor vechi
 module.exports = app; 
