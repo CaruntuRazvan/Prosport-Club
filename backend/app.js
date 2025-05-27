@@ -9,7 +9,7 @@ const notificationsRoutes = require('./routes/notifications'); // Ruta notifică
 const healthRoutes = require('./routes/health'); // Ruta sănătate
 const injuriesRoutes = require('./routes/injuries'); // Ruta accidentări
 const announcementsRoutes = require('./routes/announcements'); // Ruta anunțuri
-const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
+//const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
 
 const cors = require('cors');
 const path = require('path');
@@ -77,10 +77,11 @@ app.get('/api/quote', async (req, res) => {
 });
 
 if (process.env.ENABLE_CRON === 'true') {
-  updateEventStatus();
-  cleanOldNotifications();
-  backupMongoDBMonthly();
-  cleanOldBackups();
+  const cron = require('./middleware/cronJobs');
+  cron.updateEventStatus();
+  cron.cleanOldNotifications();
+  cron.backupMongoDBMonthly();
+  cron.cleanOldBackups();
 } else {
   console.log('Cron jobs are disabled.');
 }
