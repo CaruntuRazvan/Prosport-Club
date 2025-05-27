@@ -1,5 +1,3 @@
-// middleware/cronJobs.js
-
 const cron = require('node-cron');
 const Event = require('../models/Event');
 const Notification = require('../models/Notification');
@@ -7,11 +5,14 @@ const backupMongoDB = require('../scripts/backupMongoDB');
 const path = require('path');
 const fs = require('fs').promises;
 
-function updateEventStatus() {
+// Rulează la fiecare oră (la minutul 0)
+const updateEventStatus = () => {
   cron.schedule('0 * * * *', async () => {
     try {
       console.log('Verific statusul evenimentelor...');
       const now = new Date();
+
+      // Găsește toate evenimentele care sunt Scheduled și au finishDate în trecut
       const eventsToUpdate = await Event.find({
         status: 'Scheduled',
         finishDate: { $lt: now },
@@ -22,32 +23,36 @@ function updateEventStatus() {
         return;
       }
 
-      await Promise.all(eventsToUpdate.map(async (event) => {
-        event.status = 'Finished';
-        await event.save();
-      }));
+      // Actualizează statusul la Finished
+      await Promise.all(
+        eventsToUpdate.map(async (event) => {
+          event.status = 'Finished';
+          await event.save();
+        })
+      );
 
       console.log(`${eventsToUpdate.length} evenimente au fost actualizate la statusul Finished.`);
     } catch (error) {
       console.error('Eroare la actualizarea statusului evenimentelor:', error);
     }
   });
-}
+};
 
-function cleanOldNotifications() {
+const cleanOldNotifications = () => {
   cron.schedule('0 0 * * *', async () => {
     try {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
       await Notification.deleteMany({ createdAt: { $lt: thirtyDaysAgo } });
       console.log('Notificările mai vechi de 30 de zile au fost șterse.');
     } catch (error) {
       console.error('Eroare la ștergerea notificărilor vechi:', error);
     }
   });
-}
+};
 
-function backupMongoDBMonthly() {
+const backupMongoDBMonthly = () => {
   cron.schedule('0 0 1 * *', async () => {
     try {
       console.log('Rulez backup-ul lunar al bazei de date...');
@@ -56,15 +61,17 @@ function backupMongoDBMonthly() {
       console.error('Eroare la backup-ul lunar:', error);
     }
   });
-}
+};
 
-function cleanOldBackups() {
+// Job pentru ștergerea backup-urilor mai vechi de un an (rulează lunar, pe data de 2 la 00:00)
+const cleanOldBackups = () => {
   cron.schedule('0 0 2 * *', async () => {
     try {
       console.log('Verific backup-urile vechi pentru ștergere...');
       const backupDir = path.join(__dirname, '../backups');
       const oneYearAgo = new Date();
-      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1); // Scade un an
+
       const backupFolders = await fs.readdir(backupDir);
       for (const folder of backupFolders) {
         if (folder.startsWith('backup-')) {
@@ -82,14 +89,5 @@ function cleanOldBackups() {
       console.error('Eroare la ștergerea backup-urilor vechi:', error);
     }
   });
-}
-
-// 🔑 funcție unică care pornește toate cron jobs-urile
-function startCronJobs() {
-  updateEventStatus();
-  cleanOldNotifications();
-  backupMongoDBMonthly();
-  cleanOldBackups();
-}
-
-module.exports = { startCronJobs };
+};
+module.exports = { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups };

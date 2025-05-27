@@ -9,7 +9,7 @@ const notificationsRoutes = require('./routes/notifications'); // Ruta notifică
 const healthRoutes = require('./routes/health'); // Ruta sănătate
 const injuriesRoutes = require('./routes/injuries'); // Ruta accidentări
 const announcementsRoutes = require('./routes/announcements'); // Ruta anunțuri
-
+//const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
 
 const cors = require('cors');
 const path = require('path');
@@ -75,12 +75,10 @@ app.get('/api/quote', async (req, res) => {
     ]);
   }
 });
-/*
-if (process.env.ENABLE_CRON === 'true') {
-  const { startCronJobs } = require('./middleware/cronJobs');
-  startCronJobs();
-} else {
-  console.log('Cron jobs are disabled.');
-}
-  */
+
+
+//updateEventStatus(); // actualizarea statusului evenimentelor
+//cleanOldNotifications(); // ștergerea notificărilor vechi
+//backupMongoDBMonthly(); // backup zilnic al bazei de date
+//cleanOldBackups(); // ștergerea backup-urilor vechi
 module.exports = app; 
