@@ -39,7 +39,8 @@ jobs:
         echo "MONGOMS_PREFER_GLOBAL_PATH=1" >> $GITHUB_ENV
         echo "CI=true" >> $GITHUB_ENV
         echo "NODE_ENV=test" >> $GITHUB_ENV
-
+        echo "ENABLE_CRON=false" >> $GITHUB_ENV  # Dezactivăm cron job-urile
+    
     - name: Create MongoDB binaries directory
       run: mkdir -p ${{ github.workspace }}/mongodb-binaries
 
