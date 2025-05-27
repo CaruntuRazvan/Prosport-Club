@@ -9,7 +9,7 @@ const notificationsRoutes = require('./routes/notifications'); // Ruta notifică
 const healthRoutes = require('./routes/health'); // Ruta sănătate
 const injuriesRoutes = require('./routes/injuries'); // Ruta accidentări
 const announcementsRoutes = require('./routes/announcements'); // Ruta anunțuri
-//const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
+const { updateEventStatus, cleanOldNotifications, backupMongoDBMonthly, cleanOldBackups } = require('./middleware/cronJobs');
 
 const cors = require('cors');
 const path = require('path');
