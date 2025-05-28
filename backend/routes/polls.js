@@ -304,20 +304,18 @@ router.delete('/reset-user/:userId', authMiddleware, isAdmin, async (req, res) =
     console.log(`Șterse voturile utilizatorului ${userId} din ${updatedPollsCount} sondaje.`);
 
     // Șterge notificările asociate sondajelor create de utilizator
+
     const deletedCreatedNotifications = await Notification.deleteMany({
       type: 'poll',
-      pollId: { $in: createdPollIds }, // Folosim pollId în loc de actionLink
+      actionLink: { $in: createdPollIds.map(id => id.toString()) }, // Folosim actionLink, ca în ruta pentru evenimente
     });
     console.log(`Șterse ${deletedCreatedNotifications.deletedCount} notificări asociate sondajelor create de utilizatorul ${userId}.`);
 
-    // Șterge notificările de vot primite de utilizator
+    // Șterge notificările primite de utilizator legate de sondaje (ex. notificări de vot)
     const deletedVoteNotifications = await Notification.deleteMany({
       userId,
-      type: 'poll',
-      pollId: { $exists: true }, // Asigură că notificarea este legată de un sondaj
+      type: { $in: ['poll'] }, // Acoperim toate tipurile relevante de notificări
     });
-    console.log(`Șterse ${deletedVoteNotifications.deletedCount} notificări de vot pentru utilizatorul ${userId}.`);
-
     res.status(200).json({ message: 'Sondajele, voturile și notificările utilizatorului au fost șterse cu succes.' });
   } catch (error) {
     console.error(`Eroare la ștergerea sondajelor utilizatorului ${req.params.userId}:`, error);

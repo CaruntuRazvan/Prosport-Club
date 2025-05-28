@@ -302,13 +302,18 @@ router.delete('/reset-user/:userId', auth, isAdmin, async (req, res) => {
     console.log(`Amenzile pentru utilizatorul ${userId} au fost șterse.`);
 
     // Șterge notificările asociate acelor amenzi
-    const fineIds = fines.map(fine => fine._id);
-    await Notification.deleteMany({
-      fineId: { $in: fineIds },
+    const deletedNotifications = await Notification.deleteMany({
+      type: { $in: ['fine', 'fine_payment_request', 'fine_payment_approved', 'fine_payment_rejected'] },
+      actionLink: { $in: fineIds.map(id => id.toString()) }, // Folosim actionLink, ca în ruta pentru evenimente
+    });
+    console.log(`Șterse ${deletedNotifications.deletedCount} notificări asociate amenzilor utilizatorului ${userId}.`);
+
+    // Șterge notificările primite de utilizator legate de amenzi (ex. notificări de plată)
+    const deletedUserNotifications = await Notification.deleteMany({
+      userId,
       type: { $in: ['fine', 'fine_payment_request', 'fine_payment_approved', 'fine_payment_rejected'] },
     });
-    console.log(`Notificările asociate amenzilor utilizatorului ${userId} au fost șterse.`);
-
+    console.log(`Șterse ${deletedUserNotifications.deletedCount} notificări primite de utilizatorul ${userId} legate de amenzi.`);
     res.status(200).json({ message: 'Amenzile utilizatorului au fost șterse cu succes.' });
   } catch (error) {
     console.error(`Eroare la ștergerea amenzilor utilizatorului ${req.params.userId}:`, error);
