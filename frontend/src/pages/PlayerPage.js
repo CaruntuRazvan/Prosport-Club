@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchCurrentUser } from '../services/userService';
 import AboutTeam from '../components/shared/AboutTeam';
@@ -9,7 +9,7 @@ import UserProfile from '../components/users/UserProfile';
 import PollsList from '../components/polls/PollsList';
 import NotificationsDropdown from '../components/notifications/NotificationsDropdown';
 import JournalSection from '../components/shared/JournalSection';
-import FineList from '../components/fines/FineList'; 
+import FineList from '../components/fines/FineList';
 import SettingsComponent from '../components/shared/SettingsComponent';
 import LogoutComponent from '../components/auth/LogoutComponent';
 import '../styles/pages/PlayerPage.css';
@@ -21,6 +21,9 @@ const PlayerPage = ({ userId, handleLogout }) => {
   const [searchParams] = useSearchParams();
   const [eventColor, setEventColor] = useState(() => {
     return localStorage.getItem(`eventColor_${userId}`) || '#3788d8';
+  });
+  const [playNotificationSound, setPlayNotificationSound] = useState(() => {
+    return JSON.parse(localStorage.getItem(`playNotificationSound_${userId}`)) || false;
   });
   const [selectedUser, setSelectedUser] = useState(null);
   const role = 'player';
@@ -50,7 +53,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
       setActiveSection(sectionFromUrl);
     }
   }, [searchParams]);
-  
+
   const calculateAge = (dateOfBirth) => {
     const birthDate = new Date(dateOfBirth);
     const today = new Date();
@@ -78,7 +81,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
     <div className="player-container">
       {/* Sidebar Navigation */}
       <nav className="sidebar">
-        <img src="/images/logo.png" alt="Team Logo" className="team-logo" draggable='false' />
+        <img src="/images/logo.png" alt="Team Logo" className="team-logo" draggable="false" />
         {playerInfo && (
           <div className="player-profile">
             <p><strong>User:</strong> {playerInfo.name}</p>
@@ -142,8 +145,16 @@ const PlayerPage = ({ userId, handleLogout }) => {
         <header className="header">
           <h1>Player Dashboard</h1>
           <div className="header-actions">
-            <NotificationsDropdown userId={userId} setActiveSection={setActiveSection} />
-            <SettingsComponent userId={userId} eventColor={eventColor} onColorChange={handleColorChange} />
+            <NotificationsDropdown
+              userId={userId}
+              setActiveSection={setActiveSection}
+              playNotificationSound={playNotificationSound} // Transmitem setarea către NotificationsDropdown
+            />
+            <SettingsComponent
+              userId={userId}
+              eventColor={eventColor}
+              onColorChange={handleColorChange}
+            />
             <LogoutComponent handleLogout={handleLogout} />
           </div>
         </header>
@@ -156,7 +167,12 @@ const PlayerPage = ({ userId, handleLogout }) => {
                 <div className="profile-header">
                   <div className="profile-avatar">
                     {playerInfo.playerId?.image ? (
-                      <img src={`${process.env.REACT_APP_URL}${playerInfo.playerId.image}`} alt="Profile" className="profile-image" draggable="false"/>
+                      <img
+                        src={`${process.env.REACT_APP_URL}${playerInfo.playerId.image}`}
+                        alt="Profile"
+                        className="profile-image"
+                        draggable="false"
+                      />
                     ) : (
                       <span>{playerInfo.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</span>
                     )}

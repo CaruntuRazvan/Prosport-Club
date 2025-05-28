@@ -7,27 +7,43 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
+  const [playNotificationSound, setPlayNotificationSound] = useState(false);
+  const [lastNotificationCount, setLastNotificationCount] = useState(0);
   const dropdownRef = useRef(null);
 
-  const fetchNotifications = async () => {
-    try {
-      const data = await getNotificationsForUser(userId);
-      setNotifications(data.notifications || []);
-      setUnreadCount(data.unreadCount || 0);
-    } catch (error) {
-      console.error('Eroare la preluarea notificărilor:', error.message);
-    }
-  };
-
   useEffect(() => {
-    fetchNotifications();
+    // Încarcă setarea din localStorage
+    const savedPlaySound = localStorage.getItem(`playNotificationSound_${userId}`);
+    if (savedPlaySound !== null) {
+      setPlayNotificationSound(JSON.parse(savedPlaySound));
+    }
 
-    const interval = setInterval(() => {
-      fetchNotifications();
-    }, 30000);
+    const fetchNotifications = async () => {
+      try {
+        const data = await getNotificationsForUser(userId);
+        const newNotifications = data.notifications || [];
+        setNotifications(newNotifications);
+        setUnreadCount(data.unreadCount || 0);
+
+        // Detectează notificări noi
+        if (newNotifications.length > lastNotificationCount && playNotificationSound) {
+          const audio = new Audio('/sounds/notification.mp3');
+          audio.play().catch(error => {
+            console.error('Eroare la redarea sunetului de notificare:', error);
+          });
+        }
+        setLastNotificationCount(newNotifications.length);
+      } catch (error) {
+        console.error('Eroare la preluarea notificărilor:', error.message);
+      }
+    };
+
+    // Rulează la încărcare și apoi la fiecare 30 de secunde
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 30000);
 
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [userId, playNotificationSound, lastNotificationCount]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -73,8 +89,7 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
         );
       }
       if (notification.section) {
-        //console.log('Navigating to section:', notification.section);
-        setActiveSection(notification.section); // ex. 'calendar'
+        setActiveSection(notification.section);
       }
       setIsDropdownOpen(false);
     } catch (error) {

@@ -28,6 +28,9 @@ const ManagerPage = ({ userId, handleLogout }) => {
   const [eventColor, setEventColor] = useState(() => {
     return localStorage.getItem(`eventColor_${userId}`) || '#3788d8';
   });
+  const [playNotificationSound, setPlayNotificationSound] = useState(() => {
+      return JSON.parse(localStorage.getItem(`playNotificationSound_${userId}`)) || false;
+  });
   const [selectedUser, setSelectedUser] = useState(null);
   const [events, setEvents] = useState([]);
   const [error, setError] = useState(null);
@@ -279,7 +282,7 @@ const ManagerPage = ({ userId, handleLogout }) => {
           <h1>Manager Dashboard</h1>
           <div className="header-actions">
             <RequestDropdown userId={userId} userRole={managerInfo?.role || 'manager'} />
-            <NotificationsDropdown userId={userId} setActiveSection={setActiveSection} />
+            <NotificationsDropdown userId={userId} setActiveSection={setActiveSection} playNotificationSound={playNotificationSound}/>
             <SettingsComponent userId={userId} eventColor={eventColor} onColorChange={handleColorChange} />
             <LogoutComponent handleLogout={handleLogout} />
           </div>

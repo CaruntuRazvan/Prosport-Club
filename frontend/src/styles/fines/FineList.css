@@ -306,10 +306,20 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .go-to-fines-tariffs-btn:hover {
     background-color: #B06A27; 
+    transform: translateX(2px);
+}
+
+.go-to-fines-tariffs-btn:hover svg {
+    transform: scale(1.1);
+    transition: transform 0.2s; 
 }
 @media (max-width: 768px) {
     .fines-section {

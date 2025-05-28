@@ -295,7 +295,7 @@ router.delete('/reset-user/:userId', auth, isAdmin, async (req, res) => {
     const fines = await Fine.find({
       $or: [{ creatorId: userId }, { receiverId: userId }],
     });
-
+    const fineIds = fines.map(fine => fine._id);
     await Fine.deleteMany({
       $or: [{ creatorId: userId }, { receiverId: userId }],
     });
