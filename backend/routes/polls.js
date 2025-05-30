@@ -4,20 +4,8 @@ const Poll = require('../models/Poll');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
 const authMiddleware = require('../middleware/auth');
+const { isManagerOrStaff, isAdmin } = require('../middleware/roleMiddleware');
 
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Acces permis doar administratorilor.' });
-  }
-  next();
-};
-
-const isManagerOrStaff = (req, res, next) => {
-  if (req.user.role !== 'manager' && req.user.role !== 'staff') {
-    return res.status(403).json({ message: 'Acces permis doar managerilor și staff-ului.' });
-  }
-  next();
-};
 // POST /api/polls - Create a new poll (manager or staff only)
 router.post('/', authMiddleware, isManagerOrStaff, async (req, res) => {
   try {
@@ -232,7 +220,22 @@ router.get('/:id', authMiddleware, async (req, res) => {
     res.status(500).json({ message: 'Eroare la obținerea sondajului.' });
   }
 });
+router.delete('/reset-all', authMiddleware, isAdmin, async (req, res) => {
+  try {
+    // Șterge toate sondajele
+    await Poll.deleteMany({});
+    console.log('Toate sondajele au fost șterse.');
 
+    // Șterge notificările asociate sondajelor
+    await Notification.deleteMany({ type: 'poll' });
+    console.log('Notificările asociate sondajelor au fost șterse.');
+
+    res.status(200).json({ message: 'Toate sondajele au fost șterse cu succes.' });
+  } catch (error) {
+    console.error('Eroare la ștergerea sondajelor:', error);
+    res.status(500).json({ message: 'Eroare la ștergerea sondajelor.' });
+  }
+});
 // DELETE /api/polls/:id - Delete a poll (creator only)
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
@@ -260,22 +263,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 });
 
 // DELETE /api/polls/reset-all - Șterge toate sondajele
-router.delete('/reset-all', authMiddleware, isAdmin, async (req, res) => {
-  try {
-    // Șterge toate sondajele
-    await Poll.deleteMany({});
-    console.log('Toate sondajele au fost șterse.');
 
-    // Șterge notificările asociate sondajelor
-    await Notification.deleteMany({ type: 'poll' });
-    console.log('Notificările asociate sondajelor au fost șterse.');
-
-    res.status(200).json({ message: 'Toate sondajele au fost șterse cu succes.' });
-  } catch (error) {
-    console.error('Eroare la ștergerea sondajelor:', error);
-    res.status(500).json({ message: 'Eroare la ștergerea sondajelor.' });
-  }
-});
 
 // DELETE /api/polls/reset-user/:userId - Șterge sondajele asociate unui utilizator 
 router.delete('/reset-user/:userId', authMiddleware, isAdmin, async (req, res) => {

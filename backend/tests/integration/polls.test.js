@@ -93,7 +93,7 @@ describe('Poll Routes Integration Tests', () => {
         .send({
           question: 'What is your favorite training session?',
           options: ['Morning Run', 'Tactical Training', 'Gym Session'],
-          expiresAt: '2025-05-30T12:00:00Z',
+          expiresAt: '2025-07-30T12:00:00Z',
         });
 
       expect(res.statusCode).toBe(201);
@@ -134,7 +134,7 @@ describe('Poll Routes Integration Tests', () => {
         .send({
           question: 'What is your favorite training session?',
           options: ['Morning Run', 'Tactical Training', 'Gym Session'],
-          expiresAt: '2025-05-30T12:00:00Z',
+          expiresAt: '2025-07-30T12:00:00Z',
         });
 
       expect(res.statusCode).toBe(403);
@@ -164,7 +164,7 @@ describe('Poll Routes Integration Tests', () => {
         .send({
           question: 'What is your favorite training session?',
           options: ['Morning Run', 123, 'Gym Session'], // Opțiune invalidă (număr)
-          expiresAt: '2025-05-30T12:00:00Z',
+          expiresAt: '2025-07-30T12:00:00Z',
         });
 
       expect(res.statusCode).toBe(400);
@@ -206,7 +206,7 @@ describe('Poll Routes Integration Tests', () => {
           { text: 'Gym Session', votes: [] },
         ],
         createdBy: managerId,
-        expiresAt: '2025-05-30T12:00:00Z',
+        expiresAt: '2025-07-30T12:00:00Z',
       });
 
       authMock.mockImplementation((req, res, next) => {
@@ -261,7 +261,7 @@ describe('Poll Routes Integration Tests', () => {
           { text: 'Gym Session', votes: [] },
         ],
         createdBy: managerId,
-        expiresAt: '2025-05-30T12:00:00Z',
+        expiresAt: '2025-07-30T12:00:00Z',
       });
 
       authMock.mockImplementation((req, res, next) => {
@@ -312,7 +312,7 @@ describe('Poll Routes Integration Tests', () => {
           { text: 'Gym Session', votes: [] },
         ],
         createdBy: managerId,
-        expiresAt: '2025-05-30T12:00:00Z',
+        expiresAt: '2025-07-30T12:00:00Z',
       });
 
       authMock.mockImplementation((req, res, next) => {
@@ -363,7 +363,7 @@ describe('Poll Routes Integration Tests', () => {
           { text: 'Gym Session', votes: [] },
         ],
         createdBy: managerId,
-        expiresAt: '2025-05-30T12:00:00Z',
+        expiresAt: '2025-07-30T12:00:00Z',
       });
 
       authMock.mockImplementation((req, res, next) => {

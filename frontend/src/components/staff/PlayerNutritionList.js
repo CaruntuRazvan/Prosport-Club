@@ -15,10 +15,10 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
       try {
         setLoading(true);
         const playerData = await fetchPlayers();
-        console.log('Players Loaded:', playerData); // Depanare: Verifică datele jucătorilor
+        console.log('Players Loaded:', playerData); // Debugging: Check player data
         setPlayers(playerData);
       } catch (error) {
-        toast.error('Eroare la încărcarea jucătorilor', {
+        toast.error('Error loading players', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -40,7 +40,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
   }, []);
   useEffect(() => {
     if (selectedPlayer) {
-      document.body.style.overflow = 'hidden'; // Oprește scroll-ul exterior
+      document.body.style.overflow = 'hidden'; // Disable external scroll
       const handleEsc = (e) => {
         if (e.key === 'Escape') {
           setSelectedPlayer(null);
@@ -50,11 +50,11 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
       };
       document.addEventListener('keydown', handleEsc);
       return () => {
-        document.body.style.overflow = 'auto'; // Restabilește scroll-ul
-        document.removeEventListener('keydown', handleEsc); // Curăță listener-ul
+        document.body.style.overflow = 'auto'; // Restore scroll
+        document.removeEventListener('keydown', handleEsc); // Clean up listener
       };
     } else {
-      document.body.style.overflow = 'auto'; // Asigură scroll normal când modalul e închis
+      document.body.style.overflow = 'auto'; // Ensure normal scroll when modal is closed
     }
   }, [selectedPlayer]);
  
@@ -62,7 +62,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
     if (!player.playerId?.weight || !player.playerId?.height) return { value: 'N/A', category: 'N/A' };
     const heightInMeters = player.playerId.height / 100;
     const bmi = player.playerId.weight / (heightInMeters * heightInMeters);
-    const category = bmi < 20 ? 'Subponderal' : bmi < 26 ? 'Normal' : bmi < 31 ? 'Muscular' : 'Supraponderal';
+    const category = bmi < 20 ? 'Underweight' : bmi < 26 ? 'Normal' : bmi < 31 ? 'Muscular' : 'Overweight';
     return { value: bmi.toFixed(1), category };
   };
 
@@ -79,34 +79,34 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
     let recommended = maintenance;
     let recommendationText = '';
     
-    if (bmiData.category === 'Subponderal') {
+    if (bmiData.category === 'Underweight') {
       recommended = maintenance + 500;
-      recommendationText = ' (+500 kcal/zi pentru creștere)';
-    } else if (bmiData.category === 'Supraponderal') {
+      recommendationText = ' (+500 kcal/day for weight gain)';
+    } else if (bmiData.category === 'Overweight') {
       recommended = maintenance - 500;
-      recommendationText = ' (-500 kcal/zi pentru slăbire)';
+      recommendationText = ' (-500 kcal/day for weight loss)';
     }
     
-    return { maintenance: `${maintenance} kcal/zi`, recommended: `${recommended} kcal/zi${recommendationText}` };
+    return { maintenance: `${maintenance} kcal/day`, recommended: `${recommended} kcal/day${recommendationText}` };
   };
 
   const getRecommendations = (bmiCategory) => {
     switch (bmiCategory) {
-      case 'Subponderal':
-        return 'Crește aportul de proteine și carbohidrați complecși pentru a susține creșterea masei musculare. Include mese frecvente și gustări bogate în calorii sănătoase (ex. nuci, avocado).';
-      case 'Supraponderal':
-        return 'Redu aportul de calorii prin limitarea grăsimilor saturate și zaharurilor. Concentrează-te pe proteine slabe, legume și fibre. Crește activitatea fizică aerobă.';
+      case 'Underweight':
+        return 'Increase protein and complex carbohydrate intake to support muscle mass gain. Include frequent meals and calorie-dense healthy snacks (e.g., nuts, avocado).';
+      case 'Overweight':
+        return 'Reduce calorie intake by limiting saturated fats and sugars. Focus on lean proteins, vegetables, and fiber. Increase aerobic physical activity.';
       case 'Normal':
-        return 'Menține o dietă echilibrată cu proteine, carbohidrați și grăsimi sănătoase pentru a susține performanța atletică.';
+        return 'Maintain a balanced diet with proteins, carbohydrates, and healthy fats to support athletic performance.';
       case 'Muscular':
-        return 'Continuă să prioritizezi proteinele pentru menținerea masei musculare și carbohidrați pentru energie. Monitorizează greutatea lunar.';
+        return 'Continue prioritizing proteins for muscle mass maintenance and carbohydrates for energy. Monitor weight monthly.';
       default:
-        return 'Date insuficiente pentru recomandări.';
+        return 'Insufficient data for recommendations.';
     }
   };
 
   const handleExportCSV = () => {
-    const headers = ['Nume', 'BMI', 'Calorii Zilnice', 'Calorii Recomandate'];
+    const headers = ['Name', 'BMI', 'Daily Calories', 'Recommended Calories'];
     const rows = players.map(player => {
       const bmiData = calculateBMI(player);
       const caloriesData = calculateCalories(player);
@@ -135,7 +135,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
     const height = parseFloat(editData.height);
 
     if ((weight && weight <= 0) || (height && height <= 0)) {
-      toast.error('Greutatea și înălțimea trebuie să fie numere pozitive.', {
+      toast.error('Weight and height must be positive numbers.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -169,7 +169,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
           : player
       ));
 
-      toast.success('Datele jucătorului au fost actualizate cu succes!', {
+      toast.success('Player data updated successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -186,7 +186,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
       setEditData({ weight: '', height: '' });
       setSelectedPlayer(null);
     } catch (error) {
-      toast.error(error.message || 'Eroare la actualizarea datelor jucătorului.', {
+      toast.error(error.message || 'Error updating player data.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -202,7 +202,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
   };
 
   const handleEditToggle = () => {
-    console.log('Toggling edit mode. Current isEditing:', isEditing, 'User Role:', userRole); // Depanare
+    console.log('Toggling edit mode. Current isEditing:', isEditing, 'User Role:', userRole); // Debugging
     if (isEditing) {
       setEditData({ weight: '', height: '' });
     } else {
@@ -214,33 +214,33 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
     setIsEditing(!isEditing);
   };
 
-  if (loading) return <div className="nutrition-loading">Se încarcă...</div>;
+  if (loading) return <div className="nutrition-loading">Loading...</div>;
 
   return (
     <section className="nutrition-section">
       <div className="nutrition-action-buttons">
         <button className="nutrition-export-csv-btn" onClick={handleExportCSV}>
-          Exportă CSV
+          Export CSV
         </button>
       </div>
       {players.length > 0 ? (
         <table className="nutrition-table">
           <thead>
             <tr>
-              <th>Nume</th>
+              <th>Name</th>
               <th>BMI</th>
-              <th>Calorii Zilnice</th>
-              <th>Calorii Recomandate</th>
-              <th>Detalii</th>
+              <th>Daily Calories</th>
+              <th>Recommended Calories</th>
+              <th>Details</th>
             </tr>
           </thead>
           <tbody>
             {players.map((player) => {
               const bmiData = calculateBMI(player);
               const caloriesData = calculateCalories(player);
-              const rowClass = bmiData.category === 'Subponderal' ? 'nutrition-highlight-underweight' : bmiData.category === 'Supraponderal' ? 'nutrition-highlight-overweight' : '';
+              const rowClass = bmiData.category === 'Underweight' ? 'nutrition-highlight-underweight' : bmiData.category === 'Overweight' ? 'nutrition-highlight-overweight' : '';
               return (
-                <tr key={player._id} className={rowClass} title={bmiData.category === 'Subponderal' ? 'Acest jucător este subponderal (BMI < 20)' : bmiData.category === 'Supraponderal' ? 'Acest jucător este supraponderal (BMI ≥ 31)' : ''}>
+                <tr key={player._id} className={rowClass} title={bmiData.category === 'Underweight' ? 'This player is underweight (BMI < 20)' : bmiData.category === 'Overweight' ? 'This player is overweight (BMI ≥ 31)' : ''}>
                   <td>{`${player.playerId?.firstName} ${player.playerId?.lastName}`}</td>
                   <td>{bmiData.value !== 'N/A' ? `${bmiData.value} (${bmiData.category})` : 'N/A'}</td>
                   <td>{caloriesData.maintenance}</td>
@@ -250,10 +250,10 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
                       className="nutrition-details-btn"
                       onClick={() => {
                         setSelectedPlayer(player);
-                        console.log('Selected Player:', player); // Depanare
+                        console.log('Selected Player:', player); // Debugging
                       }}
                     >
-                      Detalii
+                      Details
                     </button>
                   </td>
                 </tr>
@@ -262,7 +262,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
           </tbody>
         </table>
       ) : (
-        <p className="nutrition-no-players">Nu există jucători disponibili.</p>
+        <p className="nutrition-no-players">No players available.</p>
       )}
       {selectedPlayer && (
         <div className="nutrition-modal-container" onClick={() => {
@@ -275,7 +275,7 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
             {isEditing && userRole?.toLowerCase() === 'staff' ? (
               <form onSubmit={handleEditSubmit} className="nutrition-edit-form">
                 <div className="nutrition-form-group">
-                  <label>Greutate (kg):</label>
+                  <label>Weight (kg):</label>
                   <input
                     type="number"
                     value={editData.weight}
@@ -283,11 +283,11 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
                     className="nutrition-edit-input"
                     min="0"
                     step="0.1"
-                    placeholder="Introdu greutatea"
+                    placeholder="Enter weight"
                   />
                 </div>
                 <div className="nutrition-form-group">
-                  <label>Înălțime (cm):</label>
+                  <label>Height (cm):</label>
                   <input
                     type="number"
                     value={editData.height}
@@ -295,24 +295,24 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
                     className="nutrition-edit-input"
                     min="0"
                     step="1"
-                    placeholder="Introdu înălțimea"
+                    placeholder="Enter height"
                   />
                 </div>
                 <div className="nutrition-modal-actions">
-                  <button type="submit" className="nutrition-save-btn">Salvează</button>
-                  <button type="button" className="nutrition-cancel-btn" onClick={handleEditToggle}>Anulează</button>
+                  <button type="submit" className="nutrition-save-btn">Save</button>
+                  <button type="button" className="nutrition-cancel-btn" onClick={handleEditToggle}>Cancel</button>
                 </div>
               </form>
             ) : (
               <>
-                <p><strong>Vârstă:</strong> {calculateAge(selectedPlayer.playerId?.dateOfBirth) || 'N/A'} ani</p>
-                <p><strong>Greutate:</strong> {selectedPlayer.playerId?.weight || 'N/A'} kg</p>
-                <p><strong>Înălțime:</strong> {selectedPlayer.playerId?.height || 'N/A'} cm</p>
+                <p><strong>Age:</strong> {calculateAge(selectedPlayer.playerId?.dateOfBirth) || 'N/A'} years</p>
+                <p><strong>Weight:</strong> {selectedPlayer.playerId?.weight || 'N/A'} kg</p>
+                <p><strong>Height:</strong> {selectedPlayer.playerId?.height || 'N/A'} cm</p>
                 <p><strong>BMI:</strong> {calculateBMI(selectedPlayer).value !== 'N/A' ? `${calculateBMI(selectedPlayer).value} (${calculateBMI(selectedPlayer).category})` : 'N/A'}</p>
-                <p><strong>BMR:</strong> {selectedPlayer.playerId?.weight && selectedPlayer.playerId?.height && selectedPlayer.playerId?.dateOfBirth ? Math.round(10 * selectedPlayer.playerId.weight + 6.25 * selectedPlayer.playerId.height - 5 * calculateAge(selectedPlayer.playerId.dateOfBirth) + 5) + ' kcal/zi' : 'N/A'}</p>
-                <p><strong>Calorii Zilnice:</strong> {calculateCalories(selectedPlayer).maintenance}</p>
-                <p><strong>Calorii Recomandate:</strong> {calculateCalories(selectedPlayer).recommended}</p>
-                <p><strong>Recomandări:</strong> {getRecommendations(calculateBMI(selectedPlayer).category)}</p>
+                <p><strong>BMR:</strong> {selectedPlayer.playerId?.weight && selectedPlayer.playerId?.height && selectedPlayer.playerId?.dateOfBirth ? Math.round(10 * selectedPlayer.playerId.weight + 6.25 * selectedPlayer.playerId.height - 5 * calculateAge(selectedPlayer.playerId.dateOfBirth) + 5) + ' kcal/day' : 'N/A'}</p>
+                <p><strong>Daily Calories:</strong> {calculateCalories(selectedPlayer).maintenance}</p>
+                <p><strong>Recommended Calories:</strong> {calculateCalories(selectedPlayer).recommended}</p>
+                <p><strong>Recommendations:</strong> {getRecommendations(calculateBMI(selectedPlayer).category)}</p>
                 {userRole?.toLowerCase() === 'staff' && (
                   <button className="nutrition-edit-btn" onClick={handleEditToggle}>
                     Edit height/weight
@@ -322,10 +322,10 @@ const PlayerNutritionList = ({ calculateAge, userRole }) => {
                   setSelectedPlayer(null);
                   setIsEditing(false);
                   setEditData({ weight: '', height: '' });
-                }}>Închide</button>
+                }}>Close</button>
               </>
             )}
-            {console.log('Modal Rendered. Selected Player:', selectedPlayer, 'User Role:', userRole, 'Is Editing:', isEditing)} {/* Depanare */}
+            {console.log('Modal Rendered:', selectedPlayer, 'User Role:', userRole, 'Is Editing:', isEditing)} {/* Debugging */}
           </div>
         </div>
       )}

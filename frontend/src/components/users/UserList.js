@@ -1,7 +1,7 @@
 import React from 'react';
 import { useConfirm } from '../../context/ConfirmContext';
 const UserList = ({ users, onDeleteUser, onViewUser, onEditUser }) => {
-  const { showConfirm } = useConfirm();
+  const showConfirm  = useConfirm();
   return (
     <div className="user-list">
       {users.length > 0 ? (
@@ -33,7 +33,7 @@ const UserList = ({ users, onDeleteUser, onViewUser, onEditUser }) => {
             <button
               className="delete-btn"
               onClick={() => {
-                showConfirm(`Sigur vrei să ștergi utilizatorul ${user.name}?`, () => {
+                showConfirm(`Are you sure you want to delete the user ${user.name}?`, () => {
                   onDeleteUser(user.email);
                 });
               }}
@@ -53,7 +53,7 @@ const UserList = ({ users, onDeleteUser, onViewUser, onEditUser }) => {
           </div>
         ))
       ) : (
-        <p className="no-users">Nu există utilizatori în categoria selectată.</p>
+        <p className="no-users">No users in the selected category.</p>
       )}
     </div>
   );

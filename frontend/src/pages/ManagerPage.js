@@ -53,10 +53,10 @@ const ManagerPage = ({ userId, handleLogout }) => {
       }
       try {
         const managerData = await fetchCurrentUser(userId, role);
-        console.log('Date manager:', managerData);
+        console.log('Manager data:', managerData);
         setManagerInfo(managerData);
       } catch (error) {
-        console.error('Eroare la încărcarea datelor managerului:', error);
+        console.error('Error loading manager data:', error);
       }
     };
 
@@ -69,8 +69,8 @@ const ManagerPage = ({ userId, handleLogout }) => {
         const eventData = await getEvents(userId);
         setEvents(eventData);
       } catch (err) {
-        setError('Eroare la obținerea evenimentelor.');
-        console.error('Eroare la încărcarea evenimentelor:', err);
+        setError('Error fetching events.');
+        console.error('Error loading events:', err);
       }
     };
     loadEvents();
@@ -162,7 +162,7 @@ const ManagerPage = ({ userId, handleLogout }) => {
 
         setAverageHeightByPosition(averageHeightByPosition);
       } catch (error) {
-        console.error('Eroare la preluarea datelor jucătorilor:', error);
+        console.error('Error fetching player data:', error);
       }
     };
     loadPlayersData();
@@ -210,7 +210,7 @@ const ManagerPage = ({ userId, handleLogout }) => {
         {managerInfo && (
           <div className="manager-profile">
             <p><strong>User:</strong> {managerInfo.name}</p>
-            <p><strong>Email:</strong> {managerInfo.email}</p>
+            <p style={{ fontSize: '11px',  whiteSpace: 'nowrap',overflow: 'hidden'}}><strong>Email:</strong> {managerInfo.email}</p>
           </div>
         )}
         <ul>
@@ -218,19 +218,19 @@ const ManagerPage = ({ userId, handleLogout }) => {
             className={activeSection === 'team' ? 'active' : ''}
             onClick={() => setActiveSection('team')}
           >
-            Despre Echipa
+            About Team
           </li>
           <li
             className={activeSection === 'profile' ? 'active' : ''}
             onClick={() => setActiveSection('profile')}
           >
-            Profilul Meu
+            My Profile
           </li>
           <li
             className={activeSection === 'players' ? 'active' : ''}
             onClick={() => setActiveSection('players')}
           >
-            Jucatori
+            Players
           </li>
           <li
             className={activeSection === 'staff' ? 'active' : ''}
@@ -248,19 +248,19 @@ const ManagerPage = ({ userId, handleLogout }) => {
             className={activeSection === 'statistics' ? 'active' : ''}
             onClick={() => setActiveSection('statistics')}
           >
-            Statistici
+            Statistics
           </li>
           <li
             className={activeSection === 'feedbacks' ? 'active' : ''}
             onClick={() => setActiveSection('feedbacks')}
           >
-            Feedback-uri Medie
+            Average Feedback
           </li>
           <li
             className={activeSection === 'polls' ? 'active' : ''}
             onClick={() => setActiveSection('polls')}
           >
-            Sondaje
+            Polls
           </li>
           <li
             className={activeSection === 'fines' ? 'active' : ''}
@@ -272,7 +272,7 @@ const ManagerPage = ({ userId, handleLogout }) => {
             className={activeSection === 'journal' ? 'active' : ''}
             onClick={() => setActiveSection('journal')}
           >
-            Jurnal
+            Journal
           </li>
         </ul>
       </nav>
@@ -305,22 +305,22 @@ const ManagerPage = ({ userId, handleLogout }) => {
                 </div>
 
                 <div className="profile-details">
-                  <h4>Informații personale</h4>
+                  <h4>Personal Information</h4>
                   <div className="info-grid">
                     <div className="info-item">
-                      <span className="info-label">Prenume:</span>
+                      <span className="info-label">First Name:</span>
                       <span className="info-value">{managerInfo.managerId?.firstName}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Nume:</span>
+                      <span className="info-label">Last Name:</span>
                       <span className="info-value">{managerInfo.managerId?.lastName}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Vârsta:</span>
-                      <span className="info-value">{calculateAge(managerInfo.managerId?.dateOfBirth)} ani</span>
+                      <span className="info-label">Age:</span>
+                      <span className="info-value">{calculateAge(managerInfo.managerId?.dateOfBirth)} years</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Naționalitate:</span>
+                      <span className="info-label">Nationality:</span>
                       <span className="info-value">{managerInfo.managerId?.nationality}</span>
                     </div>
                     <div className="info-item">
@@ -331,7 +331,7 @@ const ManagerPage = ({ userId, handleLogout }) => {
 
                   {managerInfo.managerId?.history && managerInfo.managerId.history.length > 0 && (
                     <div className="profile-section">
-                      <h4>Istoric cluburi</h4>
+                      <h4>Club History</h4>
                       <ul className="history-list">
                         {managerInfo.managerId.history.map((entry, index) => (
                           <li key={index}>

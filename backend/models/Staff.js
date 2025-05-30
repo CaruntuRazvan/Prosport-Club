@@ -12,9 +12,9 @@ const staffSchema = new mongoose.Schema({
   },
   history: [
     {
-      club: { type: String, required: true },
-      startYear: { type: Number, required: true },
-      endYear: { type: Number, required: true },
+      club: { type: String },
+      startYear: { type: Number },
+      endYear: { type: Number },
     }
   ],
     certifications: [{ name: String, year: Number }], // Diplome, licențe, cursuri

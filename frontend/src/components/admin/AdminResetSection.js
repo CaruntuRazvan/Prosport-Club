@@ -4,11 +4,11 @@ import { fetchUsers } from '../../services/userService';
 import { resetAllFines, resetUserFines } from '../../services/fineService';
 import { resetAllPolls, resetUserPolls } from '../../services/pollService';
 import { resetAllFeedbacks, resetUserFeedbacks, resetAllFeedbackSummaries, resetUserFeedbackSummaries } from '../../services/feedbackService';
-import { resetAllEvents, resetUserEvents } from '../../services/eventService'; // Importăm noile funcții
+import { resetAllEvents, resetUserEvents } from '../../services/eventService';
 import { useConfirm } from '../../context/ConfirmContext';
 import '../../styles/admin/AdminResetSection.css';
 
-// Funcție reutilizabilă pentru toast-uri
+// Reusable function for toasts
 const showToast = (message, type = 'success') => {
   const toastConfig = {
     autoClose: 1500,
@@ -33,195 +33,195 @@ const AdminResetSection = () => {
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { showConfirm } = useConfirm();
+  const  showConfirm  = useConfirm();
 
-  // Încarcă lista utilizatorilor
+  // Load user list
   useEffect(() => {
     const fetchUsersData = async () => {
       try {
         const data = await fetchUsers();
         setUsers(data);
       } catch (error) {
-        showToast('Eroare la preluarea utilizatorilor: ' + error.message, 'error');
+        showToast('Error fetching users: ' + error.message, 'error');
       }
     };
     fetchUsersData();
   }, []);
 
-  // Șterge toate amenzile
+  // Reset all fines
   const handleResetAllFines = async () => {
-    showConfirm('Ești sigur că vrei să ștergi toate amenzile din baza de date? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all fines from the database? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetAllFines();
-        showToast('Toate amenzile au fost șterse cu succes!');
+        showToast('All fines have been successfully deleted!');
       } catch (error) {
-        showToast('Eroare la ștergerea amenzilor: ' + error.message, 'error');
+        showToast('Error deleting fines: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge amenzile unui utilizator selectat
+  // Reset fines for a selected user
   const handleResetUserFines = async () => {
     if (!selectedUserId) {
-      showToast('Selectează un utilizator pentru resetare!', 'error');
+      showToast('Select a user to reset!', 'error');
       return;
     }
 
-    showConfirm('Ești sigur că vrei să ștergi toate amenzile asociate acestui utilizator? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all fines associated with this user? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetUserFines(selectedUserId);
-        showToast('Amenzile utilizatorului au fost șterse cu succes!');
+        showToast('User fines have been successfully deleted!');
         setSelectedUserId('');
       } catch (error) {
-        showToast('Eroare la ștergerea amenzilor utilizatorului: ' + error.message, 'error');
+        showToast('Error deleting user fines: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge toate sondajele
+  // Reset all polls
   const handleResetAllPolls = async () => {
-    showConfirm('Ești sigur că vrei să ștergi toate sondajele din baza de date? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all polls from the database? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetAllPolls();
-        showToast('Toate sondajele au fost șterse cu succes!');
+        showToast('All polls have been successfully deleted!');
       } catch (error) {
-        showToast('Eroare la ștergerea sondajelor: ' + error.message, 'error');
+        showToast('Error deleting polls: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge sondajele și voturile unui utilizator selectat
+  // Reset polls and votes for a selected user
   const handleResetUserPolls = async () => {
     if (!selectedUserId) {
-      showToast('Selectează un utilizator pentru resetare!', 'error');
+      showToast('Select a user to reset!', 'error');
       return;
     }
 
-    showConfirm('Ești sigur că vrei să ștergi toate sondajele create de acest utilizator și voturile sale? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all polls created by this user and their votes? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetUserPolls(selectedUserId);
-        showToast('Sondajele și voturile utilizatorului au fost șterse cu succes!');
+        showToast('User polls and votes have been successfully deleted!');
         setSelectedUserId('');
       } catch (error) {
-        showToast('Eroare la ștergerea sondajelor utilizatorului: ' + error.message, 'error');
+        showToast('Error deleting user polls: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge toate feedback-urile
+  // Reset all feedbacks
   const handleResetAllFeedbacks = async () => {
-    showConfirm('Ești sigur că vrei să ștergi toate feedback-urile din baza de date? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all feedbacks from the database? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetAllFeedbacks();
-        showToast('Toate feedback-urile au fost șterse cu succes!');
+        showToast('All feedbacks have been successfully deleted!');
       } catch (error) {
-        showToast('Eroare la ștergerea feedback-urilor: ' + error.message, 'error');
+        showToast('Error deleting feedbacks: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge feedback-urile asociate unui utilizator selectat
+  // Reset feedbacks for a selected user
   const handleResetUserFeedbacks = async () => {
     if (!selectedUserId) {
-      showToast('Selectează un utilizator pentru resetare!', 'error');
+      showToast('Select a user to reset!', 'error');
       return;
     }
 
-    showConfirm('Ești sigur că vrei să ștergi toate feedback-urile asociate acestui utilizator? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all feedbacks associated with this user? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetUserFeedbacks(selectedUserId);
-        showToast('Feedback-urile utilizatorului au fost șterse cu succes!');
+        showToast('User feedbacks have been successfully deleted!');
         setSelectedUserId('');
       } catch (error) {
-        showToast('Eroare la ștergerea feedback-urilor utilizatorului: ' + error.message, 'error');
+        showToast('Error deleting user feedbacks: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge toate rezumatele feedback-urilor
+  // Reset all feedback summaries
   const handleResetAllFeedbackSummaries = async () => {
-    showConfirm('Ești sigur că vrei să ștergi toate rezumatele feedback-urilor din baza de date? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all feedback summaries from the database? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetAllFeedbackSummaries();
-        showToast('Toate rezumatele feedback-urilor au fost șterse cu succes!');
+        showToast('All feedback summaries have been successfully deleted!');
       } catch (error) {
-        showToast('Eroare la ștergerea rezumatelor feedback-urilor: ' + error.message, 'error');
+        showToast('Error deleting feedback summaries: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge rezumatele feedback-urilor asociate unui utilizator selectat
+  // Reset feedback summaries for a selected user
   const handleResetUserFeedbackSummaries = async () => {
     if (!selectedUserId) {
-      showToast('Selectează un utilizator pentru resetare!', 'error');
+      showToast('Select a user to reset!', 'error');
       return;
     }
 
-    showConfirm('Ești sigur că vrei să ștergi toate rezumatele feedback-urilor asociate acestui utilizator? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all feedback summaries associated with this user? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetUserFeedbackSummaries(selectedUserId);
-        showToast('Rezumatele feedback-urilor utilizatorului au fost șterse cu succes!');
+        showToast('User feedback summaries have been successfully deleted!');
         setSelectedUserId('');
       } catch (error) {
-        showToast('Eroare la ștergerea rezumatelor feedback-urilor utilizatorului: ' + error.message, 'error');
+        showToast('Error deleting user feedback summaries: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge toate evenimentele
+  // Reset all events
   const handleResetAllEvents = async () => {
-    showConfirm('Ești sigur că vrei să ștergi toate evenimentele din baza de date? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all events from the database? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetAllEvents();
-        showToast('Toate evenimentele și notificările asociate au fost șterse cu succes!');
+        showToast('All events and associated notifications have been successfully deleted!');
       } catch (error) {
-        showToast('Eroare la ștergerea evenimentelor: ' + error.message, 'error');
+        showToast('Error deleting events: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
     });
   };
 
-  // Șterge evenimentele asociate unui utilizator selectat
+  // Reset events for a selected user
   const handleResetUserEvents = async () => {
     if (!selectedUserId) {
-      showToast('Selectează un utilizator pentru resetare!', 'error');
+      showToast('Select a user to reset!', 'error');
       return;
     }
 
-    showConfirm('Ești sigur că vrei să ștergi toate evenimentele asociate acestui utilizator? Această acțiune este ireversibilă!', async () => {
+    showConfirm('Are you sure you want to delete all events associated with this user? This action is irreversible!', async () => {
       setIsLoading(true);
       try {
         await resetUserEvents(selectedUserId);
-        showToast('Evenimentele și notificările utilizatorului au fost șterse cu succes!');
+        showToast('User events and notifications have been successfully deleted!');
         setSelectedUserId('');
       } catch (error) {
-        showToast('Eroare la ștergerea evenimentelor utilizatorului: ' + error.message, 'error');
+        showToast('Error deleting user events: ' + error.message, 'error');
       } finally {
         setIsLoading(false);
       }
@@ -230,74 +230,74 @@ const AdminResetSection = () => {
 
   return (
     <section className="admin-reset-section">
-      <h3 className="reset-section-title">Resetare Date</h3>
+      <h3 className="reset-section-title">Data Reset</h3>
       <div className="reset-container">
-        {/* Coloana stângă: Reset total */}
+        {/* Left column: Total reset */}
         <div className="reset-column reset-all-column">
-          <h4>Resetare Totală</h4>
+          <h4>Total Reset</h4>
           <div className="reset-item">
-            <p>Șterge toate evenimentele</p>
+            <p>Delete all events</p>
             <button
               className="reset-btn"
               onClick={handleResetAllEvents}
               disabled={isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Evenimentele'}
+              {isLoading ? 'Processing...' : 'Delete Events'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Șterge toate amenzile</p>
+            <p>Delete all fines</p>
             <button
               className="reset-btn"
               onClick={handleResetAllFines}
               disabled={isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Amenzile'}
+              {isLoading ? 'Processing...' : 'Delete Fines'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Șterge toate sondajele</p>
+            <p>Delete all polls</p>
             <button
               className="reset-btn"
               onClick={handleResetAllPolls}
               disabled={isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Sondajele'}
+              {isLoading ? 'Processing...' : 'Delete Polls'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Șterge toate feedback-urile</p>
+            <p>Delete all feedbacks</p>
             <button
               className="reset-btn"
               onClick={handleResetAllFeedbacks}
               disabled={isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Feedback-urile'}
+              {isLoading ? 'Processing...' : 'Delete Feedbacks'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Șterge toate rezumatele feedback-urilor</p>
+            <p>Delete all feedback summaries</p>
             <button
               className="reset-btn"
               onClick={handleResetAllFeedbackSummaries}
               disabled={isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Rezumatele'}
+              {isLoading ? 'Processing...' : 'Delete Summaries'}
             </button>
           </div>
         </div>
 
-        {/* Coloana dreaptă: Reset per utilizator */}
+        {/* Right column: Reset per user */}
         <div className="reset-column reset-user-column">
-          <h4>Resetare per Utilizator</h4>
+          <h4>Reset per User</h4>
           <div className="reset-item">
-            <p>Evenimentele utilizatorului</p>
+            <p>User events</p>
             <select
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
               className="reset-user-dropdown"
             >
-              <option value="">Selectează un utilizator</option>
+              <option value="">Select a user</option>
               {users.map(user => (
                 <option key={user._id} value={user._id}>
                   {user.name} ({user.role})
@@ -309,17 +309,17 @@ const AdminResetSection = () => {
               onClick={handleResetUserEvents}
               disabled={!selectedUserId || isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Evenimentele'}
+              {isLoading ? 'Processing...' : 'Delete Events'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Amenzile utilizatorului</p>
+            <p>User fines</p>
             <select
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
               className="reset-user-dropdown"
             >
-              <option value="">Selectează un utilizator</option>
+              <option value="">Select a user</option>
               {users.map(user => (
                 <option key={user._id} value={user._id}>
                   {user.name} ({user.role})
@@ -331,17 +331,17 @@ const AdminResetSection = () => {
               onClick={handleResetUserFines}
               disabled={!selectedUserId || isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Amenzile'}
+              {isLoading ? 'Processing...' : 'Delete Fines'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Sondajele utilizatorului</p>
+            <p>User polls</p>
             <select
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
               className="reset-user-dropdown"
             >
-              <option value="">Selectează un utilizator</option>
+              <option value="">Select a user</option>
               {users.map(user => (
                 <option key={user._id} value={user._id}>
                   {user.name} ({user.role})
@@ -353,17 +353,17 @@ const AdminResetSection = () => {
               onClick={handleResetUserPolls}
               disabled={!selectedUserId || isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Sondajele'}
+              {isLoading ? 'Processing...' : 'Delete Polls'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Feedback-urile utilizatorului</p>
+            <p>User feedbacks</p>
             <select
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
               className="reset-user-dropdown"
             >
-              <option value="">Selectează un utilizator</option>
+              <option value="">Select a user</option>
               {users.map(user => (
                 <option key={user._id} value={user._id}>
                   {user.name} ({user.role})
@@ -375,17 +375,17 @@ const AdminResetSection = () => {
               onClick={handleResetUserFeedbacks}
               disabled={!selectedUserId || isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Feedback-urile'}
+              {isLoading ? 'Processing...' : 'Delete Feedbacks'}
             </button>
           </div>
           <div className="reset-item">
-            <p>Rezumatele feedback-urilor utilizatorului</p>
+            <p>User feedback summaries</p>
             <select
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
               className="reset-user-dropdown"
             >
-              <option value="">Selectează un utilizator</option>
+              <option value="">Select a user</option>
               {users.map(user => (
                 <option key={user._id} value={user._id}>
                   {user.name} ({user.role})
@@ -397,7 +397,7 @@ const AdminResetSection = () => {
               onClick={handleResetUserFeedbackSummaries}
               disabled={!selectedUserId || isLoading}
             >
-              {isLoading ? 'Se procesează...' : 'Șterge Rezumatele'}
+              {isLoading ? 'Processing...' : 'Delete Summaries'}
             </button>
           </div>
         </div>

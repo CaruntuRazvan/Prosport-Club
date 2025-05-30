@@ -7,13 +7,8 @@ const authMiddleware = require('../middleware/auth');
 const { generateFeedbackSummary } = require("../middleware/openaiService");
 const Notification = require('../models/Notification');
 const User = require('../models/User'); // Adăugăm modelul User
+const { isAdmin } = require('../middleware/roleMiddleware'); 
 
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Acces permis doar administratorilor.' });
-  }
-  next();
-};
 
 // Ruta pentru adăugarea unui feedback (deja existentă)
 router.post('/', authMiddleware, async (req, res) => {
@@ -57,7 +52,27 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
+// DELETE /api/feedback/reset-all - Șterge toate feedback-urile (doar admin)
+router.delete('/reset-all', authMiddleware, isAdmin, async (req, res) => {
+  try {
+    // Șterge toate feedback-urile
+    await Feedback.deleteMany({});
+    console.log('Toate feedback-urile au fost șterse.');
 
+    // Șterge toate notificările asociate feedback-urilor
+    await Notification.deleteMany({ type: 'feedback' });
+    console.log('Notificările asociate feedback-urilor au fost șterse.');
+
+    // Șterge toate rezumatele din PlayerFeedbackSummary
+    await PlayerFeedbackSummary.deleteMany({});
+    console.log('Toate rezumatele PlayerFeedbackSummary au fost șterse.');
+
+    res.status(200).json({ message: 'Toate feedback-urile au fost șterse cu succes.' });
+  } catch (error) {
+    console.error('Eroare la ștergerea feedback-urilor:', error);
+    res.status(500).json({ message: 'Eroare la ștergerea feedback-urilor.' });
+  }
+});
 // Ruta pentru preluarea feedback-urilor pentru un eveniment
 router.get('/event/:eventId', authMiddleware, async (req, res) => {
   const { eventId } = req.params;
@@ -147,27 +162,6 @@ router.get("/summary-by-creator/:creatorId", authMiddleware, async (req, res) =>
   } catch (error) {
     console.error("Error retrieving feedback summaries:", error);
     res.status(500).json({ message: "Error retrieving feedback summaries." });
-  }
-});
-// DELETE /api/feedback/reset-all - Șterge toate feedback-urile (doar admin)
-router.delete('/reset-all', authMiddleware, isAdmin, async (req, res) => {
-  try {
-    // Șterge toate feedback-urile
-    await Feedback.deleteMany({});
-    console.log('Toate feedback-urile au fost șterse.');
-
-    // Șterge toate notificările asociate feedback-urilor
-    await Notification.deleteMany({ type: 'feedback' });
-    console.log('Notificările asociate feedback-urilor au fost șterse.');
-
-    // Șterge toate rezumatele din PlayerFeedbackSummary
-    await PlayerFeedbackSummary.deleteMany({});
-    console.log('Toate rezumatele PlayerFeedbackSummary au fost șterse.');
-
-    res.status(200).json({ message: 'Toate feedback-urile au fost șterse cu succes.' });
-  } catch (error) {
-    console.error('Eroare la ștergerea feedback-urilor:', error);
-    res.status(500).json({ message: 'Eroare la ștergerea feedback-urilor.' });
   }
 });
 

@@ -5,20 +5,7 @@ const User = require('../models/User');
 const Notification = require('../models/Notification');
 const auth = require('../middleware/auth');
 const { Parser } = require('json2csv');
-
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Acces permis doar administratorilor.' });
-  }
-  next();
-};
-
-const isManagerOrStaff = (req, res, next) => {
-  if (req.user.role !== 'manager' && req.user.role !== 'staff') {
-    return res.status(403).json({ message: 'Acces permis doar managerilor și staff-ului.' });
-  }
-  next();
-};
+const { isManagerOrStaff, isAdmin } = require('../middleware/roleMiddleware');
 
 // Middleware to check authorization for a specific fine
 const isFineAuthorized = async (req, res, next) => {
@@ -214,6 +201,24 @@ router.put('/:id', auth, isFineAuthorized, async (req, res) => {
   }
 });
 
+router.delete('/reset-all', auth, isAdmin, async (req, res) => {
+  try {
+    // Șterge toate amenzile
+    await Fine.deleteMany({});
+    console.log('Toate amenzile au fost șterse.');
+
+    // Șterge notificările asociate amenzilor
+    await Notification.deleteMany({
+      type: { $in: ['fine', 'fine_payment_request', 'fine_payment_approved', 'fine_payment_rejected'] },
+    });
+    console.log('Notificările asociate amenzilor au fost șterse.');
+
+    res.status(200).json({ message: 'Toate amenzile au fost șterse cu succes.' });
+  } catch (error) {
+    console.error('Eroare la ștergerea amenzilor:', error);
+    res.status(500).json({ message: 'Eroare la ștergerea amenzilor.' });
+  }
+});
 // DELETE /api/fines/:id - Delete a fine (creator only)
 router.delete('/:id', auth, isManagerOrStaff, isFineAuthorized, async (req, res) => {
   try {
@@ -267,24 +272,6 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-router.delete('/reset-all', auth, isAdmin, async (req, res) => {
-  try {
-    // Șterge toate amenzile
-    await Fine.deleteMany({});
-    console.log('Toate amenzile au fost șterse.');
-
-    // Șterge notificările asociate amenzilor
-    await Notification.deleteMany({
-      type: { $in: ['fine', 'fine_payment_request', 'fine_payment_approved', 'fine_payment_rejected'] },
-    });
-    console.log('Notificările asociate amenzilor au fost șterse.');
-
-    res.status(200).json({ message: 'Toate amenzile au fost șterse cu succes.' });
-  } catch (error) {
-    console.error('Eroare la ștergerea amenzilor:', error);
-    res.status(500).json({ message: 'Eroare la ștergerea amenzilor.' });
-  }
-});
 
 // DELETE /api/fines/reset-user/:userId - Șterge amenzile asociate unui utilizator (doar admin)
 router.delete('/reset-user/:userId', auth, isAdmin, async (req, res) => {

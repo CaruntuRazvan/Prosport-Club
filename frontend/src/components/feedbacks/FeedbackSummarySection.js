@@ -7,7 +7,7 @@ import '../../styles/feedbacks/FeedbackSummarySection.css';
 const FeedbackSummarySection = ({ creatorId }) => {
   const [summaries, setSummaries] = useState([]);
   const [filteredSummaries, setFilteredSummaries] = useState([]);
-  const [topPlayers, setTopPlayers] = useState([]); // State pentru top 3 jucători
+  const [topPlayers, setTopPlayers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [logoBase64, setLogoBase64] = useState(null);
@@ -23,7 +23,7 @@ const FeedbackSummarySection = ({ creatorId }) => {
         setSummaries(summariesData);
         setFilteredSummaries(summariesData);
 
-        // Calculăm top 3 jucători după averageSatisfaction
+        // Calculate top 3 players by averageSatisfaction
         const sortedSummaries = [...summariesData].sort((a, b) => parseFloat(b.averageSatisfaction) - parseFloat(a.averageSatisfaction));
         setTopPlayers(sortedSummaries.slice(0, 3));
 
@@ -33,7 +33,7 @@ const FeedbackSummarySection = ({ creatorId }) => {
         setCurrentUser(userData);
 
         const response = await fetch("/images/logo.png");
-        if (!response.ok) throw new Error('Nu s-a putut încărca logo-ul');
+        if (!response.ok) throw new Error('Failed to load the logo');
         const blob = await response.blob();
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -42,7 +42,7 @@ const FeedbackSummarySection = ({ creatorId }) => {
         reader.readAsDataURL(blob);
       } catch (err) {
         setError(err.message);
-        console.error('Eroare:', err);
+        console.error('Error:', err);
       } finally {
         setLoading(false);
       }
@@ -72,18 +72,18 @@ const FeedbackSummarySection = ({ creatorId }) => {
   };
 
   const handleExportToPDF = () => {
-    const generatedBy = currentUser?.name || 'Utilizator necunoscut';
-    const role = currentUser?.role || 'Rol necunoscut';
+    const generatedBy = currentUser?.name || 'Unknown user';
+    const role = currentUser?.role || 'Unknown role';
     exportFeedbackSummaryToPDF(filteredSummaries, generatedBy, role, logoBase64);
   };
 
-  if (loading) return <div className="feedback-loading-message">Se încarcă mediile feedback-urilor...</div>;
+  if (loading) return <div className="feedback-loading-message">Loading feedback summaries...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="feedback-summary-section">
-      {/* Secțiunea Top 3 Jucători - vizibilă doar pentru manager */}
-      {currentUser?.role === 'manager' && summaries.length >= 3  && (
+      {/* Top 3 Players section - visible only for manager */}
+      {currentUser?.role === 'manager' && summaries.length >= 3 && (
         <div className="top-players-section">
           <h3>🏆 Top 3</h3>
           <div className="top-players-list">
@@ -92,7 +92,7 @@ const FeedbackSummarySection = ({ creatorId }) => {
                 <span className="top-player-position">#{index + 1}</span>
                 <span className="top-player-name">{player.playerName}</span>
                 <span className="top-player-score">
-                  Media: {parseFloat(player.averageSatisfaction).toFixed(2)}
+                  Average: {parseFloat(player.averageSatisfaction).toFixed(2)}
                 </span>
               </div>
             ))}
@@ -104,24 +104,27 @@ const FeedbackSummarySection = ({ creatorId }) => {
         <div className="feedback-search-bar">
           <input
             type="text"
-            placeholder="Caută jucător..."
+            placeholder="Search for a player..."
             value={searchTerm}
             onChange={handleSearch}
             className="feedback-search-input"
           />
         </div>
-        <button className="feedback-export-button" onClick={handleExportToPDF}>
-          Export as PDF
-        </button>
+        {/* Display the button only if there is at least one feedback */}
+        {summaries.length > 0 && (
+          <button className="feedback-export-button" onClick={handleExportToPDF}>
+            Export as PDF
+          </button>
+        )}
       </div>
 
       {summaries.length === 0 ? (
         <div className="feedback-no-data-message">
-          Nu există feedback-uri disponibile momentan.
+          No feedback available at the moment.
         </div>
       ) : filteredSummaries.length === 0 ? (
         <div className="feedback-no-results-message">
-          Niciun jucător nu corespunde căutării tale.
+          No player matches your search.
         </div>
       ) : (
         <div className="feedback-summary-list">
@@ -134,11 +137,11 @@ const FeedbackSummarySection = ({ creatorId }) => {
                   data-score={summary.averageSatisfaction}
                   data-score-range={getScoreRange(parseFloat(summary.averageSatisfaction))}
                 >
-                  ({summary.feedbackCount} feedback-uri)
+                  ({summary.feedbackCount} feedbacks)
                 </span>
                 <span className="feedback-summary-text">{summary.summary}</span>
                 <span className="feedback-last-updated">
-                  Ultima actualizare: {new Date(summary.lastUpdated).toLocaleDateString('ro-RO')}
+                  Last updated: {new Date(summary.lastUpdated).toLocaleDateString('en-GB')}
                 </span>
               </div>
             </div>

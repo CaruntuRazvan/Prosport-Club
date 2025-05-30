@@ -324,8 +324,15 @@ const AdminPage = ({ userId, handleLogout }) => {
         <div className="section-wrapper" key={activeSection}>
           {activeSection === 'dashboard' && (
             <section className="dashboard-section section">
-              <h2>Welcome, {adminInfo?.name}!</h2>
-              <p>Welcome back to managing the ProSport club!</p>
+              <h2>
+                {(() => {
+                  const hour = new Date().getHours();
+                  if (hour < 12) return "Good morning";
+                  if (hour < 17) return "Good afternoon";
+                  return "Good evening";
+                })()}, {adminInfo?.name}! Ready to lead ProSport to victory? ⚽
+              </h2>
+              <p>Let’s make things happen—manage your team like a champion today!</p>
             </section>
           )}
 

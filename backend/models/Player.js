@@ -9,9 +9,9 @@ const playerSchema = new mongoose.Schema({
   weight: { type: Number, required: true },
   history: [
     {
-      club: { type: String, required: true },
-      startYear: { type: Number, required: true },
-      endYear: { type: Number, required: true },
+      club: { type: String },
+      startYear: { type: Number},
+      endYear: { type: Number},
     }
   ],
   image: { type: String },
@@ -39,6 +39,7 @@ const playerSchema = new mongoose.Schema({
   },
   status: { 
     type: String, 
+    required: true, 
     enum: ['notInjured', 'recovering', 'injured'], 
     default: 'notInjured' 
   }

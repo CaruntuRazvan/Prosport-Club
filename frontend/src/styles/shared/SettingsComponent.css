@@ -1,6 +1,5 @@
 .settings-btn {
     background-color: #3b82f6;
-    /* Verde pentru settings */
     color: white;
     border: none;
     border-radius: 50%;
@@ -35,7 +34,6 @@
     transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-/* Afișare text la hover */
 .settings-btn:hover .settings-text {
     opacity: 1;
     visibility: visible;
@@ -60,6 +58,8 @@
     border-radius: 8px;
     width: 300px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding: 40px 20px 20px;
 }
 
 .settings-modal h2 {
@@ -70,12 +70,16 @@
 .settings-content label {
     display: block;
     margin-bottom: 10px;
+    font-weight: 500;
+    color: #333;
 }
 
 .color-options {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    margin-bottom: 20px;
+    /* Adăugăm spațiu sub culori pentru a separa de toggle */
 }
 
 .color-option {
@@ -95,14 +99,8 @@
     border-color: #333;
 }
 
-.settings-modal {
-    position: relative;
-    padding: 40px 20px 20px;
-}
-
-/* Stiluri pentru toggle switch (existente, dar le ajustăm pentru claritate) */
+/* Stiluri pentru toggle switch */
 .switch {
-    
     position: relative;
     display: inline-block;
     width: 40px;
@@ -141,14 +139,23 @@
 
 input:checked+.slider {
     background-color: #28a745;
-    /* Verde pentru stare activată */
 }
 
 input:checked+.slider:before {
     transform: translateX(20px);
 }
 
+/* Stiluri pentru secțiunea de setare (etichetă + toggle + text) */
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    /* Adăugăm spațiu deasupra toggle-ului */
+}
+
 /* Textul mic "Activat/Dezactivat" */
 .setting-item small {
     font-size: 12px;
-    color: #666; }
+    color: #666;
+}

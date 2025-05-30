@@ -1,4 +1,3 @@
-// components/JournalSection.js
 import React, { useState, useEffect } from 'react';
 import '../../styles/shared/JournalSection.css';
 
@@ -25,7 +24,7 @@ const JournalSection = ({ userId }) => {
         const parsedNotes = JSON.parse(savedNotes);
         setNotes(parsedNotes);
       } catch (error) {
-        console.error('Eroare la parsarea datelor din localStorage:', error);
+        console.error('Error parsing data from localStorage:', error);
         setNotes([]);
       }
     } else {
@@ -79,7 +78,7 @@ const JournalSection = ({ userId }) => {
 
     const newNote = {
       id: Date.now(),
-      title: title.trim() || 'Fără titlu',
+      title: title.trim() || 'No title',
       content: content.trim(),
       date: new Date().toISOString(),
       lastModified: null,
@@ -98,7 +97,7 @@ const JournalSection = ({ userId }) => {
 
     const updatedNote = {
       ...selectedNote,
-      title: title.trim() || 'Fără titlu',
+      title: title.trim() || 'No title',
       content: content.trim(),
       lastModified: new Date().toISOString(),
     };
@@ -122,7 +121,6 @@ const JournalSection = ({ userId }) => {
   };
 
   const getRandomColor = () => {
-    //const colors = ['#fef4e1', '#e1f5e1', '#e1f0f5', '#f5e1e1', '#f0e1f5'];
     const colors = ['#fef4e1', '#e1f5e1', '#e1f0f5', '#f5e1e1', '#f0e1f5', '#e1e7f5', '#f5e1f0', '#e1f5f0', '#f5f5e1'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
@@ -144,8 +142,8 @@ const JournalSection = ({ userId }) => {
   if (!isAuthenticated) {
     return (
       <section className="journal-section">
-        <h2>Jurnal</h2>
-        <p>Trebuie să fii autentificat pentru a accesa jurnalul.</p>
+        <h2>Journal</h2>
+        <p>You must be logged in to access the journal.</p>
       </section>
     );
   }
@@ -153,7 +151,7 @@ const JournalSection = ({ userId }) => {
   return (
     <section className="journal-section">
       <button className="add-note-btn" onClick={() => setIsFormOpen(true)}>
-        Adaugă Notiță
+        Add Note
       </button>
 
       {isFormOpen && (
@@ -161,25 +159,25 @@ const JournalSection = ({ userId }) => {
           <form onSubmit={handleSubmit} className="note-form">
             <input
               type="text"
-              placeholder="Titlu..."
+              placeholder="Title..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="note-input"
             />
             <textarea
-              placeholder="Scrie aici gândurile, țelurile sau ideile tale..."
+              placeholder="Write your thoughts, goals, or ideas here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="note-textarea"
               rows="5"
             />
             <div className="note-form-actions">
-              <button type="submit" className="save-note-btn">Salvează</button>
+              <button type="submit" className="save-note-btn">Save</button>
               <button type="button" onClick={() => {
                 setIsFormOpen(false);
                 setTitle('');
                 setContent('');
-              }} className="cancel-note-btn">Anulează</button>
+              }} className="cancel-note-btn">Cancel</button>
             </div>
           </form>
         </div>
@@ -190,26 +188,26 @@ const JournalSection = ({ userId }) => {
           <form onSubmit={handleEditSubmit} className="note-form edit-form">
             <input
               type="text"
-              placeholder="Titlu..."
+              placeholder="Title..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="note-input"
             />
             <textarea
-              placeholder="Scrie aici gândurile, țelurile sau ideile tale..."
+              placeholder="Write your thoughts, goals, or ideas here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="note-textarea"
               rows="5"
             />
             <div className="note-form-actions">
-              <button type="submit" className="save-note-btn">Salvează Modificări</button>
+              <button type="submit" className="save-note-btn">Save Changes</button>
               <button type="button" onClick={() => {
                 setIsEditModalOpen(false);
                 setTitle('');
                 setContent('');
                 setSelectedNote(null);
-              }} className="cancel-note-btn">Anulează</button>
+              }} className="cancel-note-btn">Cancel</button>
             </div>
           </form>
         </div>
@@ -239,8 +237,8 @@ const JournalSection = ({ userId }) => {
               <p>{note.content}</p>
               <span className="note-date">
                 {note.lastModified
-                  ? `Modificat pe: ${formatDate(note.lastModified)}`
-                  : `Adăugat pe: ${formatDate(note.date)}`}
+                  ? `Modified on: ${formatDate(note.lastModified)}`
+                  : `Added on: ${formatDate(note.date)}`}
               </span>
             </div>
           ))

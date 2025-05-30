@@ -9,21 +9,8 @@ const fs = require('fs');
 const Manager = require('../models/Manager');
 const Staff = require('../models/Staff');
 const auth = require('../middleware/auth');
+const { isAdmin, isStaff } = require('../middleware/roleMiddleware');
 const { body, validationResult } = require('express-validator');
-// Middleware pentru a verifica dacă utilizatorul este admin
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Acces permis doar administratorilor.' });
-  }
-  next();
-};
-
-const isStaff = (req, res, next) => {
-  if (req.user.role !== 'staff') {
-    return res.status(403).json({ message: 'Acces permis doar membrilor staff.' });
-  }
-  next();
-};
 const { loginUser} = require("../controllers/userController");
 
 // POST /api/users/login

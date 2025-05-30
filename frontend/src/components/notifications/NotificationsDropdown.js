@@ -2,48 +2,32 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getNotificationsForUser, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from '../../services/notificationService';
 import '../../styles/shared/NotificationsDropdown.css';
 
-const NotificationsDropdown = ({ userId, setActiveSection }) => {
+const NotificationsDropdown = ({ userId, setActiveSection, playNotificationSound }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
-  const [playNotificationSound, setPlayNotificationSound] = useState(false);
-  const [lastNotificationCount, setLastNotificationCount] = useState(0);
+  const [lastAnnouncedCount, setLastAnnouncedCount] = useState(0); // Number of notifications announced with sound
+  const [hasInteracted, setHasInteracted] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // Încarcă setarea din localStorage
-    const savedPlaySound = localStorage.getItem(`playNotificationSound_${userId}`);
-    if (savedPlaySound !== null) {
-      setPlayNotificationSound(JSON.parse(savedPlaySound));
-    }
-
     const fetchNotifications = async () => {
       try {
         const data = await getNotificationsForUser(userId);
         const newNotifications = data.notifications || [];
         setNotifications(newNotifications);
         setUnreadCount(data.unreadCount || 0);
-
-        // Detectează notificări noi
-        if (newNotifications.length > lastNotificationCount && playNotificationSound) {
-          const audio = new Audio('/sounds/notification.mp3');
-          audio.play().catch(error => {
-            console.error('Eroare la redarea sunetului de notificare:', error);
-          });
-        }
-        setLastNotificationCount(newNotifications.length);
       } catch (error) {
-        console.error('Eroare la preluarea notificărilor:', error.message);
+        console.error('Error fetching notifications:', error.message);
       }
     };
 
-    // Rulează la încărcare și apoi la fiecare 30 de secunde
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 30000);
 
     return () => clearInterval(interval);
-  }, [userId, playNotificationSound, lastNotificationCount]);
+  }, [userId]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -61,16 +45,32 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
     };
   }, [isDropdownOpen]);
 
+  useEffect(() => {
+    // Play sound only when the user opens the dropdown and there are new unread notifications
+    if (isDropdownOpen && hasInteracted && playNotificationSound) {
+      const unreadNotifications = notifications.filter(n => !n.isRead);
+      const newUnreadCount = unreadNotifications.length;
+
+      if (newUnreadCount > lastAnnouncedCount) {
+        const audio = new Audio('/sounds/notification.wav');
+        audio.play().catch(error => {
+          console.error('Error playing notification sound:', error);
+        });
+        setLastAnnouncedCount(newUnreadCount); // Update the number of announced notifications
+      }
+    }
+  }, [isDropdownOpen, hasInteracted, playNotificationSound, notifications, lastAnnouncedCount]);
+
   const formatDate = (date) => {
     const now = new Date();
     const notificationDate = new Date(date);
     const diffInSeconds = Math.floor((now - notificationDate) / 1000);
 
-    if (diffInSeconds < 60) return 'Acum câteva secunde';
-    if (diffInSeconds < 3600) return `Acum ${Math.floor(diffInSeconds / 60)} minute`;
-    if (diffInSeconds < 86400) return `Acum ${Math.floor(diffInSeconds / 3600)} ore`;
-    if (diffInSeconds < 604800) return `Acum ${Math.floor(diffInSeconds / 86400)} zile`;
-    return notificationDate.toLocaleDateString('ro-RO', {
+    if (diffInSeconds < 60) return 'A few seconds ago';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    return notificationDate.toLocaleDateString('en-US', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
@@ -93,7 +93,7 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
       }
       setIsDropdownOpen(false);
     } catch (error) {
-      console.error('Eroare la gestionarea notificării:', error.message);
+      console.error('Error handling notification:', error.message);
     }
   };
 
@@ -104,8 +104,9 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
         prev.map((n) => ({ ...n, isRead: true }))
       );
       setUnreadCount(0);
+      setLastAnnouncedCount(notifications.length); // Update to prevent sound replay
     } catch (error) {
-      console.error('Eroare la marcarea tuturor notificărilor ca citite:', error.message);
+      console.error('Error marking all notifications as read:', error.message);
     }
   };
 
@@ -115,9 +116,10 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
       setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
       if (!isRead) {
         setUnreadCount((prev) => prev - 1);
+        setLastAnnouncedCount((prev) => prev - 1); // Adjust to maintain synchronization
       }
     } catch (error) {
-      console.error('Eroare la ștergerea notificării:', error.message);
+      console.error('Error deleting notification:', error.message);
     }
   };
 
@@ -132,7 +134,10 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
   return (
     <div className="notifications-dropdown" ref={dropdownRef}>
       <button
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        onClick={() => {
+          setIsDropdownOpen(!isDropdownOpen);
+          setHasInteracted(true);
+        }}
         className="notifications-btn"
       >
         <svg
@@ -148,14 +153,14 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
         {unreadCount > 0 && (
           <span className="badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
         )}
-        <span className="notifications-text">Notificări</span>
+        <span className="notifications-text">Notifications</span>
       </button>
 
       {isDropdownOpen && (
         <div className="dropdown-menu">
           {notifications.length === 0 ? (
             <div className="no-notifications">
-              <p>Nu ai notificări noi.</p>
+              <p>You have no new notifications.</p>
             </div>
           ) : (
             <>
@@ -165,20 +170,20 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
                   className="show-unread-btn"
                   disabled={unreadCount === 0}
                 >
-                  {showUnreadOnly ? 'Toate' : 'Necitite'}
+                  {showUnreadOnly ? 'All' : 'Unread'}
                 </button>
                 <button
                   onClick={handleMarkAllAsRead}
                   className="mark-all-read-btn"
                   disabled={unreadCount === 0}
                 >
-                  Marchează toate
+                  Mark All Read
                 </button>
               </div>
               <div className="notifications-list">
                 {filteredNotifications.length === 0 ? (
                   <div className="no-notifications">
-                    <p>Nu ai notificări necitite.</p>
+                    <p>You have no unread notifications.</p>
                   </div>
                 ) : (
                   filteredNotifications.map((notification) => (
@@ -203,7 +208,7 @@ const NotificationsDropdown = ({ userId, setActiveSection }) => {
                           handleDeleteNotification(notification._id, notification.isRead)
                         }
                         className="delete-btn"
-                        title="Șterge notificarea"
+                        title="Delete notification"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

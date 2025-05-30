@@ -1,4 +1,3 @@
-// components/UserProfile.js
 import React, { useEffect, useRef } from 'react';
 //import '../styles/UserProfile.css';
 
@@ -20,7 +19,7 @@ const UserProfile = ({ user, onClose, calculateAge }) => {
 
   if (!user) return null;
 
-  // Determinăm imaginea în funcție de rolul utilizatorului
+  // Determine the image based on the user's role
   const getProfileImage = () => {
     const baseUrl = process.env.REACT_APP_URL;
     if (user.role === 'player' && user.playerId?.image) {
@@ -32,7 +31,7 @@ const UserProfile = ({ user, onClose, calculateAge }) => {
     if (user.role === 'manager' && user.managerId?.image) {
       return `${baseUrl}${user.managerId.image}`;
     }
-    return null; // Fallback pentru cazul în care nu există imagine
+    return null; // Fallback for cases with no image
   };
   
   const profileImage = getProfileImage();
@@ -61,65 +60,65 @@ const UserProfile = ({ user, onClose, calculateAge }) => {
         <div className="profile-details">
           {user.role === 'player' && user.playerId && (
             <>
-              <h4>Informații personale</h4>
+              <h4>Personal Information</h4>
               <div className="info-grid">
                 <div className="info-item">
-                  <span className="info-label">Prenume:</span>
+                  <span className="info-label">First Name:</span>
                   <span className="info-value">{user.playerId.firstName}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Nume:</span>
+                  <span className="info-label">Last Name:</span>
                   <span className="info-value">{user.playerId.lastName}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Vârsta:</span>
-                  <span className="info-value">{calculateAge(user.playerId.dateOfBirth)} ani</span>
+                  <span className="info-label">Age:</span>
+                  <span className="info-value">{calculateAge(user.playerId.dateOfBirth)} years</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Naționalitate:</span>
+                  <span className="info-label">Nationality:</span>
                   <span className="info-value">{user.playerId.nationality}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Înălțime:</span>
+                  <span className="info-label">Height:</span>
                   <span className="info-value">{user.playerId.height} cm</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Greutate:</span>
+                  <span className="info-label">Weight:</span>
                   <span className="info-value">{user.playerId.weight} kg</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Poziție:</span>
+                  <span className="info-label">Position:</span>
                   <span className="info-value">
-                    {user.playerId.position === 'Goalkeeper' ? 'Portar' :
-                     user.playerId.position === 'Defender' ? 'Fundaș' :
-                     user.playerId.position === 'Midfielder' ? 'Mijlocaș' :
-                     user.playerId.position === 'Forward' ? 'Atacant' :
+                    {user.playerId.position === 'Goalkeeper' ? 'Goalkeeper' :
+                     user.playerId.position === 'Defender' ? 'Defender' :
+                     user.playerId.position === 'Midfielder' ? 'Midfielder' :
+                     user.playerId.position === 'Forward' ? 'Forward' :
                      user.playerId.position}
                   </span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Număr tricou:</span>
+                  <span className="info-label">Shirt Number:</span>
                   <span className="info-value">{user.playerId.shirtNumber || 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Număr de telefon:</span>
+                  <span className="info-label">Phone Number:</span>
                   <span className="info-value">{user.playerId.phoneNumber || 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Picior preferat:</span>
+                  <span className="info-label">Preferred Foot:</span>
                   <span className="info-value">
-                    {user.playerId.preferredFoot === 'right' ? 'Drept' :
-                     user.playerId.preferredFoot === 'left' ? 'Stâng' :
-                     user.playerId.preferredFoot === 'both' ? 'Ambele' :
+                    {user.playerId.preferredFoot === 'right' ? 'Right' :
+                     user.playerId.preferredFoot === 'left' ? 'Left' :
+                     user.playerId.preferredFoot === 'both' ? 'Both' :
                      user.playerId.preferredFoot}
                   </span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Stare:</span>
+                  <span className="info-label">Status:</span>
                   <span className="info-value">
-                    {user.playerId.status === 'notInjured' ? 'Nu este accidentat' :
-                     user.playerId.status === 'recovering' ? 'În recuperare' :
-                     user.playerId.status === 'injured' ? 'Accidentat' :
+                    {user.playerId.status === 'notInjured' ? 'Not Injured' :
+                     user.playerId.status === 'recovering' ? 'Recovering' :
+                     user.playerId.status === 'injured' ? 'Injured' :
                      user.playerId.status}
                   </span>
                 </div>
@@ -127,7 +126,7 @@ const UserProfile = ({ user, onClose, calculateAge }) => {
 
               {user.playerId.history && user.playerId.history.length > 0 && (
                 <div className="profile-section">
-                  <h4>Istoric cluburi</h4>
+                  <h4>Club History</h4>
                   <ul className="history-list">
                     {user.playerId.history.map((entry, index) => (
                       <li key={index}>
@@ -142,29 +141,29 @@ const UserProfile = ({ user, onClose, calculateAge }) => {
 
           {user.role === 'manager' && user.managerId && (
             <>
-              <h4>Informații personale</h4>
+              <h4>Personal Information</h4>
               <div className="info-grid">
                 <div className="info-item">
-                  <span className="info-label">Prenume:</span>
+                  <span className="info-label">First Name:</span>
                   <span className="info-value">{user.managerId.firstName}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Nume:</span>
+                  <span className="info-label">Last Name:</span>
                   <span className="info-value">{user.managerId.lastName}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Vârsta:</span>
-                  <span className="info-value">{calculateAge(user.managerId.dateOfBirth)} ani</span>
+                  <span className="info-label">Age:</span>
+                  <span className="info-value">{calculateAge(user.managerId.dateOfBirth)} years</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Naționalitate:</span>
+                  <span className="info-label">Nationality:</span>
                   <span className="info-value">{user.managerId.nationality}</span>
                 </div>
               </div>
 
               {user.managerId.history && user.managerId.history.length > 0 && (
                 <div className="profile-section">
-                  <h4>Istoric cluburi</h4>
+                  <h4>Club History</h4>
                   <ul className="history-list">
                     {user.managerId.history.map((entry, index) => (
                       <li key={index}>
@@ -179,33 +178,33 @@ const UserProfile = ({ user, onClose, calculateAge }) => {
 
           {user.role === 'staff' && user.staffId && (
             <>
-              <h4>Informații personale</h4>
+              <h4>Personal Information</h4>
               <div className="info-grid">
                 <div className="info-item">
-                  <span className="info-label">Prenume:</span>
+                  <span className="info-label">First Name:</span>
                   <span className="info-value">{user.staffId.firstName}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Nume:</span>
+                  <span className="info-label">Last Name:</span>
                   <span className="info-value">{user.staffId.lastName}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Vârsta:</span>
-                  <span className="info-value">{calculateAge(user.staffId.dateOfBirth)} ani</span>
+                  <span className="info-label">Age:</span>
+                  <span className="info-value">{calculateAge(user.staffId.dateOfBirth)} years</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Naționalitate:</span>
+                  <span className="info-label">Nationality:</span>
                   <span className="info-value">{user.staffId.nationality}</span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Rol:</span>
+                  <span className="info-label">Role:</span>
                   <span className="info-value">{user.staffId.role}</span>
                 </div>
               </div>
 
               {user.staffId.certifications && user.staffId.certifications.length > 0 && (
                 <div className="profile-section">
-                  <h4>Certificări</h4>
+                  <h4>Certifications</h4>
                   <ul className="certifications-list">
                     {user.staffId.certifications.map((cert, index) => (
                       <li key={index}>{cert.name} ({cert.year})</li>
@@ -218,10 +217,10 @@ const UserProfile = ({ user, onClose, calculateAge }) => {
 
           {user.role === 'admin' && (
             <>
-              <h4>Informații personale</h4>
+              <h4>Personal Information</h4>
               <div className="info-grid">
                 <div className="info-item">
-                  <span className="info-label">Nume:</span>
+                  <span className="info-label">Name:</span>
                   <span className="info-value">{user.name}</span>
                 </div>
                 <div className="info-item">

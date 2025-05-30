@@ -4,27 +4,8 @@ const Announcement = require('../models/Announcement');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const authMiddleware = require('../middleware/auth');
+const { isManagerOrAdmin } = require('../middleware/roleMiddleware');
 
-// Middleware pentru a verifica dacă utilizatorul este manager sau admin
-const isManagerOrAdmin = async (req, res, next) => {
-  try {
-    console.log('Checking user role for ID:', req.user._id);
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      console.error('User not found for ID:', req.user._id);
-      return res.status(404).json({ error: 'Utilizatorul nu există.' });
-    }
-    if (!['manager', 'admin'].includes(user.role)) {
-      console.error('Access denied. User role:', user.role);
-      return res.status(403).json({ error: 'Acces permis doar managerilor sau adminilor.' });
-    }
-    console.log('User role verified:', user.role);
-    next();
-  } catch (error) {
-    console.error('Eroare la verificarea rolului:', error);
-    res.status(500).json({ error: 'Eroare la verificarea rolului.', details: error.message });
-  }
-};
 // GET /api/announcements - Listează ultimele 5 anunțuri active
 router.get('/', authMiddleware, async (req, res) => {
   try {

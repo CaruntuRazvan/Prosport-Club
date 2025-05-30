@@ -6,14 +6,7 @@ const Player = require('../models/Player');
 const { syncPlayerStatus } = require('../middleware/playerStatus');
 const { body, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
-
-// Middleware pentru a verifica dacă utilizatorul este staff
-const isStaff = (req, res, next) => {
-  if (req.user.role !== 'staff') {
-    return res.status(403).json({ message: 'Acces permis doar membrilor staff.' });
-  }
-  next();
-};
+const { isStaff } = require('../middleware/roleMiddleware');
 
 // GET /api/injuries - Listează accidentările active
 router.get('/', auth, isStaff, async (req, res) => {

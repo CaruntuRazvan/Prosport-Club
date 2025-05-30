@@ -4,10 +4,10 @@ import { useConfirm } from '../../context/ConfirmContext'; // Importăm useConfi
 import '../../styles/auth/LogoutComponent.css';
 
 const LogoutComponent = ({ handleLogout }) => {
-  const { showConfirm } = useConfirm(); // Folosim useConfirm
+  const  showConfirm  = useConfirm(); // Folosim useConfirm
 
   const handleLogoutWithConfirmation = () => {
-    showConfirm('Ești sigur că vrei să te deconectezi?', () => {
+    showConfirm('Are you sure you want to log out?', () => {
       handleLogout();
     });
   };

@@ -27,6 +27,9 @@ const StaffPage = ({ userId, handleLogout }) => {
   const [eventColor, setEventColor] = useState(() => {
     return localStorage.getItem(`eventColor_${userId}`) || '#3788d8';
   });
+  const [playNotificationSound, setPlayNotificationSound] = useState(() => {
+    return JSON.parse(localStorage.getItem(`playNotificationSound_${userId}`)) || false;
+  });
   const [selectedUser, setSelectedUser] = useState(null);
   const role = 'staff';
 
@@ -38,10 +41,10 @@ const StaffPage = ({ userId, handleLogout }) => {
       }
       try {
         const staffData = await fetchCurrentUser(userId, role);
-        console.log('Date staff:', staffData);
+        console.log('Staff data:', staffData);
         setStaffInfo(staffData);
       } catch (error) {
-        console.error('Eroare la încărcarea datelor staff-ului:', error);
+        console.error('Error loading staff data:', error);
       }
     };
 
@@ -97,7 +100,7 @@ const StaffPage = ({ userId, handleLogout }) => {
         {staffInfo && (
           <div className="staff-profile">
             <p><strong>User:</strong> {staffInfo.name}</p>
-            <p><strong>Email:</strong> {staffInfo.email}</p>
+            <p style={{ fontSize: '11px',  whiteSpace: 'nowrap',overflow: 'hidden'}}><strong>Email:</strong> {staffInfo.email}</p>
           </div>
         )}
         <ul>
@@ -105,19 +108,19 @@ const StaffPage = ({ userId, handleLogout }) => {
             className={activeSection === 'team' ? 'active' : ''}
             onClick={() => setActiveSection('team')}
           >
-            Despre Echipa
+            About Team
           </li>
           <li
             className={activeSection === 'profile' ? 'active' : ''}
             onClick={() => setActiveSection('profile')}
           >
-            Profilul Meu
+            My Profile
           </li>
           <li
             className={activeSection === 'players' ? 'active' : ''}
             onClick={() => setActiveSection('players')}
           >
-            Jucatori
+            Players
           </li>
           <li
             className={activeSection === 'staff' ? 'active' : ''}
@@ -135,32 +138,32 @@ const StaffPage = ({ userId, handleLogout }) => {
             className={activeSection === 'feedbacks' ? 'active' : ''}
             onClick={() => setActiveSection('feedbacks')}
           >
-            Feedback-uri Medie
+            Average Feedback
           </li>
           <li
             className={activeSection === 'polls' ? 'active' : ''}
             onClick={() => setActiveSection('polls')}
           >
-            Sondaje
+            Polls
           </li>
           <li
             className={activeSection === 'fines' ? 'active' : ''}
             onClick={() => setActiveSection('fines')}
           >
-            Penalizări
+            Fines
           </li>
           <li
             className={activeSection === 'journal' ? 'active' : ''}
             onClick={() => setActiveSection('journal')}
           >
-            Jurnal
+            Journal
           </li>
           {staffInfo?.staffId?.role === 'Nutritionist' && (
             <li
               className={activeSection === 'nutrition' ? 'active' : ''}
               onClick={() => setActiveSection('nutrition')}
             >
-              Nutriție
+              Nutrition
             </li>
           )}
           {(staffInfo?.staffId?.role === 'Physiotherapist' || staffInfo?.staffId?.role === 'Fitness Coach') && (
@@ -168,7 +171,7 @@ const StaffPage = ({ userId, handleLogout }) => {
               className={activeSection === 'injuries' ? 'active' : ''}
               onClick={() => setActiveSection('injuries')}
             >
-              Accidentări
+              Injuries
             </li>
           )}
         </ul>
@@ -179,7 +182,7 @@ const StaffPage = ({ userId, handleLogout }) => {
           <h1>Staff Dashboard</h1>
           <div className="header-actions">
             <RequestDropdown userId={userId} userRole={staffInfo?.role || 'staff'} />
-            <NotificationsDropdown userId={userId} setActiveSection={setActiveSection} />
+            <NotificationsDropdown userId={userId} setActiveSection={setActiveSection} playNotificationSound={playNotificationSound}/>
             <SettingsComponent userId={userId} eventColor={eventColor} onColorChange={handleColorChange} />
             <LogoutComponent handleLogout={handleLogout} />
           </div>
@@ -202,22 +205,22 @@ const StaffPage = ({ userId, handleLogout }) => {
                 </div>
 
                 <div className="profile-details">
-                  <h4>Informații personale</h4>
+                  <h4>Personal Information</h4>
                   <div className="info-grid">
                     <div className="info-item">
-                      <span className="info-label">Prenume:</span>
+                      <span className="info-label">First Name:</span>
                       <span className="info-value">{staffInfo.staffId?.firstName}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Nume:</span>
+                      <span className="info-label">Last Name:</span>
                       <span className="info-value">{staffInfo.staffId?.lastName}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Vârsta:</span>
-                      <span className="info-value">{calculateAge(staffInfo.staffId?.dateOfBirth)} ani</span>
+                      <span className="info-label">Age:</span>
+                      <span className="info-value">{calculateAge(staffInfo.staffId?.dateOfBirth)} years</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Naționalitate:</span>
+                      <span className="info-label">Nationality:</span>
                       <span className="info-value">{staffInfo.staffId?.nationality}</span>
                     </div>
                     <div className="info-item">
@@ -228,7 +231,7 @@ const StaffPage = ({ userId, handleLogout }) => {
 
                   {staffInfo.staffId?.history && staffInfo.staffId.history.length > 0 && (
                     <div className="profile-section">
-                      <h4>Istoric cluburi</h4>
+                      <h4>Club History</h4>
                       <ul className="history-list">
                         {staffInfo.staffId.history.map((entry, index) => (
                           <li key={index}>

@@ -14,15 +14,15 @@ const LogoutModal = ({ onClose }) => {
 
   useEffect(() => {
     if (countdown <= 0) {
-      onClose(); // Apelăm onClose doar după ce countdown ajunge la 0
+      onClose(); 
     }
   }, [countdown, onClose]);
 
   return (
     <div className="logout-modal-overlay">
       <div className="logout-modal">
-        <h2>Sesiunea ta a expirat!</h2>
-        <p>Vei fi deconectat în {countdown} secunde...</p>
+        <h2>Your session has expired!</h2>
+        <p>You will be disconnected in {countdown} seconds...</p>
       </div>
     </div>
   );

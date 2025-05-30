@@ -15,7 +15,7 @@ const AboutTeam = ({ userRole }) => {
     title: '',
     description: '',
   });
-  const { showConfirm } = useConfirm();
+  const showConfirm  = useConfirm();
   const createModalRef = useRef(null);
   const editModalRef = useRef(null);
 
@@ -80,7 +80,7 @@ const AboutTeam = ({ userRole }) => {
       console.log('Announcements Loaded:', announcementData);
       setAnnouncements(announcementData);
     } catch (error) {
-      toast.error('Eroare la încărcarea anunțurilor', {
+      toast.error('Error loading announcements', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -98,13 +98,13 @@ const AboutTeam = ({ userRole }) => {
     }
   };
 
-  // Apelăm fetchQuote și loadAnnouncements la montarea componentei
+  // Call fetchQuote and loadAnnouncements on component mount
   useEffect(() => {
     fetchQuote();
     loadAnnouncements();
   }, []);
 
-  // Gestionare click outside pentru modale
+  // Handle click outside for modals
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (createModalRef.current && !createModalRef.current.contains(event.target)) {
@@ -125,7 +125,7 @@ const AboutTeam = ({ userRole }) => {
     };
   }, [isCreating, isEditing]);
 
-  // Gestionare Esc și scroll pentru modale
+  // Handle Esc key and scroll for modals
   useEffect(() => {
     const handleEscKey = (event) => {
       if (event.key === 'Escape') {
@@ -185,7 +185,7 @@ const AboutTeam = ({ userRole }) => {
       console.log('Creating Announcement:', announcementData);
       const newAnnouncement = await createAnnouncement(announcementData);
       setAnnouncements([newAnnouncement, ...announcements].slice(0, 5));
-      toast.success('Anunț creat cu succes!', {
+      toast.success('Announcement created successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -200,7 +200,7 @@ const AboutTeam = ({ userRole }) => {
       setIsCreating(false);
       setFormData({ title: '', description: '' });
     } catch (error) {
-      toast.error(error.message || 'Eroare la crearea anunțului.', {
+      toast.error(error.message || 'Error creating announcement.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -227,7 +227,7 @@ const AboutTeam = ({ userRole }) => {
       console.log('Updating Announcement:', isEditing._id, announcementData);
       const updatedAnnouncement = await updateAnnouncement(isEditing._id, announcementData);
       setAnnouncements(announcements.map(ann => ann._id === updatedAnnouncement._id ? updatedAnnouncement : ann));
-      toast.success('Anunț actualizat cu succes!', {
+      toast.success('Announcement updated successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -242,7 +242,7 @@ const AboutTeam = ({ userRole }) => {
       setIsEditing(null);
       setFormData({ title: '', description: '' });
     } catch (error) {
-      toast.error(error.message || 'Eroare la actualizarea anunțului.', {
+      toast.error(error.message || 'Error updating announcement.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -259,12 +259,12 @@ const AboutTeam = ({ userRole }) => {
 
   // Handle delete announcement with confirmation
   const handleDelete = async (id) => {
-    showConfirm('Ești sigur că vrei să ștergi acest anunț?', async () => {
+    showConfirm('Are you sure you want to delete this announcement?', async () => {
       try {
         console.log('Deleting Announcement:', id);
         await deleteAnnouncement(id);
         setAnnouncements(announcements.filter(ann => ann._id !== id));
-        toast.success('Anunț șters cu succes!', {
+        toast.success('Announcement deleted successfully!', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -277,7 +277,7 @@ const AboutTeam = ({ userRole }) => {
           },
         });
       } catch (error) {
-        toast.error(error.message || 'Eroare la ștergerea anunțului.', {
+        toast.error(error.message || 'Error deleting announcement.', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -308,13 +308,13 @@ const AboutTeam = ({ userRole }) => {
     setFormData({ title: '', description: '' });
   };
 
-  // Format date to dd.mm.yyyy
+  // Format date to dd mm yyyy
   const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
-    return `${day}.${month}.${year}`;
+    return `${day} ${month} ${year}`;
   };
 
   return (
@@ -326,7 +326,7 @@ const AboutTeam = ({ userRole }) => {
         </div>
       )}
 
-      <h2>Team Kits & News</h2>
+      <h2>Team Kits</h2>
 
       <div className="team-kits">
         <div className="kit-item">
@@ -384,12 +384,12 @@ const AboutTeam = ({ userRole }) => {
         {['manager', 'admin'].includes(userRole) && (
           <div className="news-action-buttons">
             <button className="news-add-btn" onClick={handleCreateToggle}>
-              Adaugă Anunț
+              Add Announcement
             </button>
           </div>
         )}
         {loading ? (
-          <div className="news-loading">Se încarcă...</div>
+          <div className="news-loading">Loading...</div>
         ) : announcements.length > 0 ? (
           announcements.map((announcement) => (
             <div key={announcement._id} className="news-item">
@@ -404,20 +404,20 @@ const AboutTeam = ({ userRole }) => {
                     className="news-edit-btn"
                     onClick={() => handleEditToggle(announcement)}
                   >
-                    Editează
+                    Edit
                   </button>
                   <button
                     className="news-delete-btn"
                     onClick={() => handleDelete(announcement._id)}
                   >
-                    Șterge
+                    Delete
                   </button>
                 </div>
               )}
             </div>
           ))
         ) : (
-          <p className="no-news">Nu există anunțuri disponibile.</p>
+          <p className="no-news">No announcements available.</p>
         )}
 
         {/* Fines Link Section */}
@@ -435,44 +435,44 @@ const AboutTeam = ({ userRole }) => {
         </div>
       </div>
 
-      {/* Modal pentru creare */}
+      {/* Modal for creating */}
       {isCreating && (
         <div className="news-modal-overlay">
           <div className="news-modal-content" ref={createModalRef}>
             <button
               className="news-modal-close-btn"
               onClick={handleCreateToggle}
-              aria-label="Închide"
+              aria-label="Close"
             >
               ×
             </button>
-            <h3>Adaugă Anunț</h3>
+            <h3>Add Announcement</h3>
             <form onSubmit={handleCreateSubmit} className="news-form">
               <div className="news-form-group">
-                <label>Titlu:</label>
+                <label>Title:</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="news-input"
-                  placeholder="Ex. Antrenament intensiv"
+                  placeholder="E.g., Intensive Training"
                   required
                 />
               </div>
               <div className="news-form-group">
-                <label>Descriere:</label>
+                <label>Description:</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="news-input"
-                  placeholder="Ex. Echipa a avut un antrenament intensiv..."
+                  placeholder="E.g., The team had an intensive training session..."
                   required
                 />
               </div>
               <div className="news-modal-actions">
-                <button type="submit" className="news-save-btn">Salvează</button>
+                <button type="submit" className="news-save-btn">Save</button>
                 <button type="button" className="news-cancel-btn" onClick={handleCreateToggle}>
-                  Anulează
+                  Cancel
                 </button>
               </div>
             </form>
@@ -480,44 +480,44 @@ const AboutTeam = ({ userRole }) => {
         </div>
       )}
 
-      {/* Modal pentru editare */}
+      {/* Modal for editing */}
       {isEditing && (
         <div className="news-modal-overlay">
           <div className="news-modal-content" ref={editModalRef}>
             <button
               className="news-modal-close-btn"
               onClick={() => setIsEditing(null)}
-              aria-label="Închide"
+              aria-label="Close"
             >
               ×
             </button>
-            <h3>Editează Anunț</h3>
+            <h3>Edit Announcement</h3>
             <form onSubmit={handleEditSubmit} className="news-form">
               <div className="news-form-group">
-                <label>Titlu:</label>
+                <label>Title:</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="news-input"
-                  placeholder="Ex. Antrenament intensiv"
+                  placeholder="E.g., Intensive Training"
                   required
                 />
               </div>
               <div className="news-form-group">
-                <label>Descriere:</label>
+                <label>Description:</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="news-input"
-                  placeholder="Ex. Echipa a avut un antrenament intensiv..."
+                  placeholder="E.g., The team had an intensive training session..."
                   required
                 />
               </div>
               <div className="news-modal-actions">
-                <button type="submit" className="news-save-btn">Salvează</button>
+                <button type="submit" className="news-save-btn">Save</button>
                 <button type="button" className="news-cancel-btn" onClick={() => setIsEditing(null)}>
-                  Anulează
+                  Cancel
                 </button>
               </div>
             </form>

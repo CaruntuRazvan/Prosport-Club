@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../utils/api';
 import { toast } from 'react-toastify';
+import { obfuscateId } from '../../utils/obfuscateId';
 import '../../styles/auth/LoginForm.css';
 
 const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
@@ -16,7 +17,7 @@ const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('LoginForm - Componenta s-a montat');
+    console.log('LoginForm - Component mounted');
     setEmail('');
     setPassword('');
     setLoading(false);
@@ -28,7 +29,7 @@ const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
     img.onload = () => setImageLoaded(true);
 
     return () => {
-      console.log('LoginForm - Componenta s-a demontat');
+      console.log('LoginForm - Component unmounted');
       toast.dismiss();
     };
   }, []);
@@ -46,6 +47,19 @@ const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
     try {
       const data = await loginUser(email, password);
       const { token, user } = data;
+
+      // Log the raw user ID
+      console.log('Raw user ID from backend:', user.id);
+
+      // Ensure the user ID is valid
+      if (!user.id || !/^[0-9a-fA-F]{24}$/.test(user.id)) {
+        throw new Error('Invalid user ID received from backend');
+      }
+
+      // Encode the user ID for the URL
+      const encodedId = obfuscateId(user.id);
+      console.log('Encoded user ID for URL:', encodedId);
+
       setIsAuthenticated(true);
       setUserInfo(user);
 
@@ -54,7 +68,7 @@ const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
       localStorage.setItem('token', token);
 
       await new Promise((resolve) => {
-        toast.success('Logare reușită!', {
+        toast.success('Login successful!', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -69,21 +83,20 @@ const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
         });
       });
 
-      setWelcomeMessage(`Bine ai venit, ${user.name}!`);
+      setWelcomeMessage(`Welcome, ${user.name}!`);
       setShowSuccessAnimation(true);
 
       setTimeout(() => {
-        navigate(`/${user.role}/${user.id}`);
+        // Navigate using the encoded ID in the URL
+        navigate(`/${user.role}/${encodedId}`);
       }, 2000);
     } catch (error) {
       const errorMessage = error.errors
         ? error.errors.map((err) => err.msg).join(', ')
-        : error.message || 'Email sau parolă incorectă';
+        : error.message || 'Incorrect email or password';
 
-      // Declanșăm efectul de shake înainte de afișarea toast-ului
       setShakeInputs(true);
 
-      // Afișăm toast-ul și așteptăm închiderea lui
       await new Promise((resolve) => {
         toast.error(errorMessage, {
           autoClose: 500,
@@ -145,7 +158,7 @@ const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
               type="button"
               className="show-password-btn"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? 'Ascunde parola' : 'Afișează parola'}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
               disabled={loading || showSuccessAnimation}
             >
               <span className="eye-icon">👁️‍🗨️</span>

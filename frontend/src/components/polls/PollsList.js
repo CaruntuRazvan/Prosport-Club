@@ -18,7 +18,7 @@ const PollsList = ({ userId, userRole }) => {
   const [results, setResults] = useState(null);
   const [votes, setVotes] = useState([]);
   const [statusFilter, setStatusFilter] = useState('all'); // Nou: Filtru pentru Active/Expired
-  const { showConfirm } = useConfirm();
+  const showConfirm  = useConfirm();
   useEffect(() => {
     fetchPollsData();
   }, []);

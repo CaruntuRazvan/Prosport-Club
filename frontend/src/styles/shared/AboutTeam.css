@@ -9,6 +9,7 @@
     color: white;
     font-size: 24px;
     margin-bottom: 20px;
+    border-bottom: 2px solid white;
 }
 
 .team-kits {
@@ -69,12 +70,12 @@
 }
 
 .team-news h4 {
-    color: #1e3a8a;
+    color: white;
     font-size: 18px;
     font-weight: 600;
-    border-bottom: 2px solid #1e3a8a;
     padding-bottom: 5px;
     margin: 0;
+    border-bottom: 2px solid white;
 }
 
 .news-item {
@@ -120,7 +121,7 @@
 
 .news-action-buttons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     margin-bottom: 15px;
 }
 
@@ -128,7 +129,7 @@
     padding: 8px 16px;
     border: none;
     border-radius: 5px;
-    background-color: #1e3a8a;
+    background-color: #28a745;
     color: #fff;
     font-size: 14px;
     font-weight: 500;

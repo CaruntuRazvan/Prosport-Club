@@ -130,7 +130,7 @@ describe('Fine Routes Integration Tests', () => {
           receiverId: playerId.toString(),
           reason: 'Late to training',
           amount: 50,
-          expirationDate: '2025-06-01T12:00:00Z',
+          expirationDate: '2025-08-01T12:00:00Z',
         });
 
       expect(res.statusCode).toBe(201);
@@ -170,7 +170,7 @@ describe('Fine Routes Integration Tests', () => {
           receiverId: playerId.toString(),
           reason: 'Late to training',
           amount: 50,
-          expirationDate: '2025-06-01T12:00:00Z',
+          expirationDate: '2025-08-01T12:00:00Z',
         });
 
       expect(res.statusCode).toBe(403);
@@ -212,7 +212,7 @@ describe('Fine Routes Integration Tests', () => {
           receiverId: playerId.toString(),
           reason: 'Late to training',
           amount: -50, // Invalid amount
-          expirationDate: '2025-06-01T12:00:00Z',
+          expirationDate: '2025-08-01T12:00:00Z',
         });
 
       expect(res.statusCode).toBe(400);
@@ -250,7 +250,7 @@ describe('Fine Routes Integration Tests', () => {
         receiverId: playerId,
         reason: 'Late to training',
         amount: 50,
-        expirationDate: '2025-06-01T12:00:00Z',
+        expirationDate: '2025-08-01T12:00:00Z',
         isPaid: false,
         paymentRequested: false,
       });
@@ -358,7 +358,7 @@ describe('Fine Routes Integration Tests', () => {
         receiverId: playerId,
         reason: 'Late to training',
         amount: 50,
-        expirationDate: '2025-06-01T12:00:00Z',
+        expirationDate: '2025-08-01T12:00:00Z',
         isPaid: true,
         paymentRequested: true,
       });
@@ -407,7 +407,7 @@ describe('Fine Routes Integration Tests', () => {
         receiverId: playerId,
         reason: 'Late to training',
         amount: 50,
-        expirationDate: '2025-06-01T12:00:00Z',
+        expirationDate: '2025-08-01T12:00:00Z',
         isPaid: false,
         paymentRequested: true,
       });
@@ -462,7 +462,7 @@ describe('Fine Routes Integration Tests', () => {
         receiverId: playerId,
         reason: 'Late to training',
         amount: 50,
-        expirationDate: '2025-06-01T12:00:00Z',
+        expirationDate: '2025-08-01T12:00:00Z',
         isPaid: false,
         paymentRequested: true,
       });

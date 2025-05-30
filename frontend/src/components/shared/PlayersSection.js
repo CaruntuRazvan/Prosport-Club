@@ -14,12 +14,12 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
       try {
         setLoading(true);
         const users = await fetchPlayers();
-        console.log('Jucători preluați:', users);
+        console.log('Players fetched:', users);
         setPlayers(users);
         setFilteredPlayers(users);
       } catch (err) {
-        setError('Eroare la încărcarea jucătorilor.');
-        console.error('Eroare fetchPlayers:', err);
+        setError('Error loading players.');
+        console.error('Error fetchPlayers:', err);
       } finally {
         setLoading(false);
       }
@@ -62,8 +62,8 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
                   draggable="false"
                   onClick={() => onPlayerClick(player)}
                   onError={(e) => {
-                    e.target.src = '/path-to-placeholder-image.jpg';
-                    console.log(`Eroare la încărcarea imaginii pentru ${player.name}`);
+                    e.target.src = '/images/default-user.jpg';
+                    console.log(`Error loading image for ${player.name}`);
                   }}
                 />
               </div>
@@ -82,16 +82,16 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
     setSearchTerm(e.target.value);
   };
 
-  if (loading) return <div className="loading-message">Se încarcă jucătorii...</div>;
+  if (loading) return <div className="loading-message">Loading players...</div>;
   if (error) return <div className="error-message">{error}</div>;
-  if (players.length === 0) return <div className="no-players-message">Nu există jucători în lot.</div>;
+  if (players.length === 0) return <div className="no-players-message">No players in the squad.</div>;
 
   return (
     <div className="players-section">
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Caută jucător după nume..."
+          placeholder="Search player by name..."
           value={searchTerm}
           onChange={handleSearchChange}
           className="search-input"
@@ -99,12 +99,12 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
       </div>
 
       {filteredPlayers.length === 0 && searchTerm && (
-        <div className="no-results">Niciun jucător găsit pentru „{searchTerm}”.</div>
+        <div className="no-results">No players found for “{searchTerm}”.</div>
       )}
-      {renderPlayerCategory(goalkeepers, 'Portari')}
-      {renderPlayerCategory(defenders, 'Fundași')}
-      {renderPlayerCategory(midfielders, 'Mijlocași')}
-      {renderPlayerCategory(forwards, 'Atacanți')}
+      {renderPlayerCategory(goalkeepers, 'Goalkeepers')}
+      {renderPlayerCategory(defenders, 'Defenders')}
+      {renderPlayerCategory(midfielders, 'Midfielders')}
+      {renderPlayerCategory(forwards, 'Forwards')}
     </div>
   );
 };

@@ -20,7 +20,7 @@ const EventCalendar = ({ userId, eventColor }) => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [userRole, setUserRole] = useState('');
-  const { showConfirm } = useConfirm();
+  const showConfirm  = useConfirm();
   const modalRef = useRef(null);
   const calendarRef = useRef(null);
 

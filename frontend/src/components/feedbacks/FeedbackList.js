@@ -3,7 +3,7 @@ import React from 'react';
 
 const FeedbackList = ({ feedbacks, userRole }) => {
   if (!feedbacks || feedbacks.length === 0) {
-    return <p>Nu există feedback pentru acest eveniment.</p>;
+    return <p>No feedback available for this event.</p>;
   }
 
   return (
@@ -13,14 +13,14 @@ const FeedbackList = ({ feedbacks, userRole }) => {
         {feedbacks.map(feedback => (
           <li key={feedback._id}>
             {userRole === 'player' ? (
-              <span>Feedback: {feedback.satisfactionLevel} - {feedback.comment || 'Fără comentariu'}</span>
+              <span>Feedback: {feedback.satisfactionLevel} - {feedback.comment || 'No comment'}</span>
             ) : (
               <>
                 <strong>
                   {feedback.receiverId.firstName && feedback.receiverId.lastName
                     ? `${feedback.receiverId.firstName} ${feedback.receiverId.lastName}`
-                    : feedback.receiverId.name || 'Necunoscut'}
-                </strong>: {feedback.satisfactionLevel} - {feedback.comment || 'Fără comentariu'}
+                    : feedback.receiverId.name || 'Unknown'}
+                </strong>: {feedback.satisfactionLevel} - {feedback.comment || 'No comment'}
               </>
             )}
           </li>

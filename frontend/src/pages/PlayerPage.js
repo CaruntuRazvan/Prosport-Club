@@ -37,10 +37,10 @@ const PlayerPage = ({ userId, handleLogout }) => {
 
       try {
         const playerData = await fetchCurrentUser(userId, role);
-        console.log('Date primite de la fetchCurrentUser pentru player:', playerData);
+        console.log('Data received from fetchCurrentUser for player:', playerData);
         setPlayerInfo(playerData);
       } catch (error) {
-        console.error('Eroare la încărcarea datelor player:', error);
+        console.error('Error loading player data:', error);
       }
     };
 
@@ -85,7 +85,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
         {playerInfo && (
           <div className="player-profile">
             <p><strong>User:</strong> {playerInfo.name}</p>
-            <p><strong>Email:</strong> {playerInfo.email}</p>
+            <p style={{ fontSize: '11px',  whiteSpace: 'nowrap',overflow: 'hidden'}}><strong>Email:</strong> {playerInfo.email}</p>
           </div>
         )}
         <ul>
@@ -93,19 +93,19 @@ const PlayerPage = ({ userId, handleLogout }) => {
             className={activeSection === 'team' ? 'active' : ''}
             onClick={() => setActiveSection('team')}
           >
-            Despre Echipa
+            About Team
           </li>
           <li
             className={activeSection === 'profile' ? 'active' : ''}
             onClick={() => setActiveSection('profile')}
           >
-            Profilul Meu
+            My Profile
           </li>
           <li
             className={activeSection === 'players' ? 'active' : ''}
             onClick={() => setActiveSection('players')}
           >
-            Jucatori
+            Players
           </li>
           <li
             className={activeSection === 'staff' ? 'active' : ''}
@@ -123,7 +123,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
             className={activeSection === 'polls' ? 'active' : ''}
             onClick={() => setActiveSection('polls')}
           >
-            Sondaje
+            Polls
           </li>
           <li
             className={activeSection === 'fines' ? 'active' : ''}
@@ -135,7 +135,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
             className={activeSection === 'journal' ? 'active' : ''}
             onClick={() => setActiveSection('journal')}
           >
-            Jurnal
+            Journal
           </li>
         </ul>
       </nav>
@@ -148,7 +148,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
             <NotificationsDropdown
               userId={userId}
               setActiveSection={setActiveSection}
-              playNotificationSound={playNotificationSound} // Transmitem setarea către NotificationsDropdown
+              playNotificationSound={playNotificationSound} // Pass the setting to NotificationsDropdown
             />
             <SettingsComponent
               userId={userId}
@@ -160,7 +160,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
         </header>
 
         <div className="section-wrapper" key={activeSection}>
-          {/* Secțiunea Profilul Meu */}
+          {/* My Profile Section */}
           {activeSection === 'profile' && playerInfo && (
             <section className="profile-section section">
               <div className="profile-card">
@@ -178,34 +178,34 @@ const PlayerPage = ({ userId, handleLogout }) => {
                     )}
                   </div>
                   <h3 className="profile-name">{playerInfo.playerId?.firstName} {playerInfo.playerId?.lastName}</h3>
-                  <span className="profile-role">Jucător</span>
+                  <span className="profile-role">Player</span>
                 </div>
 
                 <div className="profile-details">
-                  <h4>Informații personale</h4>
+                  <h4>Personal Information</h4>
                   <div className="info-grid">
                     <div className="info-item">
-                      <span className="info-label">Prenume:</span>
+                      <span className="info-label">First Name:</span>
                       <span className="info-value">{playerInfo.playerId?.firstName}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Nume:</span>
+                      <span className="info-label">Last Name:</span>
                       <span className="info-value">{playerInfo.playerId?.lastName}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Vârsta:</span>
-                      <span className="info-value">{calculateAge(playerInfo.playerId?.dateOfBirth)} ani</span>
+                      <span className="info-label">Age:</span>
+                      <span className="info-value">{calculateAge(playerInfo.playerId?.dateOfBirth)} years</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Naționalitate:</span>
+                      <span className="info-label">Nationality:</span>
                       <span className="info-value">{playerInfo.playerId?.nationality}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Înălțime:</span>
+                      <span className="info-label">Height:</span>
                       <span className="info-value">{playerInfo.playerId?.height} cm</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Greutate:</span>
+                      <span className="info-label">Weight:</span>
                       <span className="info-value">{playerInfo.playerId?.weight} kg</span>
                     </div>
                     <div className="info-item">
@@ -213,38 +213,38 @@ const PlayerPage = ({ userId, handleLogout }) => {
                       <span className="info-value">{playerInfo.email}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Poziție:</span>
+                      <span className="info-label">Position:</span>
                       <span className="info-value">
-                        {playerInfo.playerId?.position === 'Goalkeeper' ? 'Portar' :
-                        playerInfo.playerId?.position === 'Defender' ? 'Fundaș' :
-                        playerInfo.playerId?.position === 'Midfielder' ? 'Mijlocaș' :
-                        playerInfo.playerId?.position === 'Forward' ? 'Atacant' :
+                        {playerInfo.playerId?.position === 'Goalkeeper' ? 'Goalkeeper' :
+                        playerInfo.playerId?.position === 'Defender' ? 'Defender' :
+                        playerInfo.playerId?.position === 'Midfielder' ? 'Midfielder' :
+                        playerInfo.playerId?.position === 'Forward' ? 'Forward' :
                         playerInfo.playerId?.position || 'N/A'}
                       </span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Număr tricou:</span>
+                      <span className="info-label">Shirt Number:</span>
                       <span className="info-value">{playerInfo.playerId?.shirtNumber || 'N/A'}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Număr de telefon:</span>
+                      <span className="info-label">Phone Number:</span>
                       <span className="info-value">{playerInfo.playerId?.phoneNumber || 'N/A'}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Picior preferat:</span>
+                      <span className="info-label">Preferred Foot:</span>
                       <span className="info-value">
-                        {playerInfo.playerId?.preferredFoot === 'right' ? 'Drept' :
-                        playerInfo.playerId?.preferredFoot === 'left' ? 'Stâng' :
-                        playerInfo.playerId?.preferredFoot === 'both' ? 'Ambele' :
+                        {playerInfo.playerId?.preferredFoot === 'right' ? 'Right' :
+                        playerInfo.playerId?.preferredFoot === 'left' ? 'Left' :
+                        playerInfo.playerId?.preferredFoot === 'both' ? 'Both' :
                         playerInfo.playerId?.preferredFoot || 'N/A'}
                       </span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Stare:</span>
+                      <span className="info-label">Status:</span>
                       <span className="info-value">
-                        {playerInfo.playerId?.status === 'notInjured' ? 'Nu este accidentat' :
-                        playerInfo.playerId?.status === 'recovering' ? 'În recuperare' :
-                        playerInfo.playerId?.status === 'injured' ? 'Accidentat' :
+                        {playerInfo.playerId?.status === 'notInjured' ? 'Not Injured' :
+                        playerInfo.playerId?.status === 'recovering' ? 'Recovering' :
+                        playerInfo.playerId?.status === 'injured' ? 'Injured' :
                         playerInfo.playerId?.status || 'N/A'}
                       </span>
                     </div>
@@ -252,7 +252,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
 
                   {playerInfo.playerId?.history && playerInfo.playerId.history.length > 0 && (
                     <div className="profile-section">
-                      <h4>Istoric cluburi</h4>
+                      <h4>Club History</h4>
                       <ul className="history-list">
                         {playerInfo.playerId.history.map((entry, index) => (
                           <li key={index}>
@@ -273,7 +273,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
             </section>
           )}
 
-          {/* Secțiunea Jucatori */}
+          {/* Players Section */}
           {activeSection === 'players' && (
             <section className="players-section section">
               <PlayersSection
@@ -292,14 +292,14 @@ const PlayerPage = ({ userId, handleLogout }) => {
             </section>
           )}
 
-          {/* Secțiunea Calendar */}
+          {/* Calendar Section */}
           {activeSection === 'calendar' && (
             <section className="calendar-section section">
               <EventCalendar userId={userId} eventColor={eventColor} />
             </section>
           )}
 
-          {/* Secțiunea Sondaje */}
+          {/* Polls Section */}
           {activeSection === 'polls' && (
             <section className="polls-section section">
               <PollsList userId={userId} userRole={role} />
@@ -312,7 +312,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
             </section>
           )}
           
-          {/* Secțiunea Penalizări */}
+          {/* Journal Section */}
           {activeSection === 'journal' && (
             <section className="journal-section section">
               <JournalSection userId={userId} />
@@ -320,7 +320,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
           )}
         </div>
         
-        {/* Modal pentru profilul jucătorului selectat */}
+        {/* Modal for selected player's profile */}
         {selectedUser && (
           <UserProfile
             user={selectedUser}

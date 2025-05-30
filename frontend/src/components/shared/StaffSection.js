@@ -14,15 +14,15 @@ const StaffSection = ({ onStaffClick, currentUserId }) => {
         setLoading(true);
 
         const managerData = await fetchManagers();
-        console.log('Manageri preluați:', managerData);
+        console.log('Managers fetched:', managerData);
         setManagers(managerData);
 
         const staffData = await fetchStaff();
-        console.log('Membri staff preluați:', staffData);
+        console.log('Staff members fetched:', staffData);
         setStaffMembers(staffData);
       } catch (err) {
-        setError('Eroare la încărcarea datelor.');
-        console.error('Eroare:', err);
+        setError('Error loading data.');
+        console.error('Error:', err);
       } finally {
         setLoading(false);
       }
@@ -33,7 +33,7 @@ const StaffSection = ({ onStaffClick, currentUserId }) => {
   const renderManagersList = () => (
     managers.length > 0 ? (
       <div className="staff-category">
-        <h2>Manageri</h2>
+        <h2>Managers</h2>
         <div className="staff-list">
           {managers.map(manager => (
             <div
@@ -53,7 +53,7 @@ const StaffSection = ({ onStaffClick, currentUserId }) => {
                   onClick={() => onStaffClick && onStaffClick(manager)}
                   onError={(e) => {
                     e.target.src = '/images/default-user.jpg';
-                    console.log(`Eroare la încărcarea imaginii pentru ${manager.managerId?.firstName} ${manager.managerId?.lastName}`);
+                    console.log(`Error loading image for ${manager.managerId?.firstName} ${manager.managerId?.lastName}`);
                   }}
                 />
               </div>
@@ -66,7 +66,7 @@ const StaffSection = ({ onStaffClick, currentUserId }) => {
         </div>
       </div>
     ) : (
-      <div className="no-managers-message">Nu există manageri disponibili.</div>
+      <div className="no-managers-message">No managers available.</div>
     )
   );
 
@@ -94,7 +94,7 @@ const StaffSection = ({ onStaffClick, currentUserId }) => {
                   loading="lazy"
                   onError={(e) => {
                     e.target.src = '/images/default-user.jpg';
-                    console.log(`Eroare la încărcarea imaginii pentru ${staff.staffId?.firstName} ${staff.staffId?.lastName}`);
+                    console.log(`Error loading image for ${staff.staffId?.firstName} ${staff.staffId?.lastName}`);
                   }}
                 />
               </div>
@@ -107,11 +107,11 @@ const StaffSection = ({ onStaffClick, currentUserId }) => {
         </div>
       </div>
     ) : (
-      <div className="no-staff-message">Nu există membri staff disponibili.</div>
+      <div className="no-staff-message">No staff members available.</div>
     )
   );
 
-  if (loading) return <div className="loading-message">Se încarcă datele...</div>;
+  if (loading) return <div className="loading-message">Loading data...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (

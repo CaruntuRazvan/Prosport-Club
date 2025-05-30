@@ -10,20 +10,21 @@ import PlayerPage from './pages/PlayerPage';
 import ManagerPage from './pages/ManagerPage';
 import StaffPage from './pages/StaffPage';
 import ScrollToTopButton from './components/shared/ScrollToTopButton';
-import { ConfirmProvider } from './context/ConfirmContext'; // Importăm ConfirmProvider
-import { useConfirm } from './context/ConfirmContext'; // Importăm useConfirm
+import { ConfirmProvider } from './context/ConfirmContext';
+import { useConfirm } from './context/ConfirmContext';
 
-// Subcomponent care conține logica aplicației
+// Subcomponent containing the application logic
 const AppContent = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [toastKey, setToastKey] = useState(Date.now());
+  const [isInitialLoad, setIsInitialLoad] = useState(true); // New flag for initial load
   const navigate = useNavigate();
-  const confirm = useConfirm(); // Folosim useConfirm
+  const confirm = useConfirm();
 
-  const checkAuth = () => {
+  const checkAuth = (isPeriodicCheck = false) => {
     if (showLogoutModal) return;
 
     const storedUser = localStorage.getItem('user');
@@ -31,11 +32,18 @@ const AppContent = () => {
     const token = localStorage.getItem('token');
 
     if (token && isTokenExpired(token)) {
-      confirm('Sesiunea ta a expirat. Te rugăm să te autentifici din nou.', () => {
+      if (isPeriodicCheck && isAuthenticated) {
+        // Show modal only during periodic checks for authenticated users
+        confirm('Your session has expired. Please log in again.', () => {
+          handleLogout();
+          navigate('/login');
+        });
+        setShowLogoutModal(true);
+      } else {
+        // On initial load or if not authenticated, silently log out
         handleLogout();
         navigate('/login');
-      });
-      setShowLogoutModal(true); // Păstrăm această stare pentru a evita verificări repetate
+      }
       return;
     }
 
@@ -58,12 +66,13 @@ const AppContent = () => {
   };
 
   useEffect(() => {
-    checkAuth();
+    checkAuth(false); // Initial load check
     setIsLoading(false);
+    setIsInitialLoad(false); // Mark initial load complete
 
     const interval = setInterval(() => {
-      checkAuth();
-    }, 3600000); // Verifică la fiecare oră
+      checkAuth(true); // Periodic check
+    }, 3600000); // Check every hour
 
     return () => {
       clearInterval(interval);
@@ -72,12 +81,12 @@ const AppContent = () => {
 
   useEffect(() => {
     if (userInfo) {
-      console.log('AppContent - userInfo actualizat:', userInfo);
+      console.log('AppContent - userInfo updated:', userInfo);
     }
   }, [userInfo]);
 
   const handleLogout = () => {
-    console.log('AppContent - handleLogout apelat.');
+    console.log('AppContent - handleLogout called.');
     localStorage.removeItem('user');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('token');
@@ -89,7 +98,7 @@ const AppContent = () => {
   };
 
   if (isLoading) {
-    return <div>Se încarcă...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -118,7 +127,7 @@ const AppContent = () => {
           element={
             isAuthenticated && userInfo?.role === 'admin' ? (
               <>
-                {console.log('AppContent - userInfo în ruta admin:', userInfo)}
+                {console.log('AppContent - userInfo in admin route:', userInfo)}
                 <AdminPage userId={userInfo.id} handleLogout={handleLogout} />
               </>
             ) : (
@@ -162,11 +171,11 @@ const AppContent = () => {
   );
 };
 
-// Componenta principală App
+// Main App component
 const App = () => {
   return (
     <Router>
-      <ConfirmProvider> {/* Înfășurăm aplicația în ConfirmProvider */}
+      <ConfirmProvider>
         <AppContent />
       </ConfirmProvider>
     </Router>

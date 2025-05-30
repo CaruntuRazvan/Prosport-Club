@@ -1,0 +1,67 @@
+/* src/styles/Footer.css */
+.footer {
+    background-color: #1f2937;
+    color: #ffffff;
+    padding: 15px 0;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-logo {
+    height: 30px;
+}
+
+.footer-copyright {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 15px;
+    /* Spațiu între link-uri */
+}
+
+.footer-contact-link,
+.footer-regulations-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer-contact-link:hover,
+.footer-regulations-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .footer-logo {
+        height: 25px;
+    }
+
+    .footer-copyright,
+    .footer-contact-link,
+    .footer-regulations-link {
+        font-size: 0.85rem;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 8px;
+    } }

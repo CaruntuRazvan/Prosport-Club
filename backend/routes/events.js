@@ -3,21 +3,8 @@ const router = express.Router();
 const Event = require('../models/Event');
 const auth = require('../middleware/auth');
 const Notification = require('../models/Notification');
+const { isManagerOrStaff, isAdmin } = require('../middleware/roleMiddleware');
 
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Acces permis doar administratorilor.' });
-  }
-  next();
-};
-
-// Middleware pentru a verifica dacă utilizatorul este manager sau staff
-const isManagerOrStaff = (req, res, next) => {
-  if (req.user.role !== 'manager' && req.user.role !== 'staff') {
-    return res.status(403).json({ message: 'Acces permis doar managerilor și staff-ului.' });
-  }
-  next();
-};
 
 const isEventAuthorized = async (req, res, next) => {
   try {
@@ -174,22 +161,6 @@ router.put('/:id', auth, isManagerOrStaff, isEventAuthorized, async (req, res) =
   }
 });
 
-// DELETE /api/events/:id - Șterge un eveniment existent
-router.delete('/:id', auth, isManagerOrStaff, isEventAuthorized, async (req, res) => {
-  try {
-    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
-
-    if (!deletedEvent) {
-      return res.status(404).json({ message: 'Evenimentul nu a fost găsit.' });
-    }
-
-    res.status(200).json({ message: 'Evenimentul a fost șters cu succes.' });
-  } catch (error) {
-    console.error('Eroare la ștergerea evenimentului:', error);
-    res.status(500).json({ message: error.message || 'Eroare la ștergerea evenimentului.' });
-  }
-});
-
 // DELETE /api/events/reset-all - Șterge toate evenimentele
 router.delete('/reset-all', auth, isAdmin, async (req, res) => {
   try {
@@ -207,6 +178,24 @@ router.delete('/reset-all', auth, isAdmin, async (req, res) => {
     res.status(500).json({ message: 'Eroare la ștergerea evenimentelor.' });
   }
 });
+
+// DELETE /api/events/:id - Șterge un eveniment existent
+router.delete('/:id', auth, isManagerOrStaff, isEventAuthorized, async (req, res) => {
+  try {
+    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+
+    if (!deletedEvent) {
+      return res.status(404).json({ message: 'Evenimentul nu a fost găsit.' });
+    }
+
+    res.status(200).json({ message: 'Evenimentul a fost șters cu succes.' });
+  } catch (error) {
+    console.error('Eroare la ștergerea evenimentului:', error);
+    res.status(500).json({ message: error.message || 'Eroare la ștergerea evenimentului.' });
+  }
+});
+
+
 
 // DELETE /api/events/reset-user/:userId - Șterge evenimentele asociate unui utilizator
 router.delete('/reset-user/:userId', auth, isAdmin, async (req, res) => {

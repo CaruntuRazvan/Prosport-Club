@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import Modal from 'react-modal';
 
-// Setează elementul rădăcină pentru accesibilitate
+// Set the root element for accessibility
 Modal.setAppElement('#root');
 
 const ConfirmContext = createContext();
@@ -39,14 +39,14 @@ export const ConfirmProvider = ({ children }) => {
         className="confirm-modal"
         overlayClassName="confirm-overlay"
       >
-        <h2>Confirmare</h2>
+        <h2>Confirmation</h2>
         <p>{message}</p>
         <div className="confirm-buttons">
           <button onClick={handleConfirm} className="confirm-btn">
-            Confirmă
+            Confirm
           </button>
           <button onClick={handleCancel} className="cancel-btn">
-            Anulează
+            Cancel
           </button>
         </div>
       </Modal>
@@ -54,4 +54,10 @@ export const ConfirmProvider = ({ children }) => {
   );
 };
 
-export const useConfirm = () => useContext(ConfirmContext);
+export const useConfirm = () => {
+  const context = useContext(ConfirmContext);
+  if (!context) {
+    throw new Error('useConfirm must be used within a ConfirmProvider');
+  }
+  return context.showConfirm; 
+};

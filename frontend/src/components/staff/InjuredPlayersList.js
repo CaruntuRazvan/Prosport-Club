@@ -84,13 +84,54 @@ const InjuredPlayersList = ({ userRole }) => {
     }
   }, [selectedInjury, isCreating]);
 
+  // Funcție pentru validarea datei în format dd/mm/yyyy
+  const validateDate = (dateStr) => {
+    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    if (!regex.test(dateStr)) return false;
+
+    const [day, month, year] = dateStr.split('/').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.getDate() === day && date.getMonth() + 1 === month && date.getFullYear() === year;
+  };
+
+  // Funcție pentru conversia datei din format dd/mm/yyyy în ISO
+  const convertToISO = (dateStr) => {
+    if (!dateStr) return null;
+    if (!validateDate(dateStr)) {
+      throw new Error('Data trebuie să fie în format dd/mm/yyyy.');
+    }
+
+    const [day, month, year] = dateStr.split('/').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toISOString();
+  };
+
+  // Funcție pentru conversia datei din format ISO în dd/mm/yyyy
+  const convertToDDMMYYYY = (isoDate) => {
+    if (!isoDate) return '';
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Validare dată
+      let injuryDateISO = null;
+      if (editData.injuryDate) {
+        injuryDateISO = convertToISO(editData.injuryDate);
+        if (new Date(injuryDateISO) > new Date()) {
+          throw new Error('Data accidentării nu poate fi în viitor.');
+        }
+      }
+
       const injuryData = {
         playerId: editData.playerId,
         type: editData.type,
-        injuryDate: editData.injuryDate,
+        injuryDate: injuryDateISO,
         estimatedDuration: parseInt(editData.estimatedDuration),
         activityRestrictions: editData.activityRestrictions,
         notes: editData.notes,
@@ -111,7 +152,6 @@ const InjuredPlayersList = ({ userRole }) => {
         activityRestrictions: '',
         notes: '',
       });
-      // Afișează toast-ul după închiderea modalului
       toast.success('Accidentare creată cu succes!', {
         autoClose: 1500,
         hideProgressBar: true,
@@ -144,9 +184,18 @@ const InjuredPlayersList = ({ userRole }) => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Validare dată
+      let injuryDateISO = null;
+      if (editData.injuryDate) {
+        injuryDateISO = convertToISO(editData.injuryDate);
+        if (new Date(injuryDateISO) > new Date()) {
+          throw new Error('Data accidentării nu poate fi în viitor.');
+        }
+      }
+
       const injuryData = {
         type: editData.type,
-        injuryDate: editData.injuryDate,
+        injuryDate: injuryDateISO,
         estimatedDuration: parseInt(editData.estimatedDuration),
         status: editData.status,
         recoveryProgress: parseInt(editData.recoveryProgress),
@@ -172,7 +221,6 @@ const InjuredPlayersList = ({ userRole }) => {
         activityRestrictions: '',
         notes: '',
       });
-      // Afișează toast-ul după închiderea modalului
       toast.success('Accidentare actualizată cu succes!', {
         autoClose: 1500,
         hideProgressBar: true,
@@ -217,7 +265,7 @@ const InjuredPlayersList = ({ userRole }) => {
     } else {
       setEditData({
         type: selectedInjury.type,
-        injuryDate: selectedInjury.injuryDate.split('T')[0],
+        injuryDate: convertToDDMMYYYY(selectedInjury.injuryDate), // Convertim data ISO în dd/mm/yyyy
         estimatedDuration: selectedInjury.estimatedDuration,
         status: selectedInjury.status,
         recoveryProgress: selectedInjury.recoveryProgress,
@@ -341,12 +389,13 @@ const InjuredPlayersList = ({ userRole }) => {
                     />
                   </div>
                   <div className="injury-form-group">
-                    <label>Data Accidentării:</label>
+                    <label>Data Accidentării (dd/mm/yyyy):</label>
                     <input
-                      type="date"
+                      type="text"
                       value={editData.injuryDate}
                       onChange={(e) => setEditData({ ...editData, injuryDate: e.target.value })}
                       className="injury-edit-input"
+                      placeholder="dd/mm/yyyy"
                       required
                     />
                   </div>
@@ -401,12 +450,13 @@ const InjuredPlayersList = ({ userRole }) => {
                       />
                     </div>
                     <div className="injury-form-group">
-                      <label>Data Accidentării:</label>
+                      <label>Data Accidentării (dd/mm/yyyy):</label>
                       <input
-                        type="date"
+                        type="text"
                         value={editData.injuryDate}
                         onChange={(e) => setEditData({ ...editData, injuryDate: e.target.value })}
                         className="injury-edit-input"
+                        placeholder="dd/mm/yyyy"
                       />
                     </div>
                     <div className="injury-form-group">
@@ -481,23 +531,25 @@ const InjuredPlayersList = ({ userRole }) => {
                     </div>
                     <p><strong>Restricții Activitate:</strong> {selectedInjury.activityRestrictions || 'N/A'}</p>
                     <p><strong>Note:</strong> {selectedInjury.notes || 'N/A'}</p>
-                    {userRole === 'staff' && (
-                      <button className="injury-edit-btn" onClick={handleEditToggle}>Editează</button>
-                    )}
-                    <button className="injury-close-modal-btn" onClick={() => {
-                      setSelectedInjury(null);
-                      setIsEditing(false);
-                      setEditData({
-                        playerId: '',
-                        type: '',
-                        injuryDate: '',
-                        estimatedDuration: '',
-                        status: 'injured',
-                        recoveryProgress: 0,
-                        activityRestrictions: '',
-                        notes: '',
-                      });
-                    }}>Închide</button>
+                    <div className="injury-modal-actions">
+                      {userRole === 'staff' && (
+                        <button className="injury-edit-btn" onClick={handleEditToggle}>Editează</button>
+                      )}
+                      <button className="injury-close-modal-btn" onClick={() => {
+                        setSelectedInjury(null);
+                        setIsEditing(false);
+                        setEditData({
+                          playerId: '',
+                          type: '',
+                          injuryDate: '',
+                          estimatedDuration: '',
+                          status: 'injured',
+                          recoveryProgress: 0,
+                          activityRestrictions: '',
+                          notes: '',
+                        });
+                      }}>Închide</button>
+                    </div>
                   </>
                 )}
               </>
