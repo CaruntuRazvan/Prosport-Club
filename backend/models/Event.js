@@ -170,9 +170,9 @@ eventSchema.post('save', async function (doc, next) {
     const notifications = participants.map(userId => ({
       userId,
       type: 'event',
-      title: 'Eveniment nou',
-      description: `Ai fost adăugat la un nou eveniment: ${event.title} pe ${startDate}.`,
-      actionLink: event._id.toString(), // Stochează doar ID-ul evenimentului
+      title: 'New Event',
+      description: `You have been added to a new event:: ${event.title} on ${startDate}.`,
+      actionLink: event._id.toString(), 
       section: 'calendar', // Secțiunea țintă
       isRead: false,
       createdAt: new Date(),

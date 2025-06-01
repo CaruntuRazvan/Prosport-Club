@@ -1,72 +1,90 @@
-# Project Overview: Football Team Management App
+# ProSport Club
 
-## Descriere generală
+## Overview
 
-Aceasta este o aplicație web pentru gestionarea utilizatorilor unei echipe de fotbal, dezvoltată cu **React** (frontend) și **Node.js/MongoDB** (backend). Aplicația include funcționalități pentru autentificare, gestionarea utilizatorilor (admin, jucători, manageri, staff), statistici și un design modern bazat pe o temă albastră.
+*ProSport Club* is a web application designed to streamline the management of small sports clubs. Built as part of a bachelor's thesis, this project provides a free, accessible, and tailored solution for small clubs in Romania, addressing their administrative and operational needs. With features like event scheduling, automated feedback summaries, fine and poll management, injury tracking, and more, *ProSport Club* offers an intuitive platform for clubs that can't afford commercial alternatives.
 
----
+## Features
 
-## 1. Schema și structura utilizatorilor
+- **User Authentication**: Secure login with role-based access (admin, manager, staff, player) using JWT tokens.
+- **Event Management**: Schedule and manage events with an interactive calendar (FullCalendar) and automated notifications.
+- **Automated Feedback**: Generate player feedback summaries using OpenAI, with a top 3 performance ranking for managers and PDF export.
+- **Fines and Polls**: Create fines with a payment workflow and polls with voting charts, accessible to specific roles.
+- **Injury Tracking**: Track player injuries with recovery progress sliders and comments, available for physiotherapists and fitness coaches.
+- **Announcements**: Display the latest 5 announcements on the "About Team" page, created by admins or managers.
+- **Personal Journal**: Add personal notes, stored in localStorage for quick access.
+- **Custom Settings**: Choose a color from a predefined palette, saved in localStorage for persistent customization.
+- **Notifications**: Receive automated notifications for events, polls, feedback, and fines, with unread counts, filtering (unread/all), and a "mark all as read" option.
+- **Admin Reset**: Reset specific data (events, feedback, etc.) for a new season, with monthly database backups.
 
-- Am definit scheme MongoDB pentru utilizatori și datele asociate:
-  - **User**: Conține `email`, `password`, `name`, `role` (`admin`, `player`, `manager`, `staff`), și referințe opționale (`playerId`, `managerId`, `staffId`).
-  - **Player**, **Manager**, **Staff**: Scheme separate pentru date specifice (ex. `height` pentru jucători, `certifications` pentru staff).
-- Am implementat o funcționalitate de ștergere în cascadă: la ștergerea unui utilizator, se șterg automat datele asociate (ex. `Player` referențiat prin `playerId`).
 
-## 2. Autentificare și rute
+## Technologies Used
 
-- **Login**: O pagină simplă de autentificare cu un design modern (gradient albastru, card alb). Utilizatorii se autentifică cu email și parolă.
-- **Rute protejate**:
-  - `/admin/:id` pentru admini.
-  - `/player/:id`, `/manager/:id`, `/staff/:id` pentru celelalte roluri.
-  - Redirecționare automată la `/login` dacă utilizatorul nu este autentificat.
+- **Frontend**: React, FullCalendar, jsPDF
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **AI Integration**: OpenAI API for automated feedback summaries
+- **Testing**: Jest, MongoMemoryServer
+- **Deployment**: Netlify (frontend), Render (backend)
+- **CI/CD**: GitHub Actions for automated testing
+- **Monitoring**: UptimeRobot for availability monitoring
 
-## 3. Pagini pentru roluri
+## Installation
 
-- **PlayerPage**, **ManagerPage**, **StaffPage**:
-  - Afișează detalii specifice fiecărui rol (ex. `height` pentru jucători, `certifications` pentru staff).
-  - Include istoricul cluburilor și imaginea utilizatorului.
-  - Am rezolvat o eroare de tip `undefined` în `StaffPage` prin verificări stricte.
+To run *ProSport Club* locally, follow these steps:
 
-## 4. Admin Page
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/[your-username]/pro-sport-club.git
+   cd pro-sport-club
+   ```
 
-- **Funcționalități**:
-  - **Lista utilizatorilor**: Filtrabilă pe categorii (`admin`, `player`, `manager`, `staff`), cu opțiuni de ștergere.
-  - **Adăugare utilizator**: Formular `UserForm` integrat, cu suport pentru toate rolurile.
-  - **Statistici**: Grafic bar chart cu numărul de utilizatori pe categorii.
-  - **Dashboard**: Afișează statistici simple (total utilizatori, jucători noi în ultima lună).
-- **Design**:
-  - Sidebar fix cu navigare (Dashboard, Utilizatori, Statistici, Adaugă utilizator).
-  - Temă albastră (gradient `#022c5a` la `#3b82f6`), carduri albe cu colțuri rotunjite.
-  - Logo-ul echipei „ProSport Club Since 2025” în sidebar și pe un tricou simulat.
-  - Caseta de profil admin sub logo în sidebar.
+2. **Install dependencies**:
+   - For the frontend:
+     ```bash
+     cd frontend
+     npm install
+     ```
+   - For the backend:
+     ```bash
+     cd ../backend
+     npm install
+     ```
 
-## 5. Tricou simulat
+3. **Set up environment variables**:
+   - Create a `.env` file in the `backend` directory with the following variables:
+     ```
+     MONGODB_URI=your_mongodb_uri
+     JWT_SECRET=your_jwt_secret
+     OPENAI_API_KEY=your_openai_api_key
+     ```
 
-- În secțiunea „Dashboard”, am adăugat un tricou de fotbal stilizat cu CSS:
-  - Gradient albastru (`#022c5a` la `#3b82f6`).
-  - Logo-ul decupat „ProSport Club Since 2025” plasat pe piept.
-  - Mâneci și guler stilizate cu CSS.
+4. **Run the application**:
+   - Start the backend:
+     ```bash
+     cd backend
+     npm start
+     ```
+   - Start the frontend:
+     ```bash
+     cd frontend
+     npm start
+     ```
 
-## 6. Backend și API
+5. **Access the app**:
+   - Open your browser and navigate to `http://localhost:3000` to view the frontend.
+   - The backend API will be available at `http://localhost:5000` (or the port you configured).
 
-- **Rute**:
-  - `/api/users/add`: Adaugă utilizatori și date asociate.
-  - `/api/users/delete`: Șterge utilizatori (cu ștergere în cascadă).
-  - `/api/users/current`: Returnează datele utilizatorului curent (populate `playerId`, `managerId`, etc.).
-- Middleware pentru upload imagini (`multer`) și hashing parole (`bcrypt`).
+## Contributing
 
-## 7. Stilizare și UX
+Contributions are welcome! If you'd like to contribute to *ProSport Club*, please follow these steps:
 
-- Designul este inspirat de pagina de login: gradient albastru, carduri albe, butoane albastre (`#1e3a8a` cu hover `#3b82f6`).
-- Sidebar-ul include logo și caseta de profil admin.
-- Am folosit CSS pur, fără framework-uri, pentru flexibilitate.
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Make your changes and commit them (`git commit -m "Add your feature"`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request with a detailed description of your changes.
 
----
+## License
 
-## Următorii pași sugerați
-
-- Adăugare buton „Logout” în sidebar.
-- Funcționalitate de editare utilizatori direct din listă.
-- Secțiune „Acțiuni recente” pentru a urmări activitatea adminilor.
-- Filtru avansat pentru căutarea utilizatorilor după nume/email.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

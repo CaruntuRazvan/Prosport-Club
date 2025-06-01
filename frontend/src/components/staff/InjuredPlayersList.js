@@ -33,7 +33,7 @@ const InjuredPlayersList = ({ userRole }) => {
         setInjuries(injuryData);
         setPlayers(playerData);
       } catch (error) {
-        toast.error('Eroare la încărcarea datelor', {
+        toast.error('Error loading data', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -56,7 +56,7 @@ const InjuredPlayersList = ({ userRole }) => {
 
   useEffect(() => {
     if (selectedInjury || isCreating) {
-      document.body.style.overflow = 'hidden'; // Oprește scroll-ul
+      document.body.style.overflow = 'hidden'; 
       const handleEsc = (e) => {
         if (e.key === 'Escape') {
           setSelectedInjury(null);
@@ -76,7 +76,7 @@ const InjuredPlayersList = ({ userRole }) => {
       };
       document.addEventListener('keydown', handleEsc);
       return () => {
-        document.body.style.overflow = 'auto'; // Restabilește scroll-ul
+        document.body.style.overflow = 'auto'; 
         document.removeEventListener('keydown', handleEsc);
       };
     } else {
@@ -84,7 +84,7 @@ const InjuredPlayersList = ({ userRole }) => {
     }
   }, [selectedInjury, isCreating]);
 
-  // Funcție pentru validarea datei în format dd/mm/yyyy
+
   const validateDate = (dateStr) => {
     const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     if (!regex.test(dateStr)) return false;
@@ -98,7 +98,7 @@ const InjuredPlayersList = ({ userRole }) => {
   const convertToISO = (dateStr) => {
     if (!dateStr) return null;
     if (!validateDate(dateStr)) {
-      throw new Error('Data trebuie să fie în format dd/mm/yyyy.');
+      throw new Error('The date must be in dd/mm/yyyy format.');
     }
 
     const [day, month, year] = dateStr.split('/').map(Number);
@@ -124,7 +124,7 @@ const InjuredPlayersList = ({ userRole }) => {
       if (editData.injuryDate) {
         injuryDateISO = convertToISO(editData.injuryDate);
         if (new Date(injuryDateISO) > new Date()) {
-          throw new Error('Data accidentării nu poate fi în viitor.');
+          throw new Error('The injury date cannot be in the future.');
         }
       }
 
@@ -152,7 +152,7 @@ const InjuredPlayersList = ({ userRole }) => {
         activityRestrictions: '',
         notes: '',
       });
-      toast.success('Accidentare creată cu succes!', {
+      toast.success('Injury created successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -165,8 +165,8 @@ const InjuredPlayersList = ({ userRole }) => {
         },
       });
     } catch (error) {
-      console.error('Error creating injury:', error); // Depanare
-      toast.error(error.message || 'Eroare la crearea accidentării.', {
+      
+      toast.error(error.message || 'Error creating the injury.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -189,7 +189,7 @@ const InjuredPlayersList = ({ userRole }) => {
       if (editData.injuryDate) {
         injuryDateISO = convertToISO(editData.injuryDate);
         if (new Date(injuryDateISO) > new Date()) {
-          throw new Error('Data accidentării nu poate fi în viitor.');
+          throw new Error('The injury date cannot be in the future.');
         }
       }
 
@@ -205,7 +205,6 @@ const InjuredPlayersList = ({ userRole }) => {
       console.log('Updating Injury Data:', injuryData); // Depanare
 
       const updatedInjury = await updateInjury(selectedInjury._id, injuryData);
-      console.log('Updated Injury Response:', updatedInjury); // Depanare
       setInjuries(injuries.map(injury =>
         injury._id === updatedInjury._id ? updatedInjury : injury
       ));
@@ -221,7 +220,7 @@ const InjuredPlayersList = ({ userRole }) => {
         activityRestrictions: '',
         notes: '',
       });
-      toast.success('Accidentare actualizată cu succes!', {
+      toast.success('Injury updated successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -235,7 +234,7 @@ const InjuredPlayersList = ({ userRole }) => {
       });
     } catch (error) {
       console.error('Error updating injury:', error); // Depanare
-      toast.error(error.message || 'Eroare la actualizarea accidentării.', {
+      toast.error(error.message || 'Error updating the injury.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -265,7 +264,7 @@ const InjuredPlayersList = ({ userRole }) => {
     } else {
       setEditData({
         type: selectedInjury.type,
-        injuryDate: convertToDDMMYYYY(selectedInjury.injuryDate), // Convertim data ISO în dd/mm/yyyy
+        injuryDate: convertToDDMMYYYY(selectedInjury.injuryDate), 
         estimatedDuration: selectedInjury.estimatedDuration,
         status: selectedInjury.status,
         recoveryProgress: selectedInjury.recoveryProgress,
@@ -290,15 +289,15 @@ const InjuredPlayersList = ({ userRole }) => {
     });
   };
 
-  if (loading) return <div className="injury-loading">Se încarcă...</div>;
+  if (loading) return <div className="injury-loading">Loading...</div>;
 
   return (
     <section className="injury-section">
-      <h2>Accidentări Jucători</h2>
+      <h2>Injured Players</h2>
       {userRole === 'staff' && (
         <div className="injury-action-buttons">
           <button className="injury-add-btn" onClick={handleCreateToggle}>
-            Adaugă Accidentare
+            Add injury
           </button>
         </div>
       )}
@@ -309,15 +308,15 @@ const InjuredPlayersList = ({ userRole }) => {
               <div className="injury-card-header">
                 <h3>{`${injury.playerId?.firstName} ${injury.playerId?.lastName}`}</h3>
                 <span className={`injury-card-status ${injury.status}`}>
-                  {injury.status === 'injured' ? 'Accidentat' : 'În recuperare'}
+                  {injury.status === 'injured' ? 'Injured' : 'Recovering'}
                 </span>
               </div>
               <div className="injury-card-info">
-                <p><strong>Tip:</strong> {injury.type}</p>
-                <p><strong>Data:</strong> {new Date(injury.injuryDate).toLocaleDateString('ro-RO')}</p>
-                <p><strong>Durata:</strong> {injury.estimatedDuration} zile</p>
-                <p><strong>Revenire:</strong> {new Date(injury.recoveryEndDate).toLocaleDateString('ro-RO')}</p>
-                <p><strong>Restricții:</strong> {injury.activityRestrictions || 'N/A'}</p>
+                <p><strong>Type:</strong> {injury.type}</p>
+                <p><strong>Date:</strong> {new Date(injury.injuryDate).toLocaleDateString('ro-RO')}</p>
+                <p><strong>Duration:</strong> {injury.estimatedDuration} days</p>
+                <p><strong>Recovery:</strong> {new Date(injury.recoveryEndDate).toLocaleDateString('ro-RO')}</p>
+                <p><strong>Restrictions:</strong> {injury.activityRestrictions || 'N/A'}</p>
               </div>
               <div className="injury-progress-bar">
                 <div
@@ -329,16 +328,15 @@ const InjuredPlayersList = ({ userRole }) => {
                 className="injury-details-btn"
                 onClick={() => {
                   setSelectedInjury(injury);
-                  console.log('Selected Injury:', injury); // Depanare
                 }}
               >
-                Detalii
+                Details
               </button>
             </div>
           ))}
         </div>
       ) : (
-        <p className="injury-no-injuries">Nu există accidentări active.</p>
+        <p className="injury-no-injuries">No active injuries.</p>
       )}
       {(selectedInjury || isCreating) && (
         <div className="injury-modal-container" onClick={() => {
@@ -359,17 +357,17 @@ const InjuredPlayersList = ({ userRole }) => {
           <div className="injury-modal-content" onClick={e => e.stopPropagation()}>
             {isCreating ? (
               <>
-                <h3>Adaugă Accidentare</h3>
+                <h3>Add Injury</h3>
                 <form onSubmit={handleCreateSubmit} className="injury-edit-form">
                   <div className="injury-form-group">
-                    <label>Jucător:</label>
+                    <label>Player:</label>
                     <select
                       value={editData.playerId}
                       onChange={(e) => setEditData({ ...editData, playerId: e.target.value })}
                       className="injury-edit-input"
                       required
                     >
-                      <option value="">Selectează jucător</option>
+                      <option value="">Select player</option>
                       {players.map(player => (
                         <option key={player._id} value={player.playerId._id}>
                           {`${player.playerId.firstName} ${player.playerId.lastName}`}
@@ -378,18 +376,18 @@ const InjuredPlayersList = ({ userRole }) => {
                     </select>
                   </div>
                   <div className="injury-form-group">
-                    <label>Tip Accidentare:</label>
+                    <label>Injury Type:</label>
                     <input
                       type="text"
                       value={editData.type}
                       onChange={(e) => setEditData({ ...editData, type: e.target.value })}
                       className="injury-edit-input"
-                      placeholder="Ex. entorsă glezna"
+                      placeholder="e.g., ankle sprain"
                       required
                     />
                   </div>
                   <div className="injury-form-group">
-                    <label>Data Accidentării (dd/mm/yyyy):</label>
+                    <label>Injury Date (dd/mm/yyyy):</label>
                     <input
                       type="text"
                       value={editData.injuryDate}
@@ -400,7 +398,7 @@ const InjuredPlayersList = ({ userRole }) => {
                     />
                   </div>
                   <div className="injury-form-group">
-                    <label>Durata Estimată (zile):</label>
+                    <label>Estimated Duration (days):</label>
                     <input
                       type="number"
                       value={editData.estimatedDuration}
@@ -411,26 +409,26 @@ const InjuredPlayersList = ({ userRole }) => {
                     />
                   </div>
                   <div className="injury-form-group">
-                    <label>Restricții Activitate:</label>
+                    <label>Activity Restrictions:</label>
                     <textarea
                       value={editData.activityRestrictions}
                       onChange={(e) => setEditData({ ...editData, activityRestrictions: e.target.value })}
                       className="injury-edit-input"
-                      placeholder="Ex. odihnă completă"
+                      placeholder="e.g., complete rest"
                     />
                   </div>
                   <div className="injury-form-group">
-                    <label>Note:</label>
+                    <label>Notes:</label>
                     <textarea
                       value={editData.notes}
                       onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
                       className="injury-edit-input"
-                      placeholder="Ex. progres bun"
+                      placeholder="e.g., good progress"
                     />
                   </div>
                   <div className="injury-modal-actions">
-                    <button type="submit" className="injury-save-btn">Salvează</button>
-                    <button type="button" className="injury-cancel-btn" onClick={handleCreateToggle}>Anulează</button>
+                    <button type="submit" className="injury-save-btn">Save</button>
+                    <button type="button" className="injury-cancel-btn" onClick={handleCreateToggle}>Cancel</button>
                   </div>
                 </form>
               </>
@@ -440,17 +438,17 @@ const InjuredPlayersList = ({ userRole }) => {
                 {isEditing ? (
                   <form onSubmit={handleEditSubmit} className="injury-edit-form">
                     <div className="injury-form-group">
-                      <label>Tip Accidentare:</label>
+                      <label>Injury Type:</label>
                       <input
                         type="text"
                         value={editData.type}
                         onChange={(e) => setEditData({ ...editData, type: e.target.value })}
                         className="injury-edit-input"
-                        placeholder="Ex. entorsă glezna"
+                        placeholder="e.g., ankle sprain"
                       />
                     </div>
                     <div className="injury-form-group">
-                      <label>Data Accidentării (dd/mm/yyyy):</label>
+                      <label>Injury Date (dd/mm/yyyy):</label>
                       <input
                         type="text"
                         value={editData.injuryDate}
@@ -460,7 +458,7 @@ const InjuredPlayersList = ({ userRole }) => {
                       />
                     </div>
                     <div className="injury-form-group">
-                      <label>Durata Estimată (zile):</label>
+                      <label>Estimated Duration (days):</label>
                       <input
                         type="number"
                         value={editData.estimatedDuration}
@@ -470,19 +468,19 @@ const InjuredPlayersList = ({ userRole }) => {
                       />
                     </div>
                     <div className="injury-form-group">
-                      <label>Stare:</label>
+                      <label>Status:</label>
                       <select
                         value={editData.status}
                         onChange={(e) => setEditData({ ...editData, status: e.target.value })}
                         className="injury-edit-input"
                       >
-                        <option value="injured">Accidentat</option>
-                        <option value="recovering">În recuperare</option>
-                        <option value="resolved">Rezolvat</option>
+                        <option value="injured">Injured</option>
+                        <option value="recovering">Recovering</option>
+                        <option value="resolved">Resolved</option>
                       </select>
                     </div>
                     <div className="injury-form-group">
-                      <label>Progres Recuperare (%):</label>
+                      <label>Recovery Progress (%):</label>
                       <input
                         type="number"
                         value={editData.recoveryProgress}
@@ -493,47 +491,47 @@ const InjuredPlayersList = ({ userRole }) => {
                       />
                     </div>
                     <div className="injury-form-group">
-                      <label>Restricții Activitate:</label>
+                      <label>Activity Restrictions:</label>
                       <textarea
                         value={editData.activityRestrictions}
                         onChange={(e) => setEditData({ ...editData, activityRestrictions: e.target.value })}
                         className="injury-edit-input"
-                        placeholder="Ex. fizioterapie, alergare ușoară"
+                        placeholder="e.g., physiotherapy, light running"
                       />
                     </div>
                     <div className="injury-form-group">
-                      <label>Note:</label>
+                      <label>Notes:</label>
                       <textarea
                         value={editData.notes}
                         onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
                         className="injury-edit-input"
-                        placeholder="Ex. progres bun"
+                        placeholder="e.g., good progress"
                       />
                     </div>
                     <div className="injury-modal-actions">
-                      <button type="submit" className="injury-save-btn">Salvează</button>
-                      <button type="button" className="injury-cancel-btn" onClick={handleEditToggle}>Anulează</button>
+                      <button type="submit" className="injury-save-btn">Save</button>
+                      <button type="button" className="injury-cancel-btn" onClick={handleEditToggle}>Close</button>
                     </div>
                   </form>
                 ) : (
                   <>
-                    <p><strong>Tip Accidentare:</strong> {selectedInjury.type}</p>
-                    <p><strong>Data Accidentării:</strong> {new Date(selectedInjury.injuryDate).toLocaleDateString('ro-RO')}</p>
-                    <p><strong>Durata Estimată:</strong> {selectedInjury.estimatedDuration} zile</p>
-                    <p><strong>Data Estimată de Revenire:</strong> {new Date(selectedInjury.recoveryEndDate).toLocaleDateString('ro-RO')}</p>
-                    <p><strong>Stare:</strong> {selectedInjury.status === 'injured' ? 'Accidentat' : selectedInjury.status === 'recovering' ? 'În recuperare' : 'Rezolvat'}</p>
-                    <p><strong>Progres Recuperare:</strong> {selectedInjury.recoveryProgress}%</p>
+                    <p><strong>Injury type:</strong> {selectedInjury.type}</p>
+                    <p><strong>Injury Date:</strong> {new Date(selectedInjury.injuryDate).toLocaleDateString('ro-RO')}</p>
+                    <p><strong>Estimated Duration:</strong> {selectedInjury.estimatedDuration} days</p>
+                    <p><strong>Estimated Recovery Date:</strong> {new Date(selectedInjury.recoveryEndDate).toLocaleDateString('ro-RO')}</p>
+                    <p><strong>Status:</strong> {selectedInjury.status === 'injured' ? 'Injured' : selectedInjury.status === 'recovering' ? 'Recovering' : 'Resolved'}</p>
+                    <p><strong>Recovery Progress:</strong> {selectedInjury.recoveryProgress}%</p>
                     <div className="injury-progress-bar">
                       <div
                         className="injury-progress-fill"
                         style={{ width: `${selectedInjury.recoveryProgress}%` }}
                       ></div>
                     </div>
-                    <p><strong>Restricții Activitate:</strong> {selectedInjury.activityRestrictions || 'N/A'}</p>
-                    <p><strong>Note:</strong> {selectedInjury.notes || 'N/A'}</p>
+                    <p><strong>Activity Restrictions:</strong> {selectedInjury.activityRestrictions || 'N/A'}</p>
+                    <p><strong>Notes:</strong> {selectedInjury.notes || 'N/A'}</p>
                     <div className="injury-modal-actions">
                       {userRole === 'staff' && (
-                        <button className="injury-edit-btn" onClick={handleEditToggle}>Editează</button>
+                        <button className="injury-edit-btn" onClick={handleEditToggle}>Edit</button>
                       )}
                       <button className="injury-close-modal-btn" onClick={() => {
                         setSelectedInjury(null);
@@ -548,7 +546,7 @@ const InjuredPlayersList = ({ userRole }) => {
                           activityRestrictions: '',
                           notes: '',
                         });
-                      }}>Închide</button>
+                      }}>Close</button>
                     </div>
                   </>
                 )}

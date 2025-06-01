@@ -46,18 +46,18 @@ const AddFeedbackModal = ({ event, onClose, onFeedbackAdded }) => {
   return (
     <div className="feedback-modal-overlay" onClick={handleOverlayClick}>
       <div className="feedback-modal-content">
-        <h3>Adaugă feedback</h3>
+        <h3>Add feedback</h3>
         {error && <p className="feedback-error">{error}</p>}
         {success && <p className="feedback-success">{success}</p>}
         <form onSubmit={handleSubmit}>
           <div className="feedback-form-group">
-            <label>Jucător:</label>
+            <label>Player:</label>
             <select
               value={receiverId}
               onChange={(e) => setReceiverId(e.target.value)}
               required
             >
-              <option value="">Selectează un jucător</option>
+              <option value="">Select a player</option>
               {availablePlayers.map(player => (
                 <option key={player._id} value={player._id}>
                   {player.playerId ? `${player.playerId.firstName} ${player.playerId.lastName}` : player.name}
@@ -66,19 +66,19 @@ const AddFeedbackModal = ({ event, onClose, onFeedbackAdded }) => {
             </select>
           </div>
           <div className="feedback-form-group">
-            <label>Nivel de mulțumire:</label>
+            <label>Satisfaction Level:</label>
             <select
               value={satisfactionLevel}
               onChange={(e) => setSatisfactionLevel(e.target.value)}
               required
             >
-              <option value="good">Bun</option>
-              <option value="neutral">Neutru</option>
-              <option value="bad">Slab</option>
+              <option value="good">Good</option>
+              <option value="neutral">Neutral</option>
+              <option value="bad">Bad</option>
             </select>
           </div>
           <div className="feedback-form-group">
-            <label>Comentariu (opțional):</label>
+            <label>Comment (opțional):</label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -87,8 +87,8 @@ const AddFeedbackModal = ({ event, onClose, onFeedbackAdded }) => {
             />
           </div>
           <div className="feedback-modal-actions">
-            <button type="submit">Trimite feedback</button>
-            <button type="button" onClick={onClose}>Anulează</button>
+            <button type="submit">Send feedback</button>
+            <button type="button" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>

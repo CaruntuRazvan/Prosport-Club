@@ -74,7 +74,7 @@ const RequestDropdown = ({ userId, userRole}) => {
   }, [isOpen, isCreateEventModalOpen, isCreatePollModalOpen, isCreateFineModalOpen]);
   
   const handleEventCreated = (newEvent) => {
-    console.log('Eveniment creat:', newEvent);
+    console.log('Event created:', newEvent)
     setIsCreateEventModalOpen(false);
   };
 
@@ -103,7 +103,7 @@ const RequestDropdown = ({ userId, userRole}) => {
           <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
           <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
         </svg>
-        <span>Cereri</span>
+        <span>Requests</span>
       </button>
 
       {isOpen && (
@@ -115,7 +115,7 @@ const RequestDropdown = ({ userId, userRole}) => {
               setIsOpen(false);
             }}
           >
-            Crează Eveniment
+            Create Event
           </button>
           <button
             className="request-option"
@@ -124,7 +124,7 @@ const RequestDropdown = ({ userId, userRole}) => {
               setIsOpen(false);
             }}
           >
-            Crează Sondaj
+            Create Poll
           </button>
           <button
             className="request-option"
@@ -133,7 +133,7 @@ const RequestDropdown = ({ userId, userRole}) => {
               setIsOpen(false);
             }}
           >
-            Crează Penalizare
+            Create Fine
           </button>
         </div>
       )}
@@ -145,7 +145,7 @@ const RequestDropdown = ({ userId, userRole}) => {
             <button
               className="modal-close-btn"
               onClick={() => setIsCreateEventModalOpen(false)}
-              aria-label="Închide"
+              aria-label="Close"
             >
               X
             </button>
@@ -161,7 +161,7 @@ const RequestDropdown = ({ userId, userRole}) => {
             <button
               className="modal-close-btn"
               onClick={() => setIsCreatePollModalOpen(false)}
-              aria-label="Închide"
+              aria-label="Close"
             >
               X
             </button>
@@ -177,7 +177,7 @@ const RequestDropdown = ({ userId, userRole}) => {
             <button
               className="modal-close-btn"
               onClick={() => setIsCreateFineModalOpen(false)}
-              aria-label="Închide"
+              aria-label="Close"
             >
               X
             </button>

@@ -7,7 +7,7 @@ const NotificationsDropdown = ({ userId, setActiveSection, playNotificationSound
   const [unreadCount, setUnreadCount] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
-  const [lastAnnouncedCount, setLastAnnouncedCount] = useState(0); // Number of notifications announced with sound
+  const [lastAnnouncedCount, setLastAnnouncedCount] = useState(0); 
   const [hasInteracted, setHasInteracted] = useState(false);
   const dropdownRef = useRef(null);
 

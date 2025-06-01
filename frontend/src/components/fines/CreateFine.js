@@ -20,7 +20,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
           setReceiverId(playerList[0]._id);
         }
       } catch (err) {
-        toast.error('Eroare la preluarea listei de jucători: ' + err.message, {
+        toast.error('Error fetching the list of players: ' + err.message, {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -49,7 +49,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
   const convertToISO = (dateStr) => {
     if (!dateStr) return null;
     if (!validateDate(dateStr)) {
-      throw new Error('Data de expirare trebuie să fie în format dd/mm/yyyy.');
+      throw new Error('The expiration date must be in dd/mm/yyyy format.');
     }
 
     const [day, month, year] = dateStr.split('/').map(Number);
@@ -63,7 +63,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
       // Validare sumă
       const parsedAmount = parseFloat(amount);
       if (parsedAmount <= 0) {
-        throw new Error('Suma trebuie să fie pozitivă.');
+        throw new Error('The amount must be positive.');
       }
 
       // Validare dată expirare
@@ -71,7 +71,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
       if (expirationDate) {
         expirationDateISO = convertToISO(expirationDate);
         if (new Date(expirationDateISO) <= new Date()) {
-          throw new Error('Data de expirare trebuie să fie în viitor.');
+          throw new Error('The expiration date must be in the future.');
         }
       }
 
@@ -93,7 +93,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
       if (onFineCreated) onFineCreated();
       onClose();
 
-      toast.success('Penalizare creată!', {
+      toast.success('Fine created!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -106,7 +106,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
         },
       });
     } catch (err) {
-      toast.error('Eroare la crearea penalizării: ' + err.message, {
+      toast.error('Error creating the fine: ' + err.message, {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -124,10 +124,10 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
   return (
     <div className="create-fine-modal-overlay">
       <div className="create-fine-modal create-event-section">
-        <h2>Crează Penalizare</h2>
+        <h2>Create Fine</h2>
         <form onSubmit={handleSubmit} className="event-form">
           <div className="form-group">
-            <label>Motiv:</label>
+            <label>Reason:</label>
             <input
               type="text"
               value={reason}
@@ -136,7 +136,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
             />
           </div>
           <div className="form-group">
-            <label>Sumă (EUR):</label>
+            <label>Amount (EUR):</label>
             <input
               type="number"
               value={amount}
@@ -147,7 +147,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
             />
           </div>
           <div className="form-group">
-            <label>Jucător:</label>
+            <label>Player:</label>
             <select
               value={receiverId}
               onChange={(e) => setReceiverId(e.target.value)}
@@ -161,7 +161,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
             </select>
           </div>
           <div className="form-group">
-            <label>Dată Expirare (dd/mm/yyyy):</label>
+            <label>Expiration Date (dd/mm/yyyy):</label>
             <input
               type="text"
               placeholder="dd/mm/yyyy"
@@ -170,7 +170,7 @@ const CreateFine = ({ userId, userRole, onClose, onFineCreated }) => {
             />
           </div>
           <button type="submit" className="submit-event">
-            Crează Penalizare
+            Create Fine
           </button>
         </form>
       </div>

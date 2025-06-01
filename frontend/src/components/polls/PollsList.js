@@ -375,7 +375,7 @@ const PollsList = ({ userId, userRole }) => {
                     ) : (
                       <div className="no-votes-message">
                         <p style={{ margin: 0, padding: '10px', background: '#f8f9fa', borderRadius: '5px', textAlign: 'center' }}>
-                          No votes yet for this poll. Let's promote it! 🎉
+                          No votes yet for this poll.
                         </p>
                       </div>
                     )}

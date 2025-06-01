@@ -55,7 +55,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
 
   const convertToISO = (dateStr, timeStr) => {
     if (!validateDate(dateStr) || !validateTime(timeStr)) {
-      throw new Error('Format dată sau oră invalid.');
+      throw new Error('Invalid date or time format.');
     }
 
     const [day, month, year] = dateStr.split('/').map(Number);
@@ -68,16 +68,16 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
     e.preventDefault();
     try {
       if (!validateDate(newEvent.startDate)) {
-        throw new Error('Data de start trebuie să fie în format zz/ll/aaaa.');
+        throw new Error('Start date must be in dd/mm/yyyy format.');
       }
       if (!validateTime(newEvent.startTime)) {
-        throw new Error('Ora de start trebuie să fie în format hh:mm (ex. 15:00).');
+        throw new Error('Start time must be in hh:mm format (e.g., 15:00).');
       }
       if (!validateDate(newEvent.finishDate)) {
-        throw new Error('Data de sfârșit trebuie să fie în format zz/ll/aaaa.');
+        throw new Error('End date must be in dd/mm/yyyy format (e.g., 31/12/2023).');
       }
       if (!validateTime(newEvent.finishTime)) {
-        throw new Error('Ora de sfârșit trebuie să fie în format hh:mm (ex. 15:00).');
+        throw new Error('End time must be in hh:mm format (e.g., 15:00).');
       }
 
       const startDateISO = convertToISO(newEvent.startDate, newEvent.startTime);
@@ -100,13 +100,12 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
         staff: [],
       });
 
-      // Închidem modalul imediat
+      // close the selection mode
       if (onEventCreated) {
         onEventCreated(response);
       }
 
-      // Afișăm toast-ul de succes după închiderea modalului
-      toast.success('Eveniment creat!', {
+      toast.success('Event created!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -119,7 +118,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
         },
       });
     } catch (err) {
-      toast.error('Eroare la crearea evenimentului: ' + err.message, {
+      toast.error('Error creating the event: ' + err.message, {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -165,13 +164,13 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
         selectedPlayers = [];
     }
     setNewEvent({ ...newEvent, players: selectedPlayers });
-    console.log(`Selectați ${mode}:`, selectedPlayers);
+    console.log(`Selected ${mode}:`, selectedPlayers);
   };
 
   const handlePlayerChange = (e) => {
     const selectedPlayers = Array.from(e.target.selectedOptions, option => option.value);
     setNewEvent({ ...newEvent, players: selectedPlayers });
-    console.log('Jucători selectați manual:', selectedPlayers);
+    console.log('Manually selected players:', selectedPlayers);
   };
 
   const handleStaffChange = (e) => {
@@ -181,10 +180,10 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
 
   return (
     <section className="create-event-section">
-      <h2>Creare Eveniment</h2>
+      <h2>Create Event</h2>
       <form onSubmit={handleCreateEvent} className="event-form">
         <div className="form-group">
-          <label>Titlu:</label>
+          <label>Title:</label>
           <input
             type="text"
             name="title"
@@ -194,7 +193,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
           />
         </div>
         <div className="form-group">
-          <label>Descriere:</label>
+          <label>Description:</label>
           <textarea
             name="description"
             value={newEvent.description}
@@ -203,7 +202,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
           />
         </div>
         <div className="form-group">
-          <label>Data de start:</label>
+          <label>Start date:</label>
           <input
             type="text"
             name="startDate"
@@ -214,7 +213,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
           />
         </div>
         <div className="form-group">
-          <label>Ora de start:</label>
+          <label>Start time</label>
           <input
             type="text"
             name="startTime"
@@ -225,7 +224,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
           />
         </div>
         <div className="form-group">
-          <label>Data de sfârșit:</label>
+          <label>End Date:</label>
           <input
             type="text"
             name="finishDate"
@@ -236,7 +235,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
           />
         </div>
         <div className="form-group">
-          <label>Ora de sfârșit:</label>
+          <label>End time:</label>
           <input
             type="text"
             name="finishTime"
@@ -247,42 +246,42 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
           />
         </div>
         <div className="form-group">
-          <label>Mod selecție jucători:</label>
+          <label>Player Selection Mode:</label>
           <div className="selection-mode">
             <button
               type="button"
               onClick={() => handlePlayerSelection('all')}
               className={selectionMode === 'all' ? 'active' : ''}
             >
-              Toți
+              All
             </button>
             <button
               type="button"
               onClick={() => handlePlayerSelection('goalkeepers')}
               className={selectionMode === 'goalkeepers' ? 'active' : ''}
             >
-              Portari
+              Goalkeepers
             </button>
             <button
               type="button"
               onClick={() => handlePlayerSelection('defenders')}
               className={selectionMode === 'defenders' ? 'active' : ''}
             >
-              Fundași
+              Defenders
             </button>
             <button
               type="button"
               onClick={() => handlePlayerSelection('midfielders')}
               className={selectionMode === 'midfielders' ? 'active' : ''}
             >
-              Mijlocași
+              Midfielders
             </button>
             <button
               type="button"
               onClick={() => handlePlayerSelection('forwards')}
               className={selectionMode === 'forwards' ? 'active' : ''}
             >
-              Atacanți
+              Forwards
             </button>
             <button
               type="button"
@@ -295,7 +294,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
         </div>
         {selectionMode === 'manual' && (
           <div className="form-group">
-            <label>Jucători: (Ține apăsată Ctrl/Cmd pentru selecție multiplă)</label>
+            <label>Players: (Hold Ctrl/Cmd for multiple selection)</label>
             <select
               name="players"
               multiple
@@ -327,7 +326,7 @@ const CreateEventForm = ({ onEventCreated, userId }) => {
             ))}
           </select>
         </div>
-        <button type="submit" className="submit-event">Creează Eveniment</button>
+        <button type="submit" className="submit-event">Create Event</button>
       </form>
     </section>
   );

@@ -15,42 +15,42 @@ const CreatePoll = ({ onPollCreated }) => {
     try {
       // Validare întrebare
       if (!newPoll.question.trim()) {
-        throw new Error('Întrebarea este obligatorie și nu poate fi goală.');
+        throw new Error('The question is required and cannot be empty.');
       }
       if (newPoll.question.length > 200) {
-        throw new Error('Întrebarea nu poate avea mai mult de 200 de caractere.');
+        throw new Error('The question cannot exceed 200 characters.');
       }
 
       // Validare opțiuni
       const validOptions = newPoll.options.filter(opt => opt.trim() !== '');
       if (validOptions.length < 2) {
-        throw new Error('Trebuie să existe cel puțin 2 opțiuni valide.');
+        throw new Error('There must be at least 2 valid options.');
       }
       if (validOptions.length > 10) {
-        throw new Error('Nu poți avea mai mult de 10 opțiuni.');
+        throw new Error('You cannot have more than 10 options.');
       }
       const uniqueOptions = new Set(validOptions.map(opt => opt.toLowerCase()));
       if (uniqueOptions.size !== validOptions.length) {
-        throw new Error('Opțiunile nu pot fi duplicate.');
+        throw new Error('Options cannot be duplicates.');
       }
       validOptions.forEach((opt, index) => {
         if (opt.length > 100) {
-          throw new Error(`Opțiunea ${index + 1} nu poate avea mai mult de 100 de caractere.`);
+          throw new Error(`Option ${index + 1} cannot exceed 100 characters.`);
         }
       });
 
       let expiresAt = undefined;
       if (newPoll.expiresDate || newPoll.expiresTime) {
         if (!newPoll.expiresDate || !newPoll.expiresTime) {
-          throw new Error('Trebuie să completezi atât data, cât și ora de expirare.');
+          throw new Error('You must provide both the expiration date and time.');
         }
 
         if (!/^\d{2}\/\d{2}\/\d{4}$/.test(newPoll.expiresDate)) {
-          throw new Error('Data trebuie să fie în format dd/mm/yyyy (ex. 31/03/2025).');
+          throw new Error('The date must be in dd/mm/yyyy format (e.g., 31/03/2025).');
         }
 
         if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(newPoll.expiresTime)) {
-          throw new Error('Ora trebuie să fie în format hh:mm (ex. 09:00 sau 21:00).');
+          throw new Error('The time must be in hh:mm format (e.g., 09:00 or 21:00).');
         }
 
         const [day, month, year] = newPoll.expiresDate.split('/');
@@ -58,12 +58,12 @@ const CreatePoll = ({ onPollCreated }) => {
         const parsedDate = new Date(`${year}-${month}-${day}T${hours}:${minutes}:00`);
 
         if (isNaN(parsedDate.getTime())) {
-          throw new Error('Data sau ora introdusă nu este validă.');
+          throw new Error('The entered date or time are invalid.');
         }
 
         const now = new Date();
         if (parsedDate <= now) {
-          throw new Error('Data de expirare trebuie să fie în viitor.');
+          throw new Error('The expiration date must be in the future.');
         }
 
         expiresAt = parsedDate.toISOString();
@@ -76,10 +76,9 @@ const CreatePoll = ({ onPollCreated }) => {
       };
       await createPoll(pollData);
       setNewPoll({ question: '', options: ['', ''], expiresDate: '', expiresTime: '' });
-      // Închidem modalul imediat
+
       if (onPollCreated) onPollCreated();
-      // Afișăm toast-ul de succes după închiderea modalului
-      toast.success('Sondaj creat cu succes!', {
+      toast.success('Poll created successfully!', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -92,7 +91,7 @@ const CreatePoll = ({ onPollCreated }) => {
         },
       });
     } catch (error) {
-      toast.error(error.message || 'Eroare la crearea sondajului.', {
+      toast.error(error.message || 'Error creating the poll.', {
         autoClose: 1500,
         hideProgressBar: true,
         closeButton: false,
@@ -119,10 +118,10 @@ const CreatePoll = ({ onPollCreated }) => {
 
   return (
     <div className="create-poll">
-      <h3>Creează un sondaj nou</h3>
+      <h3>Create a New Poll</h3>
       <form onSubmit={handleCreatePoll} className="poll-form">
         <div className="form-group">
-          <label>Întrebare:</label>
+          <label>Question:</label>
           <input
             type="text"
             value={newPoll.question}
@@ -131,23 +130,23 @@ const CreatePoll = ({ onPollCreated }) => {
           />
         </div>
         <div className="form-group">
-          <label>Opțiuni:</label>
+          <label>Options:</label>
           {newPoll.options.map((option, index) => (
             <input
               key={index}
               type="text"
               value={option}
               onChange={(e) => handleOptionChange(index, e.target.value)}
-              placeholder={`Opțiunea ${index + 1}`}
+              placeholder={`Option ${index + 1}`}
               required
             />
           ))}
           <button type="button" onClick={handleAddOption} className="add-option-btn">
-            Adaugă opțiune
+            Add option
           </button>
         </div>
         <div className="form-group">
-          <label>Data de expirare (opțional):</label>
+          <label>Expiration Date:</label>
           <input
             type="text"
             placeholder="dd/mm/yyyy"
@@ -156,7 +155,7 @@ const CreatePoll = ({ onPollCreated }) => {
           />
         </div>
         <div className="form-group">
-          <label>Ora de expirare (opțional):</label>
+          <label>Expiration Time:</label>
           <input
             type="text"
             placeholder="hh:mm"
@@ -165,7 +164,7 @@ const CreatePoll = ({ onPollCreated }) => {
           />
         </div>
         <button type="submit" className="submit-btn">
-          Creează sondaj
+          Create Poll
         </button>
       </form>
     </div>

@@ -161,7 +161,41 @@ const LoginForm = ({ setIsAuthenticated, setUserInfo }) => {
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               disabled={loading || showSuccessAnimation}
             >
-              <span className="eye-icon">👁️‍🗨️</span>
+              {showPassword ? (
+                // Eye with Slash (password visible)
+                <svg
+                  className="eye-icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#1e3a8a"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M2 2l20 20" />
+                  <path d="M6.71277 6.7226C3.66479 8.79573 2 12 2 12s3.63636 5.27273 10 5.27273c2.0507 0 3.8354-.5758 5.3897-1.5732" />
+                  <path d="M22 12s-3.63636-5.27273-10-5.27273c-.3415 0-.6754.0185-1 .0546" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              ) : (
+                // Eye Normal (password hidden)
+                <svg
+                  className="eye-icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#1e3a8a"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M2 12s3.63636-5.27273 10-5.27273 10 5.27273 10 5.27273-3.63636 5.27273-10 5.27273S2 12 2 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              )}
             </button>
           </div>
         </div>

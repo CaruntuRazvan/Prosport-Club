@@ -41,8 +41,8 @@ router.post('/', authMiddleware, isManagerOrStaff, async (req, res) => {
     const notifications = users.map(user => ({
       userId: user._id,
       type: 'poll',
-      title: 'A fost creat un nou sondaj',
-      description: `A fost creat un nou sondaj: "${poll.question}"`,
+      title: 'A New Poll Has Been Created',
+      description: `A new poll has been created: "${poll.question}"`,
       actionLink: poll._id.toString(), 
       section: 'polls', 
       createdAt: new Date(),
@@ -109,8 +109,8 @@ router.post('/:id/vote', authMiddleware, async (req, res) => {
     const notification = {
       userId: poll.createdBy._id,
       type: 'poll',
-      title: 'Vot nou în sondajul tău',
-      description: `Utilizatorul ${req.user.name} a votat în sondajul "${poll.question}"`,
+      title: 'New Vote in Your Poll',
+      description: `User ${req.user.name} has voted in the poll "${poll.question}"`,
       actionLink: poll._id.toString(), 
       section: 'polls', 
       createdAt: new Date(),

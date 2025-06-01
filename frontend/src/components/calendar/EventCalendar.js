@@ -86,15 +86,15 @@ const EventCalendar = ({ userId, eventColor }) => {
             event.hasFeedback = feedbackData.some(feedback => feedback.creatorId === userId) && feedbackData.length > 0;
           }
         } catch (error) {
-          console.error(`Eroare la preluarea feedback-urilor pentru evenimentul ${event.id}:`, error);
+          console.error(`Error fetching feedback for the event ${event.id}:`, error);
           event.hasFeedback = false;
         }
       }
 
       setEvents(calendarEvents);
     } catch (error) {
-      console.error('Eroare la încărcarea evenimentelor:', error);
-      toast.error('Eroare la încărcarea evenimentelor.', {
+      console.error('Error fetching event details:', error);
+      toast.error('Error fetching event details.', {
         autoClose: 2000,
         hideProgressBar: true,
         closeButton: false,
@@ -164,7 +164,7 @@ const EventCalendar = ({ userId, eventColor }) => {
       setIsModalOpen(true);
     } catch (error) {
       console.error('Eroare la obținerea detaliilor evenimentului:', error);
-      toast.error(error.message || 'Nu ai permisiunea de a vedea detaliile acestui eveniment.', {
+      toast.error(error.message || 'You do not permission to view this event details.', {
         autoClose: 2000,
         hideProgressBar: true,
         closeButton: false,
@@ -180,12 +180,12 @@ const EventCalendar = ({ userId, eventColor }) => {
   };
 
   const handleDeleteEvent = async (eventId) => {
-    showConfirm('Ești sigur că vrei să ștergi acest eveniment?', async () => {
+    showConfirm('Are you sure you want to delete this event?', async () => {
       try {
         await deleteEvent(eventId);
         setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId));
         closeModal();
-        toast.success('Eveniment șters!', {
+        toast.success('Event deleted!', {
           autoClose: 2000,
           hideProgressBar: true,
           closeButton: false,
@@ -198,8 +198,8 @@ const EventCalendar = ({ userId, eventColor }) => {
           },
         });
       } catch (error) {
-        console.error('Eroare la ștergerea evenimentului:', error);
-        toast.error('Eroare la ștergere!', {
+        console.error('Error deleting the event:', error);
+        toast.error('Error deleting!', {
           autoClose: 2000,
           hideProgressBar: true,
           closeButton: false,
@@ -237,7 +237,7 @@ const EventCalendar = ({ userId, eventColor }) => {
       const allPlayersHaveFeedback = playerIds.every(playerId => feedbackReceiverIds.includes(playerId));
 
       if (allPlayersHaveFeedback) {
-        toast.warning('Toți jucătorii au primit deja feedback pentru acest eveniment!', {
+        toast.warning('All players have already received feedback for this event!', {
           autoClose: 1500,
           hideProgressBar: true,
           closeButton: false,
@@ -268,12 +268,12 @@ const EventCalendar = ({ userId, eventColor }) => {
       setShowFeedbackModal(false);
       await fetchEvents();
     } catch (error) {
-      console.error('Eroare la reîmprospătarea feedback-urilor:', error);
+      console.error('Error refreshing feedback::', error);
     }
   };
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleString('ro-RO', {
+    return new Date(date).toLocaleString('en-GB', {
       dateStyle: 'medium',
       timeStyle: 'short',
     });
@@ -333,7 +333,7 @@ const EventCalendar = ({ userId, eventColor }) => {
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         }}
         events={events}
-        locale="ro"
+        locale="en-GB"
         firstDay={1}
         slotMinTime="08:00:00"
         slotMaxTime="22:00:00"
@@ -346,10 +346,10 @@ const EventCalendar = ({ userId, eventColor }) => {
           hour12: false,
         }}
         buttonText={{
-          today: 'Astăzi',
-          month: 'Lună',
-          week: 'Săptămână',
-          day: 'Zi',
+          today: 'Today',
+          month: 'Month',
+          week: 'Week',
+          day: 'Day',
         }}
         dayMaxEvents={true}
         views={{
@@ -380,37 +380,37 @@ const EventCalendar = ({ userId, eventColor }) => {
                   <button
                     className="event-modal-delete-btn"
                     onClick={() => handleDeleteEvent(eventDetails._id)}
-                    aria-label="Șterge eveniment"
+                    aria-label="Delete event"
                   >
-                    <i className="fas fa-trash-alt"></i> Șterge
+                    <i className="fas fa-trash-alt"></i> Delete
                   </button>
                   {feedbacks.length > 0 && (
                     <p className="delete-warning">
-                      Atenție! Acest eveniment are {feedbacks.length} feedback-uri asociate. Ștergerea evenimentului va șterge și feedback-urile.
+                      Warning! This event has {feedbacks.length} associated feedbacks. Deleting the event will also delete the feedbacks.
                     </p>
                   )}
                 </div>
               )}
-              <button className="event-modal-close-btn" onClick={closeModal} aria-label="Închide">
+              <button className="event-modal-close-btn" onClick={closeModal} aria-label="Close">
                 X
               </button>
             </div>
             <h2>{eventDetails.title}</h2>
             <div className="event-details-content">
-              <p><strong>Descriere:</strong> {eventDetails.description}</p>
-              <p><strong>Data de început:</strong> {formatDate(eventDetails.startDate)}</p>
-              <p><strong>Data de sfârșit:</strong> {formatDate(eventDetails.finishDate)}</p>
+              <p><strong>Description:</strong> {eventDetails.description}</p>
+              <p><strong>Start date:</strong> {formatDate(eventDetails.startDate)}</p>
+              <p><strong>End date:</strong> {formatDate(eventDetails.finishDate)}</p>
               <p><strong>Status:</strong> {eventDetails.status}</p>
               <p>
-                <strong>Creat de:</strong>{' '}
+                <strong>Created by:</strong>{' '}
                 {eventDetails.createdBy
                   ? `${eventDetails.createdBy.name} (${eventDetails.createdBy.email})`
-                  : 'Necunoscut'}
+                  : 'Unknown'}
               </p>
 
               {eventDetails.players && eventDetails.players.length > 0 ? (
                 <div>
-                  <h4>Jucători:</h4>
+                  <h4>Players:</h4>
                   <ul className="event-participants-list">
                     {eventDetails.players.map((player) => (
                       <li key={player._id}>
@@ -423,7 +423,7 @@ const EventCalendar = ({ userId, eventColor }) => {
                   </ul>
                 </div>
               ) : (
-                <p><strong>Jucători:</strong> Niciun jucător asociat.</p>
+                <p><strong>Players:</strong> No players associated.</p>
               )}
 
               {eventDetails.staff && eventDetails.staff.length > 0 ? (
@@ -441,13 +441,13 @@ const EventCalendar = ({ userId, eventColor }) => {
                   </ul>
                 </div>
               ) : (
-                <p><strong>Staff:</strong> Niciun membru al staff-ului asociat.</p>
+                <p><strong>Staff:</strong> No staff members associated.</p>
               )}
 
               {((userRole === 'manager' && eventDetails.createdBy && eventDetails.createdBy._id === userId) ||
                 (userRole === 'staff' && eventDetails.createdBy && eventDetails.createdBy._id === userId)) && (
                 <button className="event-add-feedback-btn" onClick={handleOpenFeedbackModal}>
-                  Adaugă feedback
+                  Add feedback
                 </button>
               )}
               <FeedbackList feedbacks={feedbacks} userRole={userRole} />

@@ -38,6 +38,7 @@
   min-width: 180px;
   overflow: hidden;
   z-index: 1000;
+  border: 1px solid #1e3a8a;
 }
 
 .request-option {
@@ -51,6 +52,7 @@
   text-align: left;
   transition: all 0.2s ease;
   width: 100%;
+
 }
 
 .request-option:last-child {
