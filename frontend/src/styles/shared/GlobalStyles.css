@@ -1,4 +1,7 @@
-.admin-container, .player-container, .manager-container, .staff-container {
+.admin-container,
+.player-container,
+.manager-container,
+.staff-container {
     display: flex;
     min-height: 100vh;
     background: linear-gradient(to right, #022c5a, #3b82f6);
@@ -11,6 +14,17 @@
     padding: 20px;
     position: fixed;
     height: 100%;
+    transition: transform 0.3s ease;
+    z-index: 100;
+}
+
+/* Sidebar states */
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar.closed {
+    transform: translateX(-100%);
 }
 
 .section-wrapper {
@@ -20,7 +34,6 @@
 .section {
     animation: fadeIn 0.5s ease-in-out;
 }
-
 
 .team-logo {
     width: 110px;
@@ -35,7 +48,10 @@
     /* Efect de scalare la hover */
 }
 
-.admin-profile, .player-profile, .manager-profile, .staff-profile {
+.admin-profile,
+.player-profile,
+.manager-profile,
+.staff-profile {
     background-color: white;
     padding: 10px;
     border-radius: 10px;
@@ -43,12 +59,18 @@
     margin-bottom: 20px;
 }
 
-.admin-profile p, .player-profile p, .manager-profile p, .staff-profile p {
+.admin-profile p,
+.player-profile p,
+.manager-profile p,
+.staff-profile p {
     margin: 5px 0;
     color: #1e3a8a;
 }
 
-.admin-profile p strong, .player-profile p strong, .manager-profile p strong, .staff-profile p strong {
+.admin-profile p strong,
+.player-profile p strong,
+.manager-profile p strong,
+.staff-profile p strong {
     color: #1e3a8a;
 }
 
@@ -75,6 +97,16 @@
     margin-left: 250px;
     flex-grow: 1;
     padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Main content states based on sidebar */
+.sidebar.closed~.main-content {
+    margin-left: 0;
+}
+
+.sidebar.open~.main-content {
+    margin-left: 250px;
 }
 
 .header {
@@ -90,6 +122,49 @@
 
 .header h1 {
     color: #1e3a8a;
+}
+
+/* Sidebar toggle button */
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: #1e3a8a;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle:hover {
+    background-color: #f1f5f9;
+}
+
+.sidebar-toggle svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar.closed~.main-content {
+        margin-left: 0;
+    }
+
+    .sidebar.open~.main-content {
+        margin-left: 0;
+    }
 }
 
 /* src/styles/shared/GlobalStyles.css */
@@ -164,9 +239,8 @@
 }
 
 .cancel-btn:hover {
-    background-color: #5a6268; 
+    background-color: #5a6268;
 }
-
 
 @keyframes fadeIn {
     from {

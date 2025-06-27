@@ -9,7 +9,7 @@ const auth = require('../middleware/auth');
 const { isStaff } = require('../middleware/roleMiddleware');
 
 // GET /api/injuries - Listează accidentările active
-router.get('/', auth, isStaff, async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const injuries = await Injury.find({ status: { $in: ['injured', 'recovering'] } })
       .populate('playerId', 'firstName lastName')

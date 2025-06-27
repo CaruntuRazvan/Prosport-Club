@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPlayers } from '../../services/userService';
+import { fetchInjuries } from '../../services/injuryService';
 import '../../styles/shared/PlayersSection.css';
 
 const PlayersSection = ({ onPlayerClick, currentUserId }) => {
@@ -8,23 +9,25 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [injuries, setInjuries] = useState([]);
 
   useEffect(() => {
-    const loadPlayers = async () => {
+    const loadPlayersAndInjuries = async () => {
       try {
         setLoading(true);
-        const users = await fetchPlayers();
-        console.log('Players fetched:', users);
+        const [users, injuryData] = await Promise.all([fetchPlayers(), fetchInjuries()]);
+        console.log('Players fetched:', users); 
+        console.log('Injuries fetched:', injuryData); // Verify playerId._id
         setPlayers(users);
         setFilteredPlayers(users);
+        setInjuries(injuryData);
       } catch (err) {
-        setError('Error loading players.');
-        console.error('Error fetchPlayers:', err);
+        setError('Error loading players or injuries.');
       } finally {
         setLoading(false);
       }
     };
-    loadPlayers();
+    loadPlayersAndInjuries();
   }, []);
 
   useEffect(() => {
@@ -33,6 +36,16 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
     );
     setFilteredPlayers(filtered);
   }, [searchTerm, players]);
+
+  // Updated injury check to match playerId._id with injury.playerId._id
+  const isPlayerInjured = (playerId) => {
+    const player = players.find(p => p._id === playerId);
+    const playerPlayerId = player?.playerId?._id?.toString();
+    return injuries.some(injury => 
+      injury.playerId && injury.playerId._id && injury.playerId._id.toString() === playerPlayerId && 
+      injury.status !== 'resolved'
+    );
+  };
 
   const goalkeepers = filteredPlayers.filter(player => player.playerId?.position === 'Goalkeeper');
   const defenders = filteredPlayers.filter(player => player.playerId?.position === 'Defender');
@@ -48,6 +61,7 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
             <div
               key={player._id}
               className={`player-card ${player._id === currentUserId ? 'current-user' : ''}`}
+              onClick={() => onPlayerClick(player)}
             >
               <div className="player-image-wrapper">
                 <div className="background-logo"></div>
@@ -60,12 +74,25 @@ const PlayersSection = ({ onPlayerClick, currentUserId }) => {
                   alt={player.name}
                   className="player-image"
                   draggable="false"
-                  onClick={() => onPlayerClick(player)}
                   onError={(e) => {
                     e.target.src = '/images/default-user.jpg';
-                    console.log(`Error loading image for ${player.name}`);
                   }}
                 />
+                {isPlayerInjured(player._id) && (
+                  <div className="injury-icon">
+                    <svg
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ff4040" 
+                    strokeWidth="4"  
+                  >
+                    <path d="M12 4V20" /> {/* Vertical line */}
+                    <path d="M4 12H20" /> {/* Horizontal line */}
+                  </svg>
+                  </div>
+                )}
               </div>
               <div className="player-info">
                 <span className="player-number">{player.playerId?.shirtNumber || 'N/A'}</span>

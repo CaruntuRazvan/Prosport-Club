@@ -26,6 +26,7 @@ const PlayerPage = ({ userId, handleLogout }) => {
     return JSON.parse(localStorage.getItem(`playNotificationSound_${userId}`)) || false;
   });
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const role = 'player';
 
   useEffect(() => {
@@ -77,10 +78,41 @@ const PlayerPage = ({ userId, handleLogout }) => {
     setSelectedUser(null);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleMenuItemClick = (section) => {
+    setActiveSection(section);
+    
+    // Auto-close sidebar on mobile when menu item is clicked
+    if (window.innerWidth <= 768) {
+      setIsSidebarOpen(false);
+    }
+  };
+  
+  // Add this useEffect to handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      // Auto-open sidebar on desktop, auto-close on mobile
+      if (window.innerWidth > 768) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+  
+    // Set initial state based on screen size
+    handleResize();
+  
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="player-container">
       {/* Sidebar Navigation */}
-      <nav className="sidebar">
+      <nav className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
         <img src="/images/logo.png" alt="Team Logo" className="team-logo" draggable="false" />
         {playerInfo && (
           <div className="player-profile">
@@ -91,19 +123,19 @@ const PlayerPage = ({ userId, handleLogout }) => {
         <ul>
           <li
             className={activeSection === 'team' ? 'active' : ''}
-            onClick={() => setActiveSection('team')}
+            onClick={() => handleMenuItemClick('team')}
           >
             About Team
           </li>
           <li
             className={activeSection === 'profile' ? 'active' : ''}
-            onClick={() => setActiveSection('profile')}
+            onClick={() => handleMenuItemClick('profile')}
           >
             My Profile
           </li>
           <li
             className={activeSection === 'players' ? 'active' : ''}
-            onClick={() => setActiveSection('players')}
+            onClick={() => handleMenuItemClick('players')}
           >
             Players
           </li>
@@ -115,25 +147,25 @@ const PlayerPage = ({ userId, handleLogout }) => {
           </li>
           <li
             className={activeSection === 'calendar' ? 'active' : ''}
-            onClick={() => setActiveSection('calendar')}
+            onClick={() => handleMenuItemClick('calendar')}
           >
             Calendar
           </li>
           <li
             className={activeSection === 'polls' ? 'active' : ''}
-            onClick={() => setActiveSection('polls')}
+            onClick={() => handleMenuItemClick('polls')}
           >
             Polls
           </li>
           <li
             className={activeSection === 'fines' ? 'active' : ''}
-            onClick={() => setActiveSection('fines')}
+            onClick={() => handleMenuItemClick('fines')}
           >
             Fines
           </li>
           <li
             className={activeSection === 'journal' ? 'active' : ''}
-            onClick={() => setActiveSection('journal')}
+            onClick={() => handleMenuItemClick('journal')}
           >
             Journal
           </li>
@@ -143,6 +175,20 @@ const PlayerPage = ({ userId, handleLogout }) => {
       {/* Main Content */}
       <div className="main-content">
         <header className="header">
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
           <h1>Player Dashboard</h1>
           <div className="header-actions">
             <NotificationsDropdown

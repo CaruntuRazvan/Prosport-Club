@@ -24,7 +24,7 @@ const AdminPage = ({ userId, handleLogout }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   // Handle scroll lock when modals are open
   useEffect(() => {
     const isAnyModalOpen = isAddingUser || editingUser || selectedUser;
@@ -274,6 +274,36 @@ const AdminPage = ({ userId, handleLogout }) => {
     return acc;
   }, {});
 
+  const handleMenuItemClick = (section) => {
+    setActiveSection(section);
+    
+    // Auto-close sidebar on mobile when menu item is clicked
+    if (window.innerWidth <= 768) {
+      setIsSidebarOpen(false);
+    }
+  };
+  
+  // Add this useEffect to handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      // Auto-open sidebar on desktop, auto-close on mobile
+      if (window.innerWidth > 768) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+  
+    // Set initial state based on screen size
+    handleResize();
+  
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
   return (
     <div className="admin-container">
       <ToastContainer
@@ -288,7 +318,7 @@ const AdminPage = ({ userId, handleLogout }) => {
         pauseOnHover
         style={{ zIndex: 999999, position: 'fixed', bottom: 0, left: 0 }}
       />
-      <nav className="sidebar">
+      <nav className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
         <img src="/images/logo.png" alt="Team Logo" className="team-logo" loading="lazy" draggable="false" decoding="async"/>
         {adminInfo && (
           <div className="admin-profile">
@@ -297,19 +327,19 @@ const AdminPage = ({ userId, handleLogout }) => {
           </div>
         )}
         <ul>
-          <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => setActiveSection('dashboard')}>
+          <li className={activeSection === 'dashboard' ? 'active' : ''} onClick={() => handleMenuItemClick('dashboard')}>
             Dashboard
           </li>
-          <li className={activeSection === 'team' ? 'active' : ''} onClick={() => setActiveSection('team')}>
+          <li className={activeSection === 'team' ? 'active' : ''} onClick={() => handleMenuItemClick('team')}>
             About Team
           </li>
-          <li className={activeSection === 'users' ? 'active' : ''} onClick={() => setActiveSection('users')}>
+          <li className={activeSection === 'users' ? 'active' : ''} onClick={() => handleMenuItemClick('users')}>
             Users
           </li>
-          <li className={activeSection === 'stats' ? 'active' : ''} onClick={() => setActiveSection('stats')}>
+          <li className={activeSection === 'stats' ? 'active' : ''} onClick={() => handleMenuItemClick('stats')}>
             Statistics
           </li>
-          <li className={activeSection === 'reset' ? 'active' : ''} onClick={() => setActiveSection('reset')}>
+          <li className={activeSection === 'reset' ? 'active' : ''} onClick={() => handleMenuItemClick('reset')}>
             Reset
           </li>
         </ul>
@@ -317,6 +347,20 @@ const AdminPage = ({ userId, handleLogout }) => {
 
       <div className="main-content">
         <header className="header">
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
           <h1>Admin Dashboard</h1>
           <LogoutComponent handleLogout={handleLogout} />
         </header>
@@ -370,6 +414,7 @@ const AdminPage = ({ userId, handleLogout }) => {
                 onDeleteUser={handleDelete}
                 onViewUser={handleViewUser}
                 onEditUser={(user) => setEditingUser(user)}
+                currentUserId={userId} // Pass the logged-in admin's userId
               />
             </section>
           )}

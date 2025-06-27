@@ -152,6 +152,19 @@
     margin: 20px 0;
     border: 1px solid #ddd;
 }
+.injury-icon {
+    position: absolute;
+    top: 35px;
+    right: 5px;
+    z-index: 1;
+    
+}
+
+.injury-icon svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
 
 @keyframes fadeIn {
     from {
